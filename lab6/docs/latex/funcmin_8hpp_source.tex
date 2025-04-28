@@ -1,0 +1,746 @@
+\doxysection{funcmin.\+hpp}
+\hypertarget{funcmin_8hpp_source}{}\label{funcmin_8hpp_source}\index{src/funcmin.hpp@{src/funcmin.hpp}}
+\mbox{\hyperlink{funcmin_8hpp}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#ifndef\ FUNCMIN\_HPP}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ FUNCMIN\_HPP}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <cmath>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <cstdio>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <cassert>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <Eigen/Eigenvalues>}\ }
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacefuncmin}{funcmin}}}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00046\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a07939512747e3786b6a1c38ebc0ebecf}{trsEig}}(\textcolor{keyword}{const}\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{double}\ D,\ Eigen::VectorXd\ \&\ p);}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00066\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a07939512747e3786b6a1c38ebc0ebecf}{trsEig}}(\textcolor{keyword}{const}\ Eigen::MatrixXd\ \&\ Q,\ \textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ v,\ \textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{double}\ D,\ Eigen::VectorXd\ \&\ p);}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00086\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_aafd08c8cf500feab0ebf4a452c0a88be}{trsSqrt}}(\textcolor{keyword}{const}\ Eigen::MatrixXd\ \&\ Xi,\ \textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{double}\ D,\ Eigen::VectorXd\ \&\ p);}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00105\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_ac35752d9f2d6d61e5df0ba0542d5910d}{trsSqrtInv}}(\textcolor{keyword}{const}\ Eigen::MatrixXd\ \&\ S,\ \textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{double}\ D,\ Eigen::VectorXd\ \&\ p);}
+\DoxyCodeLine{00106\ }
+\DoxyCodeLine{00122\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00123\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a177ce87c99954482d2836fb7ec0ec8d1}{NewtonTrustEig}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ Q,\ Eigen::VectorXd\ \&\ v,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00124\ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ Scalar;}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::VectorXd\ Vector;}
+\DoxyCodeLine{00127\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::MatrixXd\ Matrix;}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ assert(x.cols()\ ==\ 1);}
+\DoxyCodeLine{00130\ \ \ \ \ g.resize(x.size());}
+\DoxyCodeLine{00131\ \ \ \ \ Q.resize(x.size(),\ x.size());}
+\DoxyCodeLine{00132\ \ \ \ \ v.resize(x.size());}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00134\ \ \ \ \ Matrix\ H(x.size(),\ x.size());}
+\DoxyCodeLine{00135\ }
+\DoxyCodeLine{00136\ \ \ \ \ \textcolor{comment}{//\ Storage\ for\ trial\ point,\ gradient\ and\ Hessian}}
+\DoxyCodeLine{00137\ \ \ \ \ Vector\ xn(x.size());}
+\DoxyCodeLine{00138\ \ \ \ \ Vector\ gn(x.size());}
+\DoxyCodeLine{00139\ \ \ \ \ Matrix\ Hn(x.size(),\ x.size());}
+\DoxyCodeLine{00140\ }
+\DoxyCodeLine{00141\ \ \ \ \ \textcolor{comment}{//\ Evaluate\ initial\ cost,\ gradient\ and\ Hessian}}
+\DoxyCodeLine{00142\ \ \ \ \ Scalar\ f\ =\ costFunc(x,\ g,\ H);}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::isfinite(f)\ ||\ !g.allFinite()\ ||\ !H.allFinite())\ \ \ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00144\ \ \ \ \ \{}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}ERROR:\ Initial\ point\ is\ not\ in\ domain\ of\ cost\ function\(\backslash\)n"{}});}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00148\ \ \ \ \ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ \ \ \ \ \textcolor{comment}{//\ Eigendecomposition\ of\ initial\ Hessian}}
+\DoxyCodeLine{00151\ \ \ \ \ Eigen::SelfAdjointEigenSolver<Matrix>\ eigenH(H);}
+\DoxyCodeLine{00152\ \ \ \ \ v\ =\ eigenH.eigenvalues();}
+\DoxyCodeLine{00153\ \ \ \ \ Q\ =\ eigenH.eigenvectors();}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00155\ \ \ \ \ Scalar\ Delta\ =\ 1e0;\ \ \ \ \ \textcolor{comment}{//\ Initial\ trust-\/region\ radius}}
+\DoxyCodeLine{00156\ }
+\DoxyCodeLine{00157\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ maxIterations\ =\ 5000;}
+\DoxyCodeLine{00158\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ maxIterations;\ ++i)}
+\DoxyCodeLine{00159\ \ \ \ \ \{}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ trust-\/region\ subproblem}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ Vector\ p;}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefuncmin_a07939512747e3786b6a1c38ebc0ebecf}{trsEig}}(Q,\ v,\ g,\ Delta,\ p);\ \ \ \textcolor{comment}{//\ minimise\ 0.5*p.'*H*p\ +\ g.'*p\ subject\ to\ ||p||\ <=\ Delta}}
+\DoxyCodeLine{00163\ }
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ Scalar\ pg\ =\ p.dot(g);}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ Scalar\ LambdaSq\ =\ -\/pg;\ \ \textcolor{comment}{//\ The\ Newton\ decrement\ squared\ is\ g.'*inv(H)*g\ =\ p.'*H*p}}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 3)}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}Iter\ =\ \%5i,\ Cost\ =\ \%10.2e,\ Newton\ decr\string^2\ =\ \%10.2e,\ Delta\ =\ \%10.2e\(\backslash\)n"{}},\ i,\ f,\ LambdaSq,\ Delta);}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 1)}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ LambdaSqThreshold\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());\ \ \ \ \ //\ Loose\ convergence\ tolerance}}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ LambdaSqThreshold\ =\ 2*std::numeric\_limits<Scalar>::epsilon();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tight\ convergence\ tolerance}}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(LambdaSq)\ <\ LambdaSqThreshold)}
+\DoxyCodeLine{00174\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >=\ 2)}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}CONVERGED:\ Newton\ decrement\ below\ threshold\ in\ \%i\ iterations\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Evaluate\ cost,\ gradient\ and\ Hessian\ for\ trial\ step}}
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ xn\ =\ x\ +\ p;}
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ Scalar\ fn\ =\ costFunc(xn,\ gn,\ Hn);}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ outOfDomain\ =\ !std::isfinite(fn)\ ||\ !gn.allFinite()\ ||\ !Hn.allFinite();\ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ Scalar\ rho;}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfDomain)}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ trust\ region\ reduction\ and\ reject\ step}}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ dm\ =\ -\/pg\ -\/\ 0.5*p.dot(H*p);\ \ \ \textcolor{comment}{//\ Predicted\ reduction\ f\ -\/\ fp,\ where\ fp\ =\ f\ +\ p'*g\ +\ 0.5*p'*H*p}}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ (f\ -\/\ fn)/dm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Actual\ reduction\ divided\ by\ predicted\ reduction}}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ <\ 0.1)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 0.25*p.norm();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrease\ trust\ region\ radius}}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >\ 0.75\ \&\&\ p.norm()\ >\ 0.8*Delta)}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 2.0*Delta;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increase\ trust\ region\ radius}}
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00206\ }
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >=\ 0.001)}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accept\ the\ step}}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ xn;}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ fn;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ gn;}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ H\ =\ Hn;}
+\DoxyCodeLine{00214\ }
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eigendecomposition\ of\ accepted\ Hessian}}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::SelfAdjointEigenSolver<Matrix>\ eigenH\_(H);}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ eigenH\_.eigenvalues();}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ Q\ =\ eigenH\_.eigenvectors();}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00220\ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}WARNING:\ maximum\ number\ of\ iterations\ reached\(\backslash\)n"{}});}
+\DoxyCodeLine{00223\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00224\ \}}
+\DoxyCodeLine{00225\ }
+\DoxyCodeLine{00240\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00241\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a7610fb352ec73e4da5add06ab144d139}{NewtonTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00242\ \{}
+\DoxyCodeLine{00243\ \ \ \ \ Eigen::MatrixXd\ Q(x.size(),\ x.size());}
+\DoxyCodeLine{00244\ \ \ \ \ Eigen::VectorXd\ v(x.size());}
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ \mbox{\hyperlink{namespacefuncmin_a177ce87c99954482d2836fb7ec0ec8d1}{NewtonTrustEig}}(costFunc,\ x,\ g,\ Q,\ v,\ verbosity);}
+\DoxyCodeLine{00246\ \ \ \ \ H\ =\ Q*v.asDiagonal()*Q.transpose();}
+\DoxyCodeLine{00247\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{00248\ \}}
+\DoxyCodeLine{00249\ }
+\DoxyCodeLine{00263\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00264\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a7610fb352ec73e4da5add06ab144d139}{NewtonTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00265\ \{}
+\DoxyCodeLine{00266\ \ \ \ \ Eigen::MatrixXd\ H(x.size(),\ x.size());}
+\DoxyCodeLine{00267\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a7610fb352ec73e4da5add06ab144d139}{NewtonTrust}}(costFunc,\ x,\ g,\ H,\ verbosity);}
+\DoxyCodeLine{00268\ \}}
+\DoxyCodeLine{00269\ }
+\DoxyCodeLine{00279\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00280\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a7610fb352ec73e4da5add06ab144d139}{NewtonTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00281\ \{}
+\DoxyCodeLine{00282\ \ \ \ \ Eigen::VectorXd\ g(x.size());}
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a7610fb352ec73e4da5add06ab144d139}{NewtonTrust}}(costFunc,\ x,\ g,\ verbosity);}
+\DoxyCodeLine{00284\ \}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00298\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a90123447966b46b5a0861a34b68f16dc}{sgn}}(T\ val)\ \{\ \textcolor{keywordflow}{return}\ (T(0)\ <\ val)\ -\/\ (val\ <\ T(0));\ \}}
+\DoxyCodeLine{00299\ }
+\DoxyCodeLine{00315\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00316\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a5bce3224539c2de39f587273194b07f9}{SR1TrustEig}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ Q,\ Eigen::VectorXd\ \&\ v,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00317\ \{}
+\DoxyCodeLine{00318\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ Scalar;}
+\DoxyCodeLine{00319\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::VectorXd\ Vector;}
+\DoxyCodeLine{00320\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::MatrixXd\ Matrix;}
+\DoxyCodeLine{00321\ }
+\DoxyCodeLine{00322\ \ \ \ \ assert(x.cols()\ ==\ 1);}
+\DoxyCodeLine{00323\ \ \ \ \ g.resize(x.size());}
+\DoxyCodeLine{00324\ \ \ \ \ Q.resize(x.size(),\ x.size());}
+\DoxyCodeLine{00325\ \ \ \ \ v.resize(x.size());}
+\DoxyCodeLine{00326\ }
+\DoxyCodeLine{00327\ \ \ \ \ Matrix\ H(x.size(),x.size());}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \textcolor{comment}{//\ Storage\ for\ trial\ point\ and\ gradient}}
+\DoxyCodeLine{00330\ \ \ \ \ Vector\ xn(x.size());}
+\DoxyCodeLine{00331\ \ \ \ \ Vector\ gn(x.size());}
+\DoxyCodeLine{00332\ }
+\DoxyCodeLine{00333\ \ \ \ \ \textcolor{comment}{//\ Evaluate\ initial\ cost\ and\ gradient}}
+\DoxyCodeLine{00334\ \ \ \ \ Scalar\ f\ =\ costFunc(x,\ g);}
+\DoxyCodeLine{00335\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::isfinite(f)\ ||\ !g.allFinite())\ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00336\ \ \ \ \ \{}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}ERROR:\ Initial\ point\ is\ not\ in\ domain\ of\ cost\ function\(\backslash\)n"{}});}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00340\ \ \ \ \ \}}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \textcolor{comment}{//\ Initial\ Hessian}}
+\DoxyCodeLine{00343\ \ \ \ \ H\ =\ Q*v.asDiagonal()*Q.transpose();}
+\DoxyCodeLine{00344\ }
+\DoxyCodeLine{00345\ \ \ \ \ Scalar\ Delta\ =\ 1e0;\ \ \ \ \ \textcolor{comment}{//\ Initial\ trust-\/region\ radius}}
+\DoxyCodeLine{00346\ }
+\DoxyCodeLine{00347\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ maxIterations\ =\ 5000;}
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ maxIterations;\ ++i)}
+\DoxyCodeLine{00349\ \ \ \ \ \{}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ trust-\/region\ subproblem}}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ Vector\ p;}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefuncmin_a07939512747e3786b6a1c38ebc0ebecf}{trsEig}}(Q,\ v,\ g,\ Delta,\ p);\ \ \ \textcolor{comment}{//\ minimise\ 0.5*p.'*H*p\ +\ g.'*p\ subject\ to\ ||p||\ <=\ Delta}}
+\DoxyCodeLine{00353\ }
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ Scalar\ pg\ =\ p.dot(g);}
+\DoxyCodeLine{00355\ \ \ \ \ \ \ \ \ Scalar\ LambdaSq\ =\ -\/pg;\ \ \textcolor{comment}{//\ The\ Newton\ decrement\ squared\ is\ g.'*inv(H)*g\ =\ p.'*H*p}}
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 3)}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}Iter\ =\ \%5i,\ Cost\ =\ \%10.2e,\ Newton\ decr\string^2\ =\ \%10.2e,\ Delta\ =\ \%10.2e\(\backslash\)n"{}},\ i,\ f,\ LambdaSq,\ Delta);}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 1)}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{00360\ }
+\DoxyCodeLine{00361\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ LambdaSqThreshold\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());\ \ \ \ \ \textcolor{comment}{//\ Loose\ convergence\ tolerance}}
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ LambdaSqThreshold\ =\ 2*std::numeric\_limits<Scalar>::epsilon();\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Tight\ convergence\ tolerance}}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(LambdaSq)\ <\ LambdaSqThreshold\ \&\&\ v(0)\ >\ 0.0)}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >=\ 2)}
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}CONVERGED:\ Newton\ decrement\ below\ threshold\ in\ \%i\ iterations\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00369\ }
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Evaluate\ cost\ and\ gradient\ for\ trial\ step}}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ xn\ =\ x\ +\ p;}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ Scalar\ fn\ =\ costFunc(xn,\ gn);}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ outOfDomain\ =\ !std::isfinite(fn)\ ||\ !gn.allFinite();\ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ Vector\ y\ =\ gn\ -\/\ g;}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ Scalar\ rho;}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfDomain)}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ trust\ region\ reduction\ and\ reject\ step}}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ dm\ =\ -\/pg\ -\/\ 0.5*p.dot(H*p);\ \ \ \textcolor{comment}{//\ Predicted\ reduction\ f\ -\/\ fp,\ where\ fp\ =\ f\ +\ p'*g\ +\ 0.5*p'*H*p}}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ (f\ -\/\ fn)/dm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Actual\ reduction\ divided\ by\ predicted\ reduction}}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00386\ }
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ <\ 0.1)}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 0.25*p.norm();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrease\ trust\ region\ radius}}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >\ 0.75\ \&\&\ p.norm()\ >\ 0.8*Delta)}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 2.0*Delta;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increase\ trust\ region\ radius}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00398\ }
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >=\ 0.001)}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accept\ the\ step}}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ xn;}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ fn;}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ gn;}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00406\ }
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ Hessian\ approximation}}
+\DoxyCodeLine{00408\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ sqrteps\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());}
+\DoxyCodeLine{00409\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outOfDomain)}
+\DoxyCodeLine{00410\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00411\ \ \ \ \ \ \ \ \ \ \ \ \ Vector\ w\ =\ y\ -\/\ H*p;}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ pw\ =\ p.dot(w);}
+\DoxyCodeLine{00413\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(pw)\ >\ sqrteps*p.norm()*w.norm())}
+\DoxyCodeLine{00414\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00415\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ s\ =\ \mbox{\hyperlink{namespacefuncmin_a90123447966b46b5a0861a34b68f16dc}{sgn}}(pw);}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Vector\ u\ =\ w.array()/std::sqrt(s*pw);}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ H\ =\ H\ +\ s*(u*u.transpose());}
+\DoxyCodeLine{00418\ }
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eigendecomposition\ of\ updated\ Hessian}}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::SelfAdjointEigenSolver<Matrix>\ eigenH(H);}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ v\ =\ eigenH.eigenvalues();}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Q\ =\ eigenH.eigenvectors();}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ should\ do\ a\ rank-\/one\ update\ of\ Q\ and\ v\ instead\ of\ a\ full\ eigendecomposition\ using,\ e.g.,}}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [1]\ Bunch,\ J.R.,\ Nielsen,\ C.P.\ and\ Sorensen,\ D.C.,\ 1978.\ Rank-\/one\ modification\ of\ the\ symmetric\ eigenproblem.\ Numerische\ Mathematik,\ 31(1),\ pp.31-\/48.}}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00427\ \ \ \ \ \}}
+\DoxyCodeLine{00428\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00429\ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}WARNING:\ maximum\ number\ of\ iterations\ reached\(\backslash\)n"{}});}
+\DoxyCodeLine{00430\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00431\ \}}
+\DoxyCodeLine{00432\ }
+\DoxyCodeLine{00447\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00448\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a6b7cf99bbc1aef61696e16452998f81c}{SR1Trust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00449\ \{}
+\DoxyCodeLine{00450\ \ \ \ \ Eigen::MatrixXd\ Q(x.size(),\ x.size());}
+\DoxyCodeLine{00451\ \ \ \ \ Eigen::VectorXd\ v(x.size());}
+\DoxyCodeLine{00452\ \ \ \ \ Q.setIdentity();}
+\DoxyCodeLine{00453\ \ \ \ \ v.fill(1.0);}
+\DoxyCodeLine{00454\ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ \mbox{\hyperlink{namespacefuncmin_a5bce3224539c2de39f587273194b07f9}{SR1TrustEig}}(costFunc,\ x,\ g,\ Q,\ v,\ verbosity);}
+\DoxyCodeLine{00455\ \ \ \ \ H\ =\ Q*v.asDiagonal()*Q.transpose();}
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{00457\ \}}
+\DoxyCodeLine{00458\ }
+\DoxyCodeLine{00472\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00473\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a6b7cf99bbc1aef61696e16452998f81c}{SR1Trust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00474\ \{}
+\DoxyCodeLine{00475\ \ \ \ \ Eigen::MatrixXd\ H(x.size(),\ x.size());}
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a6b7cf99bbc1aef61696e16452998f81c}{SR1Trust}}(costFunc,\ x,\ g,\ H,\ verbosity);}
+\DoxyCodeLine{00477\ \}}
+\DoxyCodeLine{00478\ }
+\DoxyCodeLine{00491\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00492\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a6b7cf99bbc1aef61696e16452998f81c}{SR1Trust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00493\ \{}
+\DoxyCodeLine{00494\ \ \ \ \ Eigen::VectorXd\ g(x.size());}
+\DoxyCodeLine{00495\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a6b7cf99bbc1aef61696e16452998f81c}{SR1Trust}}(costFunc,\ x,\ g,\ verbosity);}
+\DoxyCodeLine{00496\ \}}
+\DoxyCodeLine{00497\ }
+\DoxyCodeLine{00513\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00514\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_ac1f73e1e0cf8ec583ff407b4db1bc470}{BFGSTrustSqrt}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ Xi,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00515\ \{}
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ Scalar;}
+\DoxyCodeLine{00517\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::VectorXd\ Vector;}
+\DoxyCodeLine{00518\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::MatrixXd\ Matrix;}
+\DoxyCodeLine{00519\ }
+\DoxyCodeLine{00520\ \ \ \ \ assert(x.cols()\ ==\ 1);}
+\DoxyCodeLine{00521\ \ \ \ \ g.resize(x.size());}
+\DoxyCodeLine{00522\ \ \ \ \ assert(Xi.isUpperTriangular());}
+\DoxyCodeLine{00523\ }
+\DoxyCodeLine{00524\ \ \ \ \ \textcolor{comment}{//\ Storage\ for\ trial\ point\ and\ gradient}}
+\DoxyCodeLine{00525\ \ \ \ \ Vector\ xn(x.size());}
+\DoxyCodeLine{00526\ \ \ \ \ Vector\ gn(x.size());}
+\DoxyCodeLine{00527\ }
+\DoxyCodeLine{00528\ \ \ \ \ \textcolor{comment}{//\ Evaluate\ initial\ cost\ and\ gradient}}
+\DoxyCodeLine{00529\ \ \ \ \ Scalar\ f\ =\ costFunc(x,\ g);}
+\DoxyCodeLine{00530\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::isfinite(f)\ ||\ !g.allFinite())\ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00531\ \ \ \ \ \{}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}ERROR:\ Initial\ point\ is\ not\ in\ domain\ of\ cost\ function\(\backslash\)n"{}});}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00535\ \ \ \ \ \}}
+\DoxyCodeLine{00536\ }
+\DoxyCodeLine{00537\ \ \ \ \ Scalar\ Delta\ =\ 10e0;\ \ \ \ \ \textcolor{comment}{//\ Initial\ trust-\/region\ radius}}
+\DoxyCodeLine{00538\ }
+\DoxyCodeLine{00539\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ maxIterations\ =\ 5000;}
+\DoxyCodeLine{00540\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ maxIterations;\ ++i)}
+\DoxyCodeLine{00541\ \ \ \ \ \{}
+\DoxyCodeLine{00542\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ trust-\/region\ subproblem}}
+\DoxyCodeLine{00543\ \ \ \ \ \ \ \ \ Vector\ p;}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefuncmin_aafd08c8cf500feab0ebf4a452c0a88be}{trsSqrt}}(Xi,\ g,\ Delta,\ p);\ \ \ \textcolor{comment}{//\ minimise\ 0.5*p.'*Xi.'*Xi*p\ +\ g.'*p\ subject\ to\ ||Xi*p||\ <=\ Delta}}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ Vector\ z\ =\ Xi*p;}
+\DoxyCodeLine{00546\ }
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ Scalar\ pg\ =\ p.dot(g);}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ Scalar\ LambdaSq\ =\ -\/pg;\ \ \textcolor{comment}{//\ The\ Newton\ decrement\ squared\ is\ g.'*inv(H)*g\ =\ p.'*H*p\ =\ p.'*Xi.'*Xi*p}}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 3)}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}Iter\ =\ \%5i,\ Cost\ =\ \%10.2e,\ Newton\ decr\string^2\ =\ \%10.2e,\ Delta\ =\ \%10.2e\(\backslash\)n"{}},\ i,\ f,\ LambdaSq,\ Delta);}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 1)}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{00553\ }
+\DoxyCodeLine{00554\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ LambdaSqThreshold\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());\ \ \ \ \ //\ Loose\ convergence\ tolerance}}
+\DoxyCodeLine{00555\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ LambdaSqThreshold\ =\ 2*std::numeric\_limits<Scalar>::epsilon();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tight\ convergence\ tolerance}}
+\DoxyCodeLine{00556\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(LambdaSq)\ <\ LambdaSqThreshold)}
+\DoxyCodeLine{00557\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00558\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >=\ 2)}
+\DoxyCodeLine{00559\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}CONVERGED:\ Newton\ decrement\ below\ threshold\ in\ \%i\ iterations\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{00560\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00562\ }
+\DoxyCodeLine{00563\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Evaluate\ cost\ and\ gradient\ for\ trial\ step}}
+\DoxyCodeLine{00564\ \ \ \ \ \ \ \ \ xn\ =\ x\ +\ p;}
+\DoxyCodeLine{00565\ \ \ \ \ \ \ \ \ Scalar\ fn\ =\ costFunc(xn,\ gn);}
+\DoxyCodeLine{00566\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ outOfDomain\ =\ !std::isfinite(fn)\ ||\ !gn.allFinite();\ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \ \ Vector\ y\ =\ gn\ -\/\ g;}
+\DoxyCodeLine{00568\ }
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ Scalar\ rho;}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfDomain)}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ trust\ region\ reduction\ and\ reject\ step}}
+\DoxyCodeLine{00573\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00574\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00575\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00576\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ dm\ =\ -\/pg\ -\/\ 0.5*z.squaredNorm();\ \ \ \textcolor{comment}{//\ Predicted\ reduction\ f\ -\/\ fp,\ where\ fp\ =\ f\ +\ p'*g\ +\ 0.5*p'*H*p}}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ (f\ -\/\ fn)/dm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Actual\ reduction\ divided\ by\ predicted\ reduction}}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00579\ }
+\DoxyCodeLine{00580\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ <\ 0.1)}
+\DoxyCodeLine{00581\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00582\ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 0.25*z.norm();\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrease\ trust\ region\ radius}}
+\DoxyCodeLine{00583\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00584\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >\ 0.75\ \&\&\ z.norm()\ >\ 0.8*Delta)}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 2.0*Delta;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increase\ trust\ region\ radius}}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00591\ }
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >=\ 0.001)}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accept\ the\ step}}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ xn;}
+\DoxyCodeLine{00596\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ fn;}
+\DoxyCodeLine{00597\ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ gn;}
+\DoxyCodeLine{00598\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00599\ }
+\DoxyCodeLine{00600\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ Hessian\ approximation}}
+\DoxyCodeLine{00601\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ sqrteps\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());}
+\DoxyCodeLine{00602\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outOfDomain)}
+\DoxyCodeLine{00603\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00604\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ py\ =\ p.dot(y);}
+\DoxyCodeLine{00605\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (py\ >\ sqrteps*y.norm()*p.norm())}
+\DoxyCodeLine{00606\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00607\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Form}}
+\DoxyCodeLine{00608\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ Xi*p,\ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ ]}}
+\DoxyCodeLine{00609\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ \ \ \ 0,\ y\string^T/sqrt(y\string^T*p)\ ]}}
+\DoxyCodeLine{00610\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Matrix\ RR(Xi.rows()\ +\ 1,\ Xi.cols()\ +\ 1);}
+\DoxyCodeLine{00611\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RR\ <<\ Xi*p,\ Xi,}
+\DoxyCodeLine{00612\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ y.transpose()/std::sqrt(py);}
+\DoxyCodeLine{00613\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Q-\/less\ QR\ yields}}
+\DoxyCodeLine{00614\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ R1,\ R2\ ]}}
+\DoxyCodeLine{00615\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ \ 0,\ R3\ ]}}
+\DoxyCodeLine{00616\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>>\ qr(RR);\ \ \ \ \textcolor{comment}{//\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{00617\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ RR.bottomRightCorner(Xi.rows(),\ Xi.cols()).triangularView<Eigen::Upper>();}
+\DoxyCodeLine{00618\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00619\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00620\ \ \ \ \ \}}
+\DoxyCodeLine{00621\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}WARNING:\ maximum\ number\ of\ iterations\ reached\(\backslash\)n"{}});}
+\DoxyCodeLine{00623\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00624\ \}}
+\DoxyCodeLine{00625\ }
+\DoxyCodeLine{00640\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00641\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a50c78b531d01ee12ab57fac2fa026c64}{BFGSTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00642\ \{}
+\DoxyCodeLine{00643\ \ \ \ \ Eigen::MatrixXd\ Xi(x.size(),\ x.size());}
+\DoxyCodeLine{00644\ \ \ \ \ Xi.setIdentity();}
+\DoxyCodeLine{00645\ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ \mbox{\hyperlink{namespacefuncmin_ac1f73e1e0cf8ec583ff407b4db1bc470}{BFGSTrustSqrt}}(costFunc,\ x,\ g,\ Xi,\ verbosity);}
+\DoxyCodeLine{00646\ \ \ \ \ H\ =\ Xi.transpose()*Xi;}
+\DoxyCodeLine{00647\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{00648\ \}}
+\DoxyCodeLine{00649\ }
+\DoxyCodeLine{00663\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00664\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a50c78b531d01ee12ab57fac2fa026c64}{BFGSTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00665\ \{}
+\DoxyCodeLine{00666\ \ \ \ \ Eigen::MatrixXd\ H(x.size(),\ x.size());}
+\DoxyCodeLine{00667\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a50c78b531d01ee12ab57fac2fa026c64}{BFGSTrust}}(costFunc,\ x,\ g,\ H,\ verbosity);}
+\DoxyCodeLine{00668\ \}}
+\DoxyCodeLine{00669\ }
+\DoxyCodeLine{00682\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00683\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a50c78b531d01ee12ab57fac2fa026c64}{BFGSTrust}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00684\ \{}
+\DoxyCodeLine{00685\ \ \ \ \ Eigen::VectorXd\ g(x.size());}
+\DoxyCodeLine{00686\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a50c78b531d01ee12ab57fac2fa026c64}{BFGSTrust}}(costFunc,\ x,\ g,\ verbosity);}
+\DoxyCodeLine{00687\ \}}
+\DoxyCodeLine{00688\ }
+\DoxyCodeLine{00704\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00705\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a1f4d972989b5a583f5fdc8e70d87ebaa}{BFGSTrustSqrtInv}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ S,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00706\ \{}
+\DoxyCodeLine{00707\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ Scalar;}
+\DoxyCodeLine{00708\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::VectorXd\ Vector;}
+\DoxyCodeLine{00709\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::MatrixXd\ Matrix;}
+\DoxyCodeLine{00710\ }
+\DoxyCodeLine{00711\ \ \ \ \ assert(x.cols()\ ==\ 1);}
+\DoxyCodeLine{00712\ \ \ \ \ g.resize(x.size());}
+\DoxyCodeLine{00713\ \ \ \ \ assert(S.isUpperTriangular());}
+\DoxyCodeLine{00714\ }
+\DoxyCodeLine{00715\ \ \ \ \ \textcolor{comment}{//\ Storage\ for\ trial\ point\ and\ gradient}}
+\DoxyCodeLine{00716\ \ \ \ \ Vector\ xn(x.size());}
+\DoxyCodeLine{00717\ \ \ \ \ Vector\ gn(x.size());}
+\DoxyCodeLine{00718\ }
+\DoxyCodeLine{00719\ \ \ \ \ \textcolor{comment}{//\ Evaluate\ initial\ cost\ and\ gradient}}
+\DoxyCodeLine{00720\ \ \ \ \ Scalar\ f\ =\ costFunc(x,\ g);}
+\DoxyCodeLine{00721\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::isfinite(f)\ ||\ !g.allFinite())\ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00722\ \ \ \ \ \{}
+\DoxyCodeLine{00723\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00724\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}ERROR:\ Initial\ point\ is\ not\ in\ domain\ of\ cost\ function\(\backslash\)n"{}});}
+\DoxyCodeLine{00725\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00726\ \ \ \ \ \}}
+\DoxyCodeLine{00727\ }
+\DoxyCodeLine{00728\ \ \ \ \ Scalar\ Delta\ =\ 10e0;\ \ \ \ \ \textcolor{comment}{//\ Initial\ trust-\/region\ radius}}
+\DoxyCodeLine{00729\ }
+\DoxyCodeLine{00730\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ maxIterations\ =\ 5000;}
+\DoxyCodeLine{00731\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ maxIterations;\ ++i)}
+\DoxyCodeLine{00732\ \ \ \ \ \{}
+\DoxyCodeLine{00733\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ trust-\/region\ subproblem}}
+\DoxyCodeLine{00734\ \ \ \ \ \ \ \ \ Vector\ p;}
+\DoxyCodeLine{00735\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{namespacefuncmin_ac35752d9f2d6d61e5df0ba0542d5910d}{trsSqrtInv}}(S,\ g,\ Delta,\ p);\ \ \ \textcolor{comment}{//\ minimise\ 0.5*p.'*inv(S.'*S)*p\ +\ g.'*p\ subject\ to\ ||inv(S.')*p||\ <=\ Delta}}
+\DoxyCodeLine{00736\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ S.'*z\ =\ p\ for\ z}}
+\DoxyCodeLine{00737\ \ \ \ \ \ \ \ \ Vector\ z\ =\ S.triangularView<Eigen::Upper>().transpose().solve(p);}
+\DoxyCodeLine{00738\ }
+\DoxyCodeLine{00739\ \ \ \ \ \ \ \ \ Scalar\ pg\ =\ p.dot(g);}
+\DoxyCodeLine{00740\ \ \ \ \ \ \ \ \ Scalar\ LambdaSq\ =\ -\/pg;\ \ \textcolor{comment}{//\ The\ Newton\ decrement\ squared\ is\ g.'*inv(H)*g\ =\ p.'*H*p\ =\ p.'*inv(S.'*S)*p}}
+\DoxyCodeLine{00741\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 3)}
+\DoxyCodeLine{00742\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}Iter\ =\ \%5i,\ Cost\ =\ \%10.2e,\ Newton\ decr\string^2\ =\ \%10.2e,\ Delta\ =\ \%10.2e\(\backslash\)n"{}},\ i,\ f,\ LambdaSq,\ Delta);}
+\DoxyCodeLine{00743\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 1)}
+\DoxyCodeLine{00744\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{00745\ }
+\DoxyCodeLine{00746\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ LambdaSqThreshold\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());\ \ \ \ \ //\ Loose\ convergence\ tolerance}}
+\DoxyCodeLine{00747\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ LambdaSqThreshold\ =\ 2*std::numeric\_limits<Scalar>::epsilon();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Tight\ convergence\ tolerance}}
+\DoxyCodeLine{00748\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(LambdaSq)\ <\ LambdaSqThreshold)}
+\DoxyCodeLine{00749\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00750\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >=\ 2)}
+\DoxyCodeLine{00751\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}CONVERGED:\ Newton\ decrement\ below\ threshold\ in\ \%i\ iterations\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{00752\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00753\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00754\ }
+\DoxyCodeLine{00755\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Evaluate\ cost\ and\ gradient\ for\ trial\ step}}
+\DoxyCodeLine{00756\ \ \ \ \ \ \ \ \ xn\ =\ x\ +\ p;}
+\DoxyCodeLine{00757\ \ \ \ \ \ \ \ \ Scalar\ fn\ =\ costFunc(xn,\ gn);}
+\DoxyCodeLine{00758\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ outOfDomain\ =\ !std::isfinite(fn)\ ||\ !gn.allFinite();\ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00759\ \ \ \ \ \ \ \ \ Vector\ y\ =\ gn\ -\/\ g;}
+\DoxyCodeLine{00760\ }
+\DoxyCodeLine{00761\ \ \ \ \ \ \ \ \ Scalar\ rho;}
+\DoxyCodeLine{00762\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfDomain)}
+\DoxyCodeLine{00763\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00764\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ trust\ region\ reduction\ and\ reject\ step}}
+\DoxyCodeLine{00765\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00766\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00767\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00768\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ dm\ =\ -\/pg\ -\/\ 0.5*z.squaredNorm();\ \ \ \textcolor{comment}{//\ Predicted\ reduction\ f\ -\/\ fp,\ where\ fp\ =\ f\ +\ p'*g\ +\ 0.5*p'*H*p}}
+\DoxyCodeLine{00769\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ (f\ -\/\ fn)/dm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Actual\ reduction\ divided\ by\ predicted\ reduction}}
+\DoxyCodeLine{00770\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00771\ }
+\DoxyCodeLine{00772\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ <\ 0.1)}
+\DoxyCodeLine{00773\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00774\ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 0.25*z.norm();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Decrease\ trust\ region\ radius}}
+\DoxyCodeLine{00775\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00776\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00777\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00778\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >\ 0.75\ \&\&\ z.norm()\ >\ 0.8*Delta)}
+\DoxyCodeLine{00779\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00780\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Delta\ =\ 2.0*Delta;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Increase\ trust\ region\ radius}}
+\DoxyCodeLine{00781\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00782\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00783\ }
+\DoxyCodeLine{00784\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >=\ 0.001)}
+\DoxyCodeLine{00785\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00786\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accept\ the\ step}}
+\DoxyCodeLine{00787\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ xn;}
+\DoxyCodeLine{00788\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ fn;}
+\DoxyCodeLine{00789\ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ gn;}
+\DoxyCodeLine{00790\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00791\ }
+\DoxyCodeLine{00792\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ Hessian\ approximation}}
+\DoxyCodeLine{00793\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ sqrteps\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());}
+\DoxyCodeLine{00794\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outOfDomain)}
+\DoxyCodeLine{00795\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00796\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ py\ =\ p.dot(y);}
+\DoxyCodeLine{00797\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (py\ >\ sqrteps*y.norm()*p.norm())}
+\DoxyCodeLine{00798\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00799\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Form}}
+\DoxyCodeLine{00800\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ \ \ \ \ \ \ p\string^T/sqrt(y\string^T*p)\ ]}}
+\DoxyCodeLine{00801\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ S*(I\ -\/\ y*p\string^T/(y\string^T*p))\ ]}}
+\DoxyCodeLine{00802\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Matrix\ RR(x.size()\ +\ 1,\ x.size());}
+\DoxyCodeLine{00803\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RR\ <<\ p.transpose()/std::sqrt(py),}
+\DoxyCodeLine{00804\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S*(Eigen::MatrixXd::Identity(x.size(),\ x.size())\ -\/\ y*p.transpose()/py);}
+\DoxyCodeLine{00805\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Q-\/less\ QR}}
+\DoxyCodeLine{00806\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>>\ qr(RR);\ \ \ \ \textcolor{comment}{//\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{00807\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ S\ =\ RR.topRows(x.size()).triangularView<Eigen::Upper>();}
+\DoxyCodeLine{00808\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00809\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00810\ \ \ \ \ \}}
+\DoxyCodeLine{00811\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00812\ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}WARNING:\ maximum\ number\ of\ iterations\ reached\(\backslash\)n"{}});}
+\DoxyCodeLine{00813\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{00814\ \}}
+\DoxyCodeLine{00815\ }
+\DoxyCodeLine{00831\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00832\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a4bba38561b6514f722b6878fdf9381a0}{BFGSTrustInv}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00833\ \{}
+\DoxyCodeLine{00834\ \ \ \ \ Eigen::MatrixXd\ S(x.size(),\ x.size());}
+\DoxyCodeLine{00835\ \ \ \ \ S.setIdentity();}
+\DoxyCodeLine{00836\ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ \mbox{\hyperlink{namespacefuncmin_a1f4d972989b5a583f5fdc8e70d87ebaa}{BFGSTrustSqrtInv}}(costFunc,\ x,\ g,\ S,\ verbosity);}
+\DoxyCodeLine{00837\ \ \ \ \ Eigen::MatrixXd\ Xi\ =\ S.triangularView<Eigen::Upper>().transpose().solve(Eigen::MatrixXd::Identity(x.size(),\ x.size()));}
+\DoxyCodeLine{00838\ \ \ \ \ Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixXd>>\ qr(Xi);\ \ \ \ \ \ \ \textcolor{comment}{//\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{00839\ \ \ \ \ Xi\ =\ Xi.triangularView<Eigen::Upper>();\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Safe\ aliasing}}
+\DoxyCodeLine{00840\ \ \ \ \ H\ =\ Xi.transpose()*Xi;}
+\DoxyCodeLine{00841\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{00842\ \}}
+\DoxyCodeLine{00843\ }
+\DoxyCodeLine{00857\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00858\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a4bba38561b6514f722b6878fdf9381a0}{BFGSTrustInv}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00859\ \{}
+\DoxyCodeLine{00860\ \ \ \ \ Eigen::MatrixXd\ H(x.size(),\ x.size());}
+\DoxyCodeLine{00861\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a4bba38561b6514f722b6878fdf9381a0}{BFGSTrustInv}}(costFunc,\ x,\ g,\ H,\ verbosity);}
+\DoxyCodeLine{00862\ \}}
+\DoxyCodeLine{00863\ }
+\DoxyCodeLine{00876\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00877\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a4bba38561b6514f722b6878fdf9381a0}{BFGSTrustInv}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00878\ \{}
+\DoxyCodeLine{00879\ \ \ \ \ Eigen::VectorXd\ g(x.size());}
+\DoxyCodeLine{00880\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a4bba38561b6514f722b6878fdf9381a0}{BFGSTrustInv}}(costFunc,\ x,\ g,\ verbosity);}
+\DoxyCodeLine{00881\ \}}
+\DoxyCodeLine{00882\ }
+\DoxyCodeLine{00898\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{00899\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_aa0ef432f7bf2f373a36fe1a0a5ed986f}{BFGSLMSqrt}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ Xi,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{00900\ \{}
+\DoxyCodeLine{00901\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{double}\ Scalar;}
+\DoxyCodeLine{00902\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::VectorX<Scalar>\ Vector;}
+\DoxyCodeLine{00903\ \ \ \ \ \textcolor{keyword}{typedef}\ Eigen::MatrixX<Scalar>\ Matrix;}
+\DoxyCodeLine{00904\ }
+\DoxyCodeLine{00905\ \ \ \ \ assert(x.cols()\ ==\ 1);}
+\DoxyCodeLine{00906\ \ \ \ \ g.resize(x.size());}
+\DoxyCodeLine{00907\ \ \ \ \ assert(Xi.isUpperTriangular());}
+\DoxyCodeLine{00908\ }
+\DoxyCodeLine{00909\ \ \ \ \ \textcolor{comment}{//\ Storage\ for\ trial\ point\ and\ gradient}}
+\DoxyCodeLine{00910\ \ \ \ \ Vector\ xn(x.size());}
+\DoxyCodeLine{00911\ \ \ \ \ Vector\ gn(x.size());}
+\DoxyCodeLine{00912\ }
+\DoxyCodeLine{00913\ \ \ \ \ \textcolor{comment}{//\ Evaluate\ initial\ cost\ and\ gradient}}
+\DoxyCodeLine{00914\ \ \ \ \ Scalar\ f\ =\ costFunc(x,\ g);}
+\DoxyCodeLine{00915\ \ \ \ \ \textcolor{keywordflow}{if}\ (!std::isfinite(f)\ ||\ !g.allFinite())\ \ \ \ \ \ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00916\ \ \ \ \ \{}
+\DoxyCodeLine{00917\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{00918\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}ERROR:\ Initial\ point\ is\ not\ in\ domain\ of\ cost\ function\(\backslash\)n"{}});}
+\DoxyCodeLine{00919\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ -\/1;}
+\DoxyCodeLine{00920\ \ \ \ \ \}}
+\DoxyCodeLine{00921\ }
+\DoxyCodeLine{00922\ \ \ \ \ \textcolor{comment}{//\ Scalar\ maxDiagH\ =\ (Xi.transpose()*Xi).diagonal().maxCoeff();}}
+\DoxyCodeLine{00923\ \ \ \ \ \textcolor{comment}{//\ Scalar\ Delta\ =\ 10e0;\ \ \ \ \ //\ Initial\ trust-\/region\ radius}}
+\DoxyCodeLine{00924\ \ \ \ \ Scalar\ lambda\ =\ 1e-\/7;}
+\DoxyCodeLine{00925\ \ \ \ \ \textcolor{comment}{//\ Scalar\ lambda\ =\ 1e-\/10*(Xi.transpose()*Xi).diagonal().maxCoeff();}}
+\DoxyCodeLine{00926\ \ \ \ \ \textcolor{comment}{//\ Scalar\ lambda\ =\ 1e-\/2;}}
+\DoxyCodeLine{00927\ \ \ \ \ \textcolor{comment}{//\ Scalar\ nu\ =\ 2.0;}}
+\DoxyCodeLine{00928\ \ \ \ \ \textcolor{comment}{//\ Scalar\ alpha\ =\ 0.00;\ \ \ \ \ \ \ \ \ //\ 0:\ robust,\ 1:\ fast}}
+\DoxyCodeLine{00929\ }
+\DoxyCodeLine{00930\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ maxIterations\ =\ 5000;}
+\DoxyCodeLine{00931\ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ maxIterations;\ ++i)}
+\DoxyCodeLine{00932\ \ \ \ \ \{}
+\DoxyCodeLine{00933\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ the\ secular\ equation\ (Xi.'*Xi\ +\ lambda*I)*p\ =\ -\/g\ for\ p}}
+\DoxyCodeLine{00934\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Matrix\ XiI(Xi.rows()\ +\ Xi.cols(),\ Xi.cols());}}
+\DoxyCodeLine{00935\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ XiI\ <<\ Xi,}}
+\DoxyCodeLine{00936\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ \ \ std::sqrt(lambda)*Matrix::Identity(Xi.cols(),\ Xi.cols());}}
+\DoxyCodeLine{00937\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eigen::HouseholderQR<Eigen::Ref<Matrix>>\ qr(XiI);\ \ \ \ //\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{00938\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Vector\ p\ =\ -\/XiI.topRows(Xi.cols()).triangularView<Eigen::Upper>().solve(}}
+\DoxyCodeLine{00939\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ \ \ \ \ XiI.topRows(Xi.cols()).triangularView<Eigen::Upper>().transpose().solve(g)}}
+\DoxyCodeLine{00940\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ );}}
+\DoxyCodeLine{00941\ }
+\DoxyCodeLine{00942\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Solve\ (\ H\ +\ lambda*diag(H)\ )*p\ =\ -\/g\ for\ p}}
+\DoxyCodeLine{00943\ \ \ \ \ \ \ \ \ Matrix\ XiI(Xi.rows()\ +\ Xi.cols(),\ Xi.cols());}
+\DoxyCodeLine{00944\ \ \ \ \ \ \ \ \ Vector\ d\ =\ Xi.array().square().colwise().sum();\ \textcolor{comment}{//\ diag(H)}}
+\DoxyCodeLine{00945\ \ \ \ \ \ \ \ \ Scalar\ tol\ =\ Xi.cols()*std::numeric\_limits<Scalar>::epsilon()*d.maxCoeff();}
+\DoxyCodeLine{00946\ \ \ \ \ \ \ \ \ d.cwiseMax(tol);}
+\DoxyCodeLine{00947\ \ \ \ \ \ \ \ \ Matrix\ sqrtLambdaH\ =\ (lambda*d).cwiseSqrt().asDiagonal();}
+\DoxyCodeLine{00948\ \ \ \ \ \ \ \ \ XiI\ <<\ Xi,\ sqrtLambdaH;}
+\DoxyCodeLine{00949\ \ \ \ \ \ \ \ \ Eigen::HouseholderQR<Eigen::Ref<Matrix>>\ qr(XiI);\ \ \ \ \textcolor{comment}{//\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{00950\ \ \ \ \ \ \ \ \ Vector\ p\ =\ -\/XiI.topRows(Xi.cols()).triangularView<Eigen::Upper>().solve(}
+\DoxyCodeLine{00951\ \ \ \ \ \ \ \ \ \ \ \ \ XiI.topRows(Xi.cols()).triangularView<Eigen::Upper>().transpose().solve(g)}
+\DoxyCodeLine{00952\ \ \ \ \ \ \ \ \ );}
+\DoxyCodeLine{00953\ }
+\DoxyCodeLine{00954\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ trsSqrt(Xi,\ g,\ Delta,\ p);\ \ \ //\ minimise\ 0.5*p.'*Xi.'*Xi*p\ +\ g.'*p\ subject\ to\ ||Xi*p||\ <=\ Delta}}
+\DoxyCodeLine{00955\ \ \ \ \ \ \ \ \ Vector\ z\ =\ Xi*p;}
+\DoxyCodeLine{00956\ }
+\DoxyCodeLine{00957\ \ \ \ \ \ \ \ \ Scalar\ pg\ =\ p.dot(g);}
+\DoxyCodeLine{00958\ \ \ \ \ \ \ \ \ Scalar\ NewtonDecrSq\ =\ -\/pg;\ \ \textcolor{comment}{//\ The\ Newton\ decrement\ squared\ is\ g.'*inv(H)*g\ =\ p.'*H*p\ =\ p.'*Xi.'*Xi*p\ if\ p\ is\ the\ Newton\ step}}
+\DoxyCodeLine{00959\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Scalar\ NewtonDecrSq\ =\ z.squaredNorm();}}
+\DoxyCodeLine{00960\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 3)}
+\DoxyCodeLine{00961\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}Iter\ =\ \%5i,\ Cost\ =\ \%10.2e,\ Newton\ decr\string^2\ =\ \%10.2e,\ Lambda\ =\ \%10.2e\(\backslash\)n"{}},\ i,\ f,\ NewtonDecrSq,\ lambda);}
+\DoxyCodeLine{00962\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ ==\ 1)}
+\DoxyCodeLine{00963\ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}."{}});}
+\DoxyCodeLine{00964\ }
+\DoxyCodeLine{00965\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ NewtonDecrSqThreshold\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());\ \ \ \ \ //\ Loose\ convergence\ tolerance}}
+\DoxyCodeLine{00966\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ const\ Scalar\ NewtonDecrSqThreshold\ =\ 2*std::numeric\_limits<Scalar>::epsilon();\ \ \ \ \ \ \ \ \ \ \ \ \ \ //\ Tight\ convergence\ tolerance}}
+\DoxyCodeLine{00967\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ NewtonDecrSqThreshold\ =\ 1e3*std::numeric\_limits<Scalar>::epsilon();}
+\DoxyCodeLine{00968\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (std::fabs(NewtonDecrSq)\ <\ NewtonDecrSqThreshold)}
+\DoxyCodeLine{00969\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00970\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >=\ 2)}
+\DoxyCodeLine{00971\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}CONVERGED:\ Newton\ decrement\ below\ threshold\ in\ \%i\ iterations\(\backslash\)n"{}},\ i);}
+\DoxyCodeLine{00972\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ 0;}
+\DoxyCodeLine{00973\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00974\ }
+\DoxyCodeLine{00975\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Evaluate\ cost\ and\ gradient\ for\ trial\ step}}
+\DoxyCodeLine{00976\ \ \ \ \ \ \ \ \ xn\ =\ x\ +\ p;}
+\DoxyCodeLine{00977\ \ \ \ \ \ \ \ \ Scalar\ fn\ =\ costFunc(xn,\ gn);}
+\DoxyCodeLine{00978\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ outOfDomain\ =\ !std::isfinite(fn)\ ||\ !gn.allFinite();\ \ \ \textcolor{comment}{//\ if\ any\ nan,\ -\/inf\ or\ +inf}}
+\DoxyCodeLine{00979\ \ \ \ \ \ \ \ \ Vector\ y\ =\ gn\ -\/\ g;}
+\DoxyCodeLine{00980\ }
+\DoxyCodeLine{00981\ \ \ \ \ \ \ \ \ Scalar\ rho;}
+\DoxyCodeLine{00982\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (outOfDomain)}
+\DoxyCodeLine{00983\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00984\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ -\/1;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Force\ trust\ region\ reduction\ and\ reject\ step}}
+\DoxyCodeLine{00985\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00986\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00987\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00988\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ dm\ =\ -\/pg\ -\/\ 0.5*z.squaredNorm();\ \ \ \textcolor{comment}{//\ Predicted\ reduction\ f\ -\/\ fp,\ where\ fp\ =\ f\ +\ p'*g\ +\ 0.5*p'*H*p}}
+\DoxyCodeLine{00989\ \ \ \ \ \ \ \ \ \ \ \ \ rho\ =\ (f\ -\/\ fn)/dm;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Actual\ reduction\ divided\ by\ predicted\ reduction}}
+\DoxyCodeLine{00990\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00991\ }
+\DoxyCodeLine{00992\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ <\ 0.25)}
+\DoxyCodeLine{00993\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00994\ \ \ \ \ \ \ \ \ \ \ \ \ lambda\ =\ std::min(lambda*11.0,\ 1e7);}
+\DoxyCodeLine{00995\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00996\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00997\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00998\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >\ 0.75\ \textcolor{comment}{/*\&\&\ lambda*p.norm()\ >\ 0.8*/}\ \textcolor{comment}{/*\&\&\ lambda*p.norm()\ >\ 0.8*g.norm()*/})}
+\DoxyCodeLine{00999\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01000\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lambda\ =\ std::max(lambda/9.0,\ 1e-\/7);}
+\DoxyCodeLine{01001\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01002\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01003\ }
+\DoxyCodeLine{01004\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (rho\ >=\ 0.001)}
+\DoxyCodeLine{01005\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01006\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Accept\ the\ step}}
+\DoxyCodeLine{01007\ \ \ \ \ \ \ \ \ \ \ \ \ x\ =\ xn;}
+\DoxyCodeLine{01008\ \ \ \ \ \ \ \ \ \ \ \ \ f\ =\ fn;}
+\DoxyCodeLine{01009\ \ \ \ \ \ \ \ \ \ \ \ \ g\ =\ gn;}
+\DoxyCodeLine{01010\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01011\ }
+\DoxyCodeLine{01012\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Update\ Hessian\ approximation}}
+\DoxyCodeLine{01013\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ Scalar\ sqrteps\ =\ std::sqrt(std::numeric\_limits<Scalar>::epsilon());}
+\DoxyCodeLine{01014\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!outOfDomain)}
+\DoxyCodeLine{01015\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01016\ \ \ \ \ \ \ \ \ \ \ \ \ Scalar\ py\ =\ p.dot(y);}
+\DoxyCodeLine{01017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (py\ >\ sqrteps*y.norm()*p.norm())}
+\DoxyCodeLine{01018\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{01019\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Form}}
+\DoxyCodeLine{01020\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ Xi*p,\ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ ]}}
+\DoxyCodeLine{01021\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ \ \ \ 0,\ y\string^T/sqrt(y\string^T*p)\ ]}}
+\DoxyCodeLine{01022\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Matrix\ RR(Xi.rows()\ +\ 1,\ Xi.cols()\ +\ 1);}
+\DoxyCodeLine{01023\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ RR\ <<\ Xi*p,\ Xi,}
+\DoxyCodeLine{01024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0,\ y.transpose()/std::sqrt(py);}
+\DoxyCodeLine{01025\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Q-\/less\ QR\ yields}}
+\DoxyCodeLine{01026\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ R1,\ R2\ ]}}
+\DoxyCodeLine{01027\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ [\ \ 0,\ R3\ ]}}
+\DoxyCodeLine{01028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>>\ qr(RR);\ \ \ \ \textcolor{comment}{//\ In-\/place\ QR\ decomposition}}
+\DoxyCodeLine{01029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Xi\ =\ RR.bottomRightCorner(Xi.rows(),\ Xi.cols()).triangularView<Eigen::Upper>();}
+\DoxyCodeLine{01030\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01031\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{01032\ \ \ \ \ \}}
+\DoxyCodeLine{01033\ \ \ \ \ \textcolor{keywordflow}{if}\ (verbosity\ >\ 1)}
+\DoxyCodeLine{01034\ \ \ \ \ \ \ \ \ std::printf(\textcolor{stringliteral}{"{}WARNING:\ maximum\ number\ of\ iterations\ reached\(\backslash\)n"{}});}
+\DoxyCodeLine{01035\ \ \ \ \ \textcolor{keywordflow}{return}\ 1;}
+\DoxyCodeLine{01036\ \}}
+\DoxyCodeLine{01037\ }
+\DoxyCodeLine{01052\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{01053\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a867b4540fa51827a73fe33a6e9ff09de}{BFGSLM}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{01054\ \{}
+\DoxyCodeLine{01055\ \ \ \ \ Eigen::MatrixXd\ Xi(x.size(),\ x.size());}
+\DoxyCodeLine{01056\ \ \ \ \ Xi.setIdentity();}
+\DoxyCodeLine{01057\ \ \ \ \ \textcolor{keywordtype}{int}\ retval\ =\ \mbox{\hyperlink{namespacefuncmin_aa0ef432f7bf2f373a36fe1a0a5ed986f}{BFGSLMSqrt}}(costFunc,\ x,\ g,\ Xi,\ verbosity);}
+\DoxyCodeLine{01058\ \ \ \ \ H\ =\ Xi.transpose()*Xi;}
+\DoxyCodeLine{01059\ \ \ \ \ \textcolor{keywordflow}{return}\ retval;}
+\DoxyCodeLine{01060\ \}}
+\DoxyCodeLine{01061\ }
+\DoxyCodeLine{01075\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{01076\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a867b4540fa51827a73fe33a6e9ff09de}{BFGSLM}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ Eigen::VectorXd\ \&\ g,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{01077\ \{}
+\DoxyCodeLine{01078\ \ \ \ \ Eigen::MatrixXd\ H(x.size(),\ x.size());}
+\DoxyCodeLine{01079\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a867b4540fa51827a73fe33a6e9ff09de}{BFGSLM}}(costFunc,\ x,\ g,\ H,\ verbosity);}
+\DoxyCodeLine{01080\ \}}
+\DoxyCodeLine{01081\ }
+\DoxyCodeLine{01094\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Func>}
+\DoxyCodeLine{01095\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{namespacefuncmin_a867b4540fa51827a73fe33a6e9ff09de}{BFGSLM}}(Func\ costFunc,\ Eigen::VectorXd\ \&\ x,\ \textcolor{keywordtype}{int}\ verbosity\ =\ 0)}
+\DoxyCodeLine{01096\ \{}
+\DoxyCodeLine{01097\ \ \ \ \ Eigen::VectorXd\ g(x.size());}
+\DoxyCodeLine{01098\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespacefuncmin_a867b4540fa51827a73fe33a6e9ff09de}{BFGSLM}}(costFunc,\ x,\ g,\ verbosity);}
+\DoxyCodeLine{01099\ \}}
+\DoxyCodeLine{01100\ }
+\DoxyCodeLine{01101\ \}\ \textcolor{comment}{//\ end\ namespace}}
+\DoxyCodeLine{01102\ }
+\DoxyCodeLine{01103\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

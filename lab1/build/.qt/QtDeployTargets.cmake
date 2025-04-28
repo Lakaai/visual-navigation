@@ -1,0 +1,8 @@
+set(__QT_DEPLOY_TARGET_nanobench_FILE /home/luke/MCHA4400/lab1/build/_deps/nanobench-build/libnanobench.a)
+set(__QT_DEPLOY_TARGET_nanobench_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_common_FILE /home/luke/MCHA4400/lab1/build/libcommon.a)
+set(__QT_DEPLOY_TARGET_common_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_lab1_FILE /home/luke/MCHA4400/lab1/build/lab1)
+set(__QT_DEPLOY_TARGET_lab1_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_tests_FILE /home/luke/MCHA4400/lab1/build/tests)
+set(__QT_DEPLOY_TARGET_tests_TYPE EXECUTABLE)

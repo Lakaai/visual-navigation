@@ -1,0 +1,233 @@
+\doxysection{System\+Estimator Class Reference}
+\hypertarget{classSystemEstimator}{}\label{classSystemEstimator}\index{SystemEstimator@{SystemEstimator}}
+
+
+Class for system state estimation.  
+
+
+
+
+{\ttfamily \#include $<$System\+Estimator.\+h$>$}
+
+Inheritance diagram for System\+Estimator\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classSystemEstimator}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a}{System\+Estimator}} (const \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \&\mbox{\hyperlink{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}{density}})
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classSystemEstimator}{System\+Estimator} object with initial density. \end{DoxyCompactList}\item 
+\Hypertarget{classSystemEstimator_af4181a32f0ffd4506a7c6564f292fd85}\label{classSystemEstimator_af4181a32f0ffd4506a7c6564f292fd85} 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+System\+Estimator} ()
+\begin{DoxyCompactList}\small\item\em Destroy the \doxylink{classSystemEstimator}{System\+Estimator} object. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classSystemEstimator_a126bb1dd67e610ddd53f5b12654c1f38}{predict}} (double time, int scenario) override
+\begin{DoxyCompactList}\small\item\em Predict the system state at a given time. \end{DoxyCompactList}\item 
+virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemEstimator_a32bf8c1a8f14d7f3f1e543ee663a4bbf}{dynamics\+Est}} (const Eigen\+::\+Vector\+Xd \&x) const
+\begin{DoxyCompactList}\small\item\em Compute the estimated system dynamics. \end{DoxyCompactList}\item 
+virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemEstimator_a4527ea358f87a013d662cb9b0e4bd132}{dynamics\+Est}} (const Eigen\+::\+Vector\+Xd \&x, Eigen\+::\+Matrix\+Xd \&J) const
+\begin{DoxyCompactList}\small\item\em Compute the estimated system dynamics and its Jacobian. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classSystemBase}{System\+Base}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries System\+Base} ()
+\begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classSystemBase}{System\+Base} object. \end{DoxyCompactList}\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+System\+Base} ()
+\begin{DoxyCompactList}\small\item\em Destroy the \doxylink{classSystemBase}{System\+Base} object. \end{DoxyCompactList}\item 
+virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemBase_a6467036f6d258b0558b6408167859475}{dynamics}} (const Eigen\+::\+Vector\+Xd \&x) const =0
+\begin{DoxyCompactList}\small\item\em Compute the system dynamics. \end{DoxyCompactList}\item 
+virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemBase_a008fdd35de6706459dffd2064d37d0c1}{dynamics}} (const Eigen\+::\+Vector\+Xd \&x, Eigen\+::\+Matrix\+Xd \&J) const =0
+\begin{DoxyCompactList}\small\item\em Compute the system dynamics and its Jacobian. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}\label{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790} 
+\mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ {\bfseries density}
+\begin{DoxyCompactList}\small\item\em The current state density estimate. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classSystemEstimator_aea72cb60a0b33d1dff001bc4cb632d14}{augmented\+Dynamics\+Est}} (const Eigen\+::\+Matrix\+Xd \&X) const
+\begin{DoxyCompactList}\small\item\em Compute the augmented dynamics estimate. \end{DoxyCompactList}\item 
+Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemEstimator_a249d9ae42fa67c8a82ad5c9b87491b5a}{RK4\+SDEHelper}} (const Eigen\+::\+Vector\+Xd \&xdw, double dt, Eigen\+::\+Matrix\+Xd \&J) const
+\begin{DoxyCompactList}\small\item\em Helper function for Runge-\/\+Kutta 4th order method for SDEs. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classSystemEstimator_ae0a65aeef0e5c8c9b8994526313b4520}{process\+Noise\+Density}} (double dt, int scenario) const =0
+\begin{DoxyCompactList}\small\item\em Compute the process noise density. \end{DoxyCompactList}\item 
+virtual std\+::vector$<$ Eigen\+::\+Index $>$ \mbox{\hyperlink{classSystemEstimator_aa276332cdb668a97daaaeb732bedb706}{process\+Noise\+Index}} () const =0
+\begin{DoxyCompactList}\small\item\em Get the indices of state variables affected by process noise. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{classSystemBase}{System\+Base}}}
+\begin{DoxyCompactItemize}
+\item 
+double {\bfseries time\+\_\+}
+\begin{DoxyCompactList}\small\item\em The current system time. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for system state estimation. 
+
+This class extends \doxylink{classSystemBase}{System\+Base} to provide state estimation functionality. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a}\index{SystemEstimator@{SystemEstimator}!SystemEstimator@{SystemEstimator}}
+\index{SystemEstimator@{SystemEstimator}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{SystemEstimator()}{SystemEstimator()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a} 
+System\+Estimator\+::\+System\+Estimator (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \&}]{density}{}\end{DoxyParamCaption})}
+
+
+
+Construct a new \doxylink{classSystemEstimator}{System\+Estimator} object with initial density. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em density} & Initial state density. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classSystemEstimator_aea72cb60a0b33d1dff001bc4cb632d14}\index{SystemEstimator@{SystemEstimator}!augmentedDynamicsEst@{augmentedDynamicsEst}}
+\index{augmentedDynamicsEst@{augmentedDynamicsEst}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{augmentedDynamicsEst()}{augmentedDynamicsEst()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_aea72cb60a0b33d1dff001bc4cb632d14} 
+Eigen\+::\+Matrix\+Xd System\+Estimator\+::augmented\+Dynamics\+Est (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Matrix\+Xd \&}]{X}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Compute the augmented dynamics estimate. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em X} & The augmented state matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Eigen\+::\+Matrix\+Xd The augmented dynamics. 
+\end{DoxyReturn}
+\Hypertarget{classSystemEstimator_a32bf8c1a8f14d7f3f1e543ee663a4bbf}\index{SystemEstimator@{SystemEstimator}!dynamicsEst@{dynamicsEst}}
+\index{dynamicsEst@{dynamicsEst}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{dynamicsEst()}{dynamicsEst()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{classSystemEstimator_a32bf8c1a8f14d7f3f1e543ee663a4bbf} 
+Eigen\+::\+Vector\+Xd System\+Estimator\+::dynamics\+Est (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Compute the estimated system dynamics. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The current state vector. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The computed dynamics (state derivative). 
+\end{DoxyReturn}
+\Hypertarget{classSystemEstimator_a4527ea358f87a013d662cb9b0e4bd132}\index{SystemEstimator@{SystemEstimator}!dynamicsEst@{dynamicsEst}}
+\index{dynamicsEst@{dynamicsEst}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{dynamicsEst()}{dynamicsEst()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{classSystemEstimator_a4527ea358f87a013d662cb9b0e4bd132} 
+Eigen\+::\+Vector\+Xd System\+Estimator\+::dynamics\+Est (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{Eigen\+::\+Matrix\+Xd \&}]{J}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Compute the estimated system dynamics and its Jacobian. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & The current state vector. \\
+\hline
+{\em J} & Output parameter for the Jacobian matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The computed dynamics (state derivative). 
+\end{DoxyReturn}
+\Hypertarget{classSystemEstimator_a126bb1dd67e610ddd53f5b12654c1f38}\index{SystemEstimator@{SystemEstimator}!predict@{predict}}
+\index{predict@{predict}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{predict()}{predict()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_a126bb1dd67e610ddd53f5b12654c1f38} 
+void System\+Estimator\+::predict (\begin{DoxyParamCaption}\item[{double}]{time}{, }\item[{int}]{scenario}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Predict the system state at a given time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em time} & The time to predict the system state for. \\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{classSystemBase_a7088a65c78f001ac259c76d86c6087c9}{System\+Base}}.
+
+\Hypertarget{classSystemEstimator_ae0a65aeef0e5c8c9b8994526313b4520}\index{SystemEstimator@{SystemEstimator}!processNoiseDensity@{processNoiseDensity}}
+\index{processNoiseDensity@{processNoiseDensity}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{processNoiseDensity()}{processNoiseDensity()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_ae0a65aeef0e5c8c9b8994526313b4520} 
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ System\+Estimator\+::process\+Noise\+Density (\begin{DoxyParamCaption}\item[{double}]{dt}{, }\item[{int}]{scenario}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Compute the process noise density. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dt} & The time step. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The process noise density. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classSystemSLAM_ae7b6a842568a769f0981e9462a76b7aa}{System\+SLAM}}.
+
+\Hypertarget{classSystemEstimator_aa276332cdb668a97daaaeb732bedb706}\index{SystemEstimator@{SystemEstimator}!processNoiseIndex@{processNoiseIndex}}
+\index{processNoiseIndex@{processNoiseIndex}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{processNoiseIndex()}{processNoiseIndex()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_aa276332cdb668a97daaaeb732bedb706} 
+virtual std\+::vector$<$ Eigen\+::\+Index $>$ System\+Estimator\+::process\+Noise\+Index (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Get the indices of state variables affected by process noise. 
+
+\begin{DoxyReturn}{Returns}
+The indices of affected state variables. 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{classSystemSLAM_a21be1262b942ad302b8fef3efdf68a75}{System\+SLAM}}.
+
+\Hypertarget{classSystemEstimator_a249d9ae42fa67c8a82ad5c9b87491b5a}\index{SystemEstimator@{SystemEstimator}!RK4SDEHelper@{RK4SDEHelper}}
+\index{RK4SDEHelper@{RK4SDEHelper}!SystemEstimator@{SystemEstimator}}
+\doxysubsubsection{\texorpdfstring{RK4SDEHelper()}{RK4SDEHelper()}}
+{\footnotesize\ttfamily \label{classSystemEstimator_a249d9ae42fa67c8a82ad5c9b87491b5a} 
+Eigen\+::\+Vector\+Xd System\+Estimator\+::\+RK4\+SDEHelper (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{xdw}{, }\item[{double}]{dt}{, }\item[{Eigen\+::\+Matrix\+Xd \&}]{J}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Helper function for Runge-\/\+Kutta 4th order method for SDEs. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em xdw} & The state and noise vector. \\
+\hline
+{\em dt} & The time step. \\
+\hline
+{\em J} & Output parameter for the Jacobian matrix. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The updated state vector. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{SystemEstimator_8h}{System\+Estimator.\+h}}\item 
+src/System\+Estimator.\+cpp\end{DoxyCompactItemize}

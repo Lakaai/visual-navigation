@@ -1,0 +1,9 @@
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/common.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/lab2.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/tests.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/run_tests.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/edit_cache.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/rebuild_cache.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/_deps/nanobench-build/CMakeFiles/nanobench.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/_deps/nanobench-build/CMakeFiles/edit_cache.dir
+/home/luke/Documents/Github/MCHA4400/lab2/build/_deps/nanobench-build/CMakeFiles/rebuild_cache.dir

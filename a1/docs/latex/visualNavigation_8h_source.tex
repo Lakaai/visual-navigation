@@ -1,0 +1,31 @@
+\doxysection{visual\+Navigation.\+h}
+\hypertarget{visualNavigation_8h_source}{}\label{visualNavigation_8h_source}\index{src/visualNavigation.h@{src/visualNavigation.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ VISUALNAVIGATION\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ VISUALNAVIGATION\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <filesystem>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <opencv2/core/mat.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}Camera.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}imagefeatures.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}image\_features.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}MeasurementSLAMUniqueTagBundle.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}MeasurementSLAMIdenticalTagBundle.h"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}SystemSLAMPointLandmarks.h"{}}\ \ }
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keywordtype}{void}\ runVisualNavigationFromVideo(\textcolor{keyword}{const}\ std::filesystem::path\ \&\ videoPath,\ \textcolor{keyword}{const}\ std::filesystem::path\ \&\ cameraPath,\ \textcolor{keywordtype}{int}\ scenario\ =\ 3,\ \textcolor{keywordtype}{int}\ interactive\ =\ 0,\ \textcolor{keyword}{const}\ std::filesystem::path\ \&\ outputDirectory\ =\ \textcolor{stringliteral}{"{}"{}});}
+\DoxyCodeLine{00016\ \textcolor{keywordtype}{void}\ drawPoseAxes(cv::Mat\&\ img,\ \textcolor{keyword}{const}\ Eigen::Matrix4d\&\ pose,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structCamera}{Camera}}\&\ camera,\ \textcolor{keywordtype}{double}\ length);}
+\DoxyCodeLine{00017\ \textcolor{keywordtype}{void}\ visualizeMeasurements(cv::Mat\&\ outputImage,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structArUcoDetectionResult}{ArUcoDetectionResult}}\&\ result,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classMeasurementUniqueTagBundle}{MeasurementUniqueTagBundle}}\&\ measurement,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structCamera}{Camera}}\&\ cam);}
+\DoxyCodeLine{00018\ \textcolor{keywordtype}{void}\ visualizeMeasurementsIdenticalTags(cv::Mat\&\ outputImage,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structArUcoDetectionResult}{ArUcoDetectionResult}}\&\ result,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classMeasurementIdenticalTagBundle}{MeasurementIdenticalTagBundle}}\&\ measurement,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structCamera}{Camera}}\&\ cam);}
+\DoxyCodeLine{00019\ Eigen::Matrix<double,\ 8,\ Eigen::Dynamic>\ buildMeasurementVector(\textcolor{keyword}{const}\ std::vector<std::vector<cv::Point2f>>\&\ features);}
+\DoxyCodeLine{00020\ \textcolor{keywordtype}{void}\ printStateVector(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAMPoseLandmarks}{SystemSLAMPoseLandmarks}}\&\ system);}
+\DoxyCodeLine{00021\ \textcolor{keywordtype}{void}\ visualizePointLandmarks(cv::Mat\&\ image,\ \textcolor{keyword}{const}\ std::vector<PointFeature>\&\ landmarks);}
+\DoxyCodeLine{00022\ Eigen::Vector3d\ estimateLandmarkPosition(\textcolor{keyword}{const}\ \mbox{\hyperlink{structPointFeature}{PointFeature}}\&\ feature,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAMPointLandmarks}{SystemSLAMPointLandmarks}}\&\ system,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structCamera}{Camera}}\&\ camera);}
+\DoxyCodeLine{00023\ std::vector<PointFeature>\ selectInitialLandmarks(\textcolor{keyword}{const}\ std::vector<PointFeature>\&\ features,\ \textcolor{keywordtype}{int}\ maxLandmarks);}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
