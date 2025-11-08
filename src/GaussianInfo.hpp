@@ -544,7 +544,9 @@ public:
         const std::size_t & nA = idxA.size();
         const std::size_t & nB = idxB.size();
         const std::size_t n = nA + nB;
-        assert(n == dim());
+        // assert(n == dim());
+        assert(static_cast<std::size_t>(n) == dim());
+
 
         // Form [Xi(:, idxA), Xi(:, idxB), nu]
         Eigen::MatrixX<Scalar> RR(n, n + 1);
@@ -592,7 +594,6 @@ public:
     GaussianInfo affineTransform(Func h) const
     {
 
-
         Eigen::MatrixX<Scalar> J;
         Eigen::VectorX<Scalar> mux = mean();
         Eigen::VectorX<Scalar> muy = h(mux, J);      // Evaluate function at mean value
@@ -600,7 +601,10 @@ public:
         const std::size_t n = J.cols();
         assert(m == muy.size());
         assert(n == dim());
+        // std::cout << "mux = " << mux.transpose() << std::endl;
 
+    
+        // std::cout << "J = \n" << J << std::endl;
         // Linearise y = h(x) about x = mux
         // y ~= h(mux) + J*(x - mux)
         //    = J*x + h(mux) - J*mux
@@ -633,6 +637,7 @@ public:
         QR.bottomRows(m - r) << Eigen::MatrixX<Scalar>::Zero(m - r, n - r), 
                                 kappa * U2.transpose(), 
                                 kappa * U2.transpose() * b;
+                                
         // Q-less QR yields
         // [R1, R2, nu1;
         //   0, R3, nu2];
@@ -642,7 +647,7 @@ public:
 
         // p(y) = N^-0.5(y; r + R*(h(mux) - J*mux), R)
         GaussianInfo out(m);
-        // matrix.block(startRow, startCol, numRows, numCols)
+
         // Extract R3 (m x m matrix, left of nu2)
         Eigen::MatrixX<Scalar> R3 = RR.block(n - r, n - r, m, m).template triangularView<Eigen::Upper>();
 
@@ -652,6 +657,9 @@ public:
         out.Xi_ = R3;
         out.nu_ = nu2;
 
+        assert(!(out.Xi_.array().isNaN().any()));
+        assert(!(out.nu_.array().isNaN().any()));
+   
         return out;
     }
 

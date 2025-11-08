@@ -14,6 +14,8 @@
 #include <cassert>
 #include <limits>
 #include <Eigen/Core>
+#include <Eigen/SparseCore>
+#include <Eigen/SparseQR>
 #include <Eigen/Eigenvalues> 
 
 /**
@@ -84,6 +86,8 @@ int trsEig(const Eigen::MatrixXd & Q, const Eigen::VectorXd & v, const Eigen::Ve
  * @return 0 on success, non-zero on failure
  */
 int trsSqrt(const Eigen::MatrixXd & Xi, const Eigen::VectorXd & g, double D, Eigen::VectorXd & p);
+
+int trsSqrtSparse(const Eigen::SparseMatrix<double> & Xi, const Eigen::PermutationMatrix<Eigen::Dynamic> & Pi, const Eigen::VectorXd & g, double D, Eigen::VectorXd & p);
 
 /**
  * @brief Solve trust-region subproblem with square-root inverse Hessian
@@ -684,6 +688,162 @@ int BFGSTrust(Func costFunc, Eigen::VectorXd & x, int verbosity = 0)
 {
     Eigen::VectorXd g(x.size());
     return BFGSTrust(costFunc, x, g, verbosity);
+}
+
+template <typename Func>
+int BFGSTrustSqrtSparse(Func costFunc, Eigen::VectorXd & x, Eigen::VectorXd & g, Eigen::SparseMatrix<double> & Xi, Eigen::PermutationMatrix<Eigen::Dynamic> & Pi, int verbosity = 0)
+{
+    typedef double Scalar;
+    typedef Eigen::VectorXd Vector;
+    // typedef Eigen::MatrixXd Matrix;
+
+    assert(x.cols() == 1);
+    g.resize(x.size());
+    assert(Xi.toDense().isUpperTriangular());
+
+    // Storage for trial point and gradient
+    Vector xn(x.size());
+    Vector gn(x.size());
+
+    // Evaluate initial cost and gradient
+    Scalar f = costFunc(x, g);
+    if (!std::isfinite(f) || !g.allFinite())        // if any nan, -inf or +inf
+    {
+        if (verbosity > 1)
+            std::printf("ERROR: Initial point is not in domain of cost function\n");
+        return -1;
+    }
+
+    Scalar Delta = 10e0;     // Initial trust-region radius
+
+    const int maxIterations = 5000;
+    for (int i = 0; i < maxIterations; ++i)
+    {
+        // Solve trust-region subproblem
+        Vector p;
+        trsSqrtSparse(Xi, Pi, g, Delta, p); // minimise 0.5*p.'*Pi*Xi.'*Xi*Pi.'*p + g.'*p subject to ||Xi*Pi.'*p|| <= Delta
+        Vector z = Xi*Pi.transpose()*p;     // Xi*Pi.'*p
+
+        Scalar pg = p.dot(g);
+        Scalar LambdaSq = -pg;  // The Newton decrement squared is g.'*inv(H)*g = p.'*H*p = p.'*Xi.'*Xi*p
+        if (verbosity == 3)
+            std::printf("Iter = %5i, Cost = %10.2e, Newton decr^2 = %10.2e, Delta = %10.2e\n", i, f, LambdaSq, Delta);
+        if (verbosity == 1)
+            std::printf(".");
+
+        // const Scalar LambdaSqThreshold = std::sqrt(std::numeric_limits<Scalar>::epsilon());     // Loose convergence tolerance
+        const Scalar LambdaSqThreshold = 2*std::numeric_limits<Scalar>::epsilon();              // Tight convergence tolerance
+        if (std::fabs(LambdaSq) < LambdaSqThreshold)
+        {
+            if (verbosity >= 2)
+                std::printf("CONVERGED: Newton decrement below threshold in %i iterations\n", i);
+            return 0;
+        }
+
+        // Evaluate cost and gradient for trial step
+        xn = x + p;
+        Scalar fn = costFunc(xn, gn);
+        bool outOfDomain = !std::isfinite(fn) || !gn.allFinite();   // if any nan, -inf or +inf
+        Vector y = gn - g;
+
+        Scalar rho;
+        if (outOfDomain)
+        {
+            rho = -1;                           // Force trust region reduction and reject step
+        }
+        else
+        {
+            Scalar dm = -pg - 0.5*z.squaredNorm();   // Predicted reduction f - fp, where fp = f + p'*g + 0.5*p'*H*p
+            rho = (f - fn)/dm;                  // Actual reduction divided by predicted reduction
+        }
+
+        if (rho < 0.1)
+        {
+            Delta = 0.25*z.norm();            // Decrease trust region radius
+        }
+        else
+        {
+            if (rho > 0.75 && z.norm() > 0.8*Delta)
+            {
+                Delta = 2.0*Delta;              // Increase trust region radius
+            }
+        }
+
+        if (rho >= 0.001)
+        {
+            // Accept the step
+            x = xn;
+            f = fn;
+            g = gn;
+        }
+
+        // Update Hessian approximation
+        const Scalar sqrteps = std::sqrt(std::numeric_limits<Scalar>::epsilon());
+        if (!outOfDomain)
+        {
+            Scalar py = p.dot(y);
+            if (py > sqrteps*y.norm()*p.norm())
+            {
+                Eigen::SparseQR<Eigen::SparseMatrix<Scalar>, Eigen::COLAMDOrdering<int>> spqr_solver;
+
+                // Compute column-pivoting QR decomposition: [Xi*Pi.'*p; 0]*Pi1 = Q1*RR1 = [Y1, Z1]*[R1; 0], where Pi1 reduces fill-in of R1
+                Eigen::VectorX<Scalar> XiPiTp_0(Xi.rows() + 1);
+                XiPiTp_0 << Xi*Pi.transpose()*p, 0;
+                spqr_solver.compute(XiPiTp_0.sparseView());
+
+                // [Xi*Pi.'; y.'/realsqrt(py)]
+                Eigen::SparseMatrix<Scalar> XiPiT_yTsqrtpy(Xi.rows() + 1, Xi.cols());
+                // Copy Xi*Pi.transpose() into top rows of XiPiT_yTsqrtpy
+                Eigen::SparseMatrix<Scalar> XiPiT = Xi*Pi.transpose();
+                for (int k = 0; k < XiPiT.outerSize(); ++k)
+                    for (typename Eigen::SparseMatrix<Scalar>::InnerIterator it(XiPiT, k); it; ++it)
+                        XiPiT_yTsqrtpy.insert(it.row(), it.col()) = it.value();
+                // Copy y.transpose()/std::sqrt(py) into bottom row of XiPiT_yTsqrtpy
+                Eigen::RowVectorX<Scalar> yTsqrtpy = y.transpose()/std::sqrt(py);
+                for (int i = 0; i < Xi.cols(); ++i)
+                    XiPiT_yTsqrtpy.insert(Xi.rows(), i) = yTsqrtpy(i);
+
+                // Z1.'*[Xi*Pi.'; y.'/realsqrt(py)]
+                Eigen::SparseMatrix<Scalar> Z1T_XiPiT_yTsqrtpy = (spqr_solver.matrixQ().transpose()*XiPiT_yTsqrtpy.toDense()).bottomRows(Xi.rows()).sparseView();
+
+                // Compute column-pivoting QR decomposition: Z1.'*[Xi*Pi.'; y.'/realsqrt(py)]*Pi2 = Q2*R2, where Pi2 reduces fill-in of R2
+                Z1T_XiPiT_yTsqrtpy.makeCompressed();
+                spqr_solver.compute(Z1T_XiPiT_yTsqrtpy);
+
+                Xi = spqr_solver.matrixR();
+                Pi = spqr_solver.colsPermutation();
+            }
+        }
+    }
+    if (verbosity > 1)
+        std::printf("WARNING: maximum number of iterations reached\n");
+    return 1;
+}
+
+template <typename Func>
+int BFGSTrustSparse(Func costFunc, Eigen::VectorXd & x, Eigen::VectorXd & g, Eigen::MatrixXd & H, int verbosity = 0)
+{
+    Eigen::SparseMatrix<double> Xi(x.size(), x.size());
+    Xi.setIdentity();
+    Eigen::PermutationMatrix<Eigen::Dynamic> Pi(x.size());
+    Pi.setIdentity();
+    int retval = BFGSTrustSqrtSparse(costFunc, x, g, Xi, Pi, verbosity);
+    H = Pi*(Xi.transpose()*Xi)*Pi.transpose();
+    return retval;
+}
+
+template <typename Func>
+int BFGSTrustSparse(Func costFunc, Eigen::VectorXd & x, Eigen::VectorXd & g, int verbosity = 0)
+{
+    Eigen::MatrixXd H(x.size(), x.size());
+    return BFGSTrustSparse(costFunc, x, g, H, verbosity);
+}
+
+template <typename Func>
+int BFGSTrustSparse(Func costFunc, Eigen::VectorXd & x, int verbosity = 0)
+{
+    Eigen::VectorXd g(x.size());
+    return BFGSTrustSparse(costFunc, x, g, verbosity);
 }
 
 /**

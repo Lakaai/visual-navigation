@@ -20,6 +20,7 @@
 #include "rotation.hpp"
 #include "Pose.hpp"
 #include "Camera.h"
+#include <Eigen/LU>
 
 void Chessboard::write(cv::FileStorage & fs) const
 {
@@ -57,23 +58,44 @@ ChessboardImage::ChessboardImage(const cv::Mat & image_, const Chessboard & ches
     , filename(filename_)
     , isFound(false)
 {
+    
     // Convert image to grayscale
-    //std::cout << "image:" << image << std::endl;
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    
 
     // Detect chessboard corners
     cv::Size patternSize(chessboard.boardSize.width, chessboard.boardSize.height);
     std::cout << "Pattern Size:" << patternSize << std::endl;
     isFound = cv::findChessboardCorners(gray, patternSize, corners,
-        cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE + cv::CALIB_CB_FAST_CHECK);
+        cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE + cv::CALIB_CB_FAST_CHECK + cv::CALIB_CB_FILTER_QUADS);
 
     // If corners are found, do subpixel refinement
     if (isFound)
     {
+        // std::cout << "Corners found, doing subpixel refinement..." << std::endl;
+        // cv::TermCriteria criteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1);
+        // cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1), criteria);
+        // Above are the intial parameters
         std::cout << "Corners found, doing subpixel refinement..." << std::endl;
-        cv::TermCriteria criteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 30, 0.1);
-        cv::cornerSubPix(gray, corners, cv::Size(11, 11), cv::Size(-1, -1), criteria);
+        
+        // Make corner refinement more stringent
+        cv::TermCriteria criteria(cv::TermCriteria::EPS + cv::TermCriteria::COUNT, 100, 0.00001);
+        
+        // Increase window size for more precise corner localization
+        cv::Size winSize(15, 15);
+        
+        // Increase this value to require more precise corner locations
+        cv::Size zeroZone(3, 3);  // Default is (-1, -1), increase to (2, 2) or (3, 3) for more stringency
+
+        cv::cornerSubPix(gray, corners, winSize, zeroZone, criteria);
+
+        // Additional check: Reject if any corners are too close to the image border
+        int borderSize = 50;  // Adjust as needed
+        isFound = std::all_of(corners.begin(), corners.end(), [&](const cv::Point2f& pt) {
+            return pt.x > borderSize && pt.x < gray.cols - borderSize &&
+                   pt.y > borderSize && pt.y < gray.rows - borderSize;
+        });
     }
     else
     {
@@ -259,12 +281,12 @@ ChessboardData::ChessboardData(const std::filesystem::path & configPath)
                             std::cout << " done, found " << nFrames << " frames" << std::endl;
 
                             // Loop through selected frames
-                            for (int idxFrame = 0; idxFrame < nFrames; idxFrame += std::max(1, nFrames / 10))
+                            for (int idxFrame = 0; idxFrame < nFrames; idxFrame += std::max(1, nFrames / 20))
                             {
                                 // Read frame
                                 std::cout << "Reading " << p.path().filename().string() << " frame " << idxFrame << "..." << std::flush;
                                 cv::Mat frame;
-                                // TODO
+
                                 cap.set(cv::CAP_PROP_POS_FRAMES, idxFrame);
                                 cap.read(frame);
                                 if (frame.empty())
@@ -350,6 +372,7 @@ void Camera::calibrate(ChessboardData & chessboardData)
     
     std::cout << "Calibrating camera... " << std::flush;
     // TODO: Merge from Lab 3
+
     double rms = cv::calibrateCamera(rPNn_allImages, rQOi_all, imageSize, cameraMatrix, distCoeffs, 
                                      Thetacn_all, rNCc_all, flags);
     
@@ -368,11 +391,9 @@ void Camera::calibrate(ChessboardData & chessboardData)
     {
         // Set the camera orientation and position (extrinsic camera parameters)
         Pose<double> & Tnc = chessboardData.chessboardImages[k].Tnc;
-        // TODO: Merge from Lab 3
         cv::Mat R;
         cv::Rodrigues(Thetacn_all[k], R);
-        // Tnc.rotationMatrix = cv::Matx33d(R); FROM LAB 3 
-        // Tnc.translationVector = cv::Vec3d(rNCc_all[k]);
+
         // Convert OpenCV rotation matrix to Eigen
         Eigen::Matrix3d R_eigen;
         cv::cv2eigen(R, R_eigen);
@@ -493,7 +514,6 @@ cv::Vec3d Camera::pixelToVector(const cv::Vec2d & rQOi) const
     std::vector<cv::Point2f> imagePoints(1, cv::Point2f(rQOi[0], rQOi[1]));
     std::vector<cv::Point2f> normalizedPoints;
 
-    // TODO
     // Undistort and normalize the point
     cv::undistortPoints(imagePoints, normalizedPoints, Camera::cameraMatrix, Camera::distCoeffs);
 
@@ -540,6 +560,14 @@ bool Camera::isVectorWithinFOV(const cv::Vec3d & rPCc) const
     return insideImage && insideHorizontalFOV && insideVerticalFOV;
 }
 
+
+bool Camera::isWorldWithinFOV(const Eigen::Vector3d& rPNn, const Pose<double> & Tnb) const
+{
+    // Convert Eigen::Vector3<Scalar> to cv::Vec3d
+    cv::Vec3d rPNn_cv(static_cast<double>(rPNn[0]), static_cast<double>(rPNn[1]), static_cast<double>(rPNn[2]));
+    return isWorldWithinFOV(rPNn_cv, Tnb);
+}
+
 bool Camera::isWorldWithinFOV(const cv::Vec3d & rPNn, const Pose<double> & Tnb) const
 {
     return isVectorWithinFOV(worldToVector(rPNn, Tnb));
@@ -572,3 +600,100 @@ void Camera::read(const cv::FileNode & node)
     assert(distCoeffs.type() == CV_64F);
 }
 
+Eigen::Matrix<double, 2, Eigen::Dynamic> Camera::undistort(const Eigen::Matrix<double, 2, Eigen::Dynamic> & rQOi) const
+{
+    // Convert from Eigen matrix to std::vector of cv::Point2d
+    std::vector<cv::Point2d> rQOi_cv(rQOi.cols());
+    for (int i = 0; i < rQOi.cols(); ++i)
+    {
+        rQOi_cv[i] = cv::Point2d(rQOi(0, i), rQOi(1, i));
+    }
+
+    // Undistort points
+    std::vector<cv::Point2d> rQbarOi_cv;
+    cv::undistortPoints(rQOi_cv, rQbarOi_cv, cameraMatrix, distCoeffs, cv::noArray(), cameraMatrix);
+
+    // Convert from std::vector of cv::Point2d to Eigen matrix
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQbarOi(2, rQOi.cols());
+    for (int i = 0; i < rQbarOi_cv.size(); ++i)
+    {
+        rQbarOi(0, i) = rQbarOi_cv[i].x;
+        rQbarOi(1, i) = rQbarOi_cv[i].y;
+    }
+
+    return rQbarOi;
+}
+
+Eigen::Matrix<double, 3, Eigen::Dynamic> Camera::undistort(const Eigen::Matrix<double, 3, Eigen::Dynamic> & pQOi) const
+{
+    // Extract the Euclidean points from the homogeneous coordinates
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQOi = pQOi.topRows<2>().array().rowwise() / pQOi.row(2).array();
+
+    // Call the Euclidean undistort function
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQbarOi = undistort(rQOi);
+
+    // Create the output matrix with homogeneous coordinates
+    Eigen::Matrix<double, 3, Eigen::Dynamic> pQbarOi(3, pQOi.cols());
+    pQbarOi.topRows<2>() = rQbarOi;
+    pQbarOi.row(2).setOnes();
+
+    return pQbarOi;
+}
+
+Eigen::Matrix<double, 2, Eigen::Dynamic> Camera::distort(const Eigen::Matrix<double, 2, Eigen::Dynamic>& rQbarOi) const
+{
+    double fx = cameraMatrix.at<double>(0, 0);
+    double fy = cameraMatrix.at<double>(1, 1);
+    double cx = cameraMatrix.at<double>(0, 2);
+    double cy = cameraMatrix.at<double>(1, 2);
+
+    // Convert from Euclidean coordinates to homogeneous coordinates
+    Eigen::Matrix<double, 3, Eigen::Dynamic> pQbarOi(3, rQbarOi.cols());
+    pQbarOi.topRows<2>() = rQbarOi;
+    pQbarOi.row(2).setOnes();
+
+    // Build the 3x3 camera matrix K using Eigen
+    Eigen::Matrix3d K;
+    K << fx, 0, cx,
+         0, fy, cy,
+         0, 0,  1;
+
+    // Solve for rPCc (3D point in camera space)
+    Eigen::Matrix<double, 3, Eigen::Dynamic> rPCc = K.inverse() * pQbarOi;
+    rPCc.array().rowwise() /= rPCc.row(2).array();  // Normalize so that z = 1
+
+    // Prepare output matrix
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQOi(2, rQbarOi.cols());
+
+    // Convert each column of rPCc (3D point) to cv::Vec3d and back to Eigen after distortion
+    for (int i = 0; i < rQbarOi.cols(); ++i) {
+        // Extract column as cv::Vec3d
+        cv::Vec3d rPCc_cv(rPCc(0, i), rPCc(1, i), rPCc(2, i));
+
+        // Simulate the `vectorToPixel` function (you may need to adjust this based on your actual distortion model)
+        cv::Vec2d rQOi_cv = vectorToPixel(rPCc_cv);  // Apply lens distortion and get 2D pixel coordinates
+
+        // Manually assign the values to the Eigen matrix
+        rQOi(0, i) = rQOi_cv[0];
+        rQOi(1, i) = rQOi_cv[1];
+    }
+
+    return rQOi;
+}
+
+
+Eigen::Matrix<double, 3, Eigen::Dynamic> Camera::distort(const Eigen::Matrix<double, 3, Eigen::Dynamic> & pQbarOi) const
+{
+    // Convert from homogeneous coordinates to Euclidean coordinates
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQbarOi = pQbarOi.topRows<2>().array().rowwise() / pQbarOi.row(2).array();
+
+    // Call the Euclidean distort function
+    Eigen::Matrix<double, 2, Eigen::Dynamic> rQOi = distort(rQbarOi);
+
+    // Convert from Euclidean coordinates to homogeneous coordinates
+    Eigen::Matrix<double, 3, Eigen::Dynamic> pQOi(3, pQbarOi.cols());
+    pQOi.topRows<2>() = rQOi;
+    pQOi.row(2).setOnes();
+
+    return pQOi;
+}

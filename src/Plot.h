@@ -31,8 +31,8 @@
 
 #include "Camera.h"
 #include "GaussianInfo.hpp"
-#include "SystemSLAM.h"
-#include "MeasurementSLAM.h"
+#include "SystemVisualNav.h"
+#include "MeasurementVisualNav.h"
 #include <vtkTextActor3D.h>
 
 
@@ -149,12 +149,12 @@ public:
     Plot(const Camera & camera);
     void render();
     void start() const;
-    void setData(const SystemSLAM & system, const MeasurementSLAM & measurement);
+    void setData(const SystemVisualNav & system, const MeasurementVisualNav & measurement);
     cv::Mat getFrame() const;
 
 private:
-    std::unique_ptr<SystemSLAM> pSystem;
-    std::unique_ptr<MeasurementSLAM> pMeasurement;
+    std::unique_ptr<SystemVisualNav> pSystem;
+    std::unique_ptr<MeasurementVisualNav> pMeasurement;
     const Camera & camera;
     vtkSmartPointer<vtkRenderWindow> renderWindow;
     vtkSmartPointer<vtkRenderer>     threeDimRenderer;

@@ -40,7 +40,7 @@ public:
      * @brief Process the event in the given system.
      * @param system The system in which to process the event.
      */
-    void process(SystemBase & system, int scenario);
+    void process(SystemBase & system);
 
 protected:
     /**
@@ -63,6 +63,8 @@ protected:
 
     double time_;       ///< The time at which the event occurs.
     int verbosity_;     ///< Verbosity level
+    
+   
 };
 
 #endif

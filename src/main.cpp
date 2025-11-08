@@ -1,11 +1,12 @@
 #include <cstdlib>
-#include <cassert>
 #include <string>  
 #include <filesystem>
 #include <iostream>
-#include <opencv2/core.hpp>
+#include <opencv2/core/utility.hpp>
 #include "calibrate.h"
+#include "visual_odometry.h"
 #include "visualNavigation.h"
+
 
 int main(int argc, char* argv [])
 {
@@ -14,12 +15,13 @@ int main(int argc, char* argv [])
         "{help h usage ?  |          | print this help message}"
         "{@input          | <none>   | path to input video or configuration XML}"
         "{calibrate c     |          | perform camera calibration for given configuration XML}"
-        "{scenario s      | 3        | run visual navigation on input video with scenario type (1:unique, 2:identical, 3:point)}"
-        "{interactive i   | 0        | interactivity (0:none, 1:last frame, 2:all frames)}"
-        "{export e        |          | export video}";
+        "{export e        |          | export video}"
+        "{scenario s      | 4        | run visual navigation on input video with scenario type (4:flight, 5:indoor, 6:duck)}"
+        "{interactive i   | 0        | interactivity (0:none, 1:last frame, 2:all frames)}";
+
 
     cv::CommandLineParser parser(argc, argv, keys);
-    parser.about("MCHA4400 Assignment 1");
+    parser.about("MCHA4400 Assignment 2");
 
     if (parser.has("help"))
     {
@@ -59,16 +61,30 @@ int main(int argc, char* argv [])
         std::cout << "Calibrating camera" << std::endl;
         std::cout << "Configuration file: " << inputPath.string() << std::endl;
         calibrateCamera(inputPath);
-        
     }
     else
     {
-        assert(1 <= scenario && scenario <= 3);
+        assert(4 <= scenario && scenario <= 6);
         assert(0 <= interactive && interactive <= 2);
-        std::cout << "Running visual navigation" << std::endl;
         std::cout << "Input video: " << inputPath.string() << std::endl;
-        std::filesystem::path cameraPath = inputPath.parent_path() / "camera.xml"; 
-        runVisualNavigationFromVideo(inputPath, cameraPath, scenario, interactive, outputDirectory);
+        std::cout << "Running visual odometry" << std::endl;
+        std::filesystem::path cameraPath = inputPath.parent_path() / "camera.xml";
+        if (scenario == 4)
+        {
+            std::cout << "Running scenario 4: Outdoor Visual Navigation" << std::endl;
+            runVisualOdometryFromVideo(inputPath, cameraPath, outputDirectory);
+        }
+        else if (scenario == 5)
+        {
+            std::cout << "Running scenario 5: Indoor Visual Navigation" << std::endl;
+            // runVisualNavigationFromVideo(inputPath, cameraPath, scenario, interactive, outputDirectory);
+        }
+        else if (scenario == 6)
+        {
+            std::cout << "Running scenario 6: Post-Duck Apocalyptic Visual Navigation" << std::endl;
+            // runVisualNavigationFromVideo(inputPath, cameraPath, scenario, interactive, outputDirectory);
+        }
+        
     }
 
     return EXIT_SUCCESS;

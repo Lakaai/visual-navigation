@@ -55,13 +55,6 @@ find_package(doctest REQUIRED)
 find_package(Boost 1.74 REQUIRED)
 find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 find_package(autodiff 1.0 REQUIRED)
-# ##########################################################################################
-# set(OpenCV_DIR "/home/linuxbrew/.linuxbrew/opt/opencv/lib/cmake/opencv4")
-# if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   add_compile_options(-std=c++20 -stdlib=libc++)
-#   add_link_options(-stdlib=libc++)
-# endif()
-# ##########################################################################################
 find_package(OpenCV 4.7 REQUIRED)
 find_package(VTK 8.2 REQUIRED)
 find_package(Torch QUIET)       # optional
@@ -85,11 +78,15 @@ if(BUILD_DOCUMENTATION)
         # Request to configure the file
         configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
 
+        # Get all source files
+        file(GLOB_RECURSE DOC_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
+
         # Add doxygen target
         doxygen_add_docs(docs
-            ${CMAKE_CURRENT_SOURCE_DIR}/src
+            ${DOC_SOURCES} # Can't be a directory or wildcards if USE_STAMP_FILE is used (https://cmake.org/cmake/help/latest/module/FindDoxygen.html)
             CONFIG_FILE ${DOXYGEN_OUT}
             COMMENT "Generating API documentation with Doxygen"
+            USE_STAMP_FILE
         )
     else()
         message(STATUS "Doxygen not found, documentation will not be built")

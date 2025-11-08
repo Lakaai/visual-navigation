@@ -12,9 +12,9 @@
 #include <set>
 #include <vtkLineSource.h>
 #include <vtkPolyDataMapper.h>
-#include "MeasurementSLAMUniqueTagBundle.h"
-#include "MeasurementSLAMIdenticalTagBundle.h"
-#include "MeasurementSLAMPointBundle.h"
+// #include "MeasurementSLAMUniqueTagBundle.h"
+// #include "MeasurementSLAMIdenticalTagBundle.h"
+#include "MeasurementPointBundle.h"
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/imgproc.hpp>
 
@@ -86,9 +86,12 @@
 #include "Camera.h"
 #include "GaussianInfo.hpp"
 #include "rotation.hpp"
-#include "SystemSLAM.h"
-#include "MeasurementSLAM.h"
+#include "SystemVisualNav.h"
+#include "MeasurementVisualNav.h"
 #include "Plot.h"
+#include <vtkTextActor.h>
+#include <vtkTextProperty.h>
+
 
 // Forward declarations
 static void hsv2rgb(const double & h, const double & s, const double & v, double & r, double & g, double & b);
@@ -454,10 +457,6 @@ void ImagePlot::init(double rendererWidth, double rendererHeight)
 {
     width   = rendererWidth;
     height  = rendererHeight;
-
-    
-
-
     isInit  = true;
 }
 
@@ -484,7 +483,7 @@ vtkActor2D * ImagePlot::getActor() const
 // Plot
 // -------------------------------------------------------
 
-void Plot::setData(const SystemSLAM & system, const MeasurementSLAM & measurement)
+void Plot::setData(const SystemVisualNav & system, const MeasurementVisualNav & measurement)
 {
     pSystem.reset(system.clone());
     pMeasurement.reset(measurement.clone());
@@ -753,6 +752,113 @@ void Plot::start() const
 {
     interactor->Start(); // block on interactor
 }
+// void Plot::render()
+// {
+//     double r,g,b;   
+//     hsv2rgb(330, 1., 1., r, g, b);
+//     qpCamera.update(pSystem->cameraPositionDensity(camera));
+//     qpCamera.getActor()->GetProperty()->SetOpacity(0.1);
+//     qpCamera.getActor()->GetProperty()->SetColor(r,g,b);
+
+//     Bounds globalBounds;
+//     qpCamera.bounds.setExtremity(globalBounds); 
+
+//     // Get current camera pose
+//     Eigen::Vector3d rCNn = pSystem->cameraPositionDensity(camera).mean();
+//     Eigen::Vector3d Thetanc = pSystem->cameraOrientationEulerDensity(camera).mean();
+//     Pose<double> Tnc(rpy2rot(Thetanc), rCNn);
+
+//     // Get current body pose
+//     Eigen::Vector3d rBNn = pSystem->bodyPositionDensity().mean();
+//     Eigen::Vector3d ThetaNb = pSystem->bodyOrientationDensity().mean();
+//     Pose<double> Tnb(rpy2rot(ThetaNb), rBNn);
+
+//     std::vector<int> associatedLandmarks;
+    
+//     if (auto* pointMeasurement = dynamic_cast<const MeasurementPointBundle*>(pMeasurement.get())) {
+//         const auto& pointLandmarks = pointMeasurement->getAssociatedLandmarks();
+//         associatedLandmarks.assign(pointLandmarks.begin(), pointLandmarks.end());
+//     }
+    
+//     // Process current landmarks
+//     for (std::size_t i = 0; i < pSystem->numberLandmarks(); ++i)
+//     {
+//         int markerId = pSystem->getLandmarkId(i);
+        
+//         // Find or create QuadricPlot for this landmark
+//         auto it = std::find_if(qpLandmarks.begin(), qpLandmarks.end(),
+//                                [markerId](const QuadricPlot& qp) { return qp.landmarkId == markerId; });
+        
+//         QuadricPlot* qp;
+//         if (it == qpLandmarks.end())
+//         {
+//             qpLandmarks.push_back(QuadricPlot());
+//             qp = &qpLandmarks.back();
+//             qp->landmarkId = markerId;
+//             threeDimRenderer->AddActor(qp->getActor());
+//             threeDimRenderer->AddActor(qp->textActor);
+//         }
+//         else
+//         {
+//             qp = &(*it);
+//         }
+
+//         // Get updated landmark position
+//         GaussianInfo<double> landmarkDensity = pSystem->landmarkPositionDensity(i);
+//         Eigen::Vector3d landmarkPosition = landmarkDensity.mean();
+
+//         // Check if landmark is within field of view
+//         cv::Vec3d landmarkPositionCV(landmarkPosition.x(), landmarkPosition.y(), landmarkPosition.z());
+//         bool isVisible = camera.isWorldWithinFOV(landmarkPositionCV, Tnb);
+
+//         // Check if landmark is detected (associated) in this frame
+//         bool isDetected = std::find(associatedLandmarks.begin(), associatedLandmarks.end(), i) != associatedLandmarks.end();
+        
+//         // Set color based on visibility and detection
+//         Eigen::Vector3d color;
+//         if (!isVisible) {
+//             color = Eigen::Vector3d(1.0, 1.0, 0.0);  // Yellow for not visible
+//         } else if (isDetected) {
+//             color = Eigen::Vector3d(0.0, 0.0, 1.0);  // Blue for visible and tracked
+//         } else {
+//             color = Eigen::Vector3d(1.0, 0.0, 0.0);  // Red for visible but not detected
+//         }
+
+//         // Update 3D quadric plot with new position and color
+//         qp->update(landmarkDensity);
+//         qp->getActor()->GetProperty()->SetOpacity(0.3);
+//         qp->getActor()->GetProperty()->SetColor(color.x(), color.y(), color.z());
+//         qp->bounds.setExtremity(globalBounds); 
+
+//         // Plot Gaussian ellipse for visible landmarks
+//         if (isVisible) {
+//             GaussianInfo<double> prQOi = pMeasurement->predictFeatureDensity(*pSystem, i);
+//             plotGaussianConfidenceEllipse(pSystem->view(), prQOi, color);
+//         }
+
+       
+    
+//         // Update marker ID label
+//         // qp->updateLabel("ID: " + std::to_string(markerId), color);
+        
+//         // // Ensure the text actor is added to the renderer
+//         // if (threeDimRenderer->GetActors()->IsItemPresent(qp->textActor) == 0)
+//         // {
+//         //     threeDimRenderer->AddActor(qp->textActor);
+//         // }
+//     }
+
+//     ap.update(globalBounds);
+//     bp.update(rCNn, Thetanc);
+//     fp.update(rCNn, Thetanc);
+//     ip.update(pSystem->view());
+
+//     // Update trajectory
+//     updateTrajectory(rCNn);
+
+//     renderWindow->Render();
+// }
+
 void Plot::render()
 {
     double r,g,b;   
@@ -764,120 +870,46 @@ void Plot::render()
     Bounds globalBounds;
     qpCamera.bounds.setExtremity(globalBounds); 
 
-    // Get current camera pose
-    Eigen::Vector3d rCNn = pSystem->cameraPositionDensity(camera).mean();
-    Eigen::Vector3d Thetanc = pSystem->cameraOrientationEulerDensity(camera).mean();
-    Pose<double> Tnc(rpy2rot(Thetanc), rCNn);
-
-    // Get current body pose
-    Eigen::Vector3d rBNn = pSystem->bodyPositionDensity().mean();
-    Eigen::Vector3d ThetaNb = pSystem->bodyOrientationDensity().mean();
-    Pose<double> Tnb(rpy2rot(ThetaNb), rBNn);
-
-    // // Get associated landmarks for this frame
-    // const auto& associatedLandmarks = dynamic_cast<const MeasurementUniqueTagBundle*>(pMeasurement.get())->getAssociatedLandmarks();
-
-    //----------------------------------------------------------------------------------------
-    std::vector<int> associatedLandmarks;
-
-
-    // Check the type of measurement and handle accordingly
-    if (auto* tagMeasurement = dynamic_cast<const MeasurementUniqueTagBundle*>(pMeasurement.get())) {
-        // ArUco tag scenario
-        const auto& tagLandmarks = tagMeasurement->getAssociatedLandmarks();
-        associatedLandmarks.assign(tagLandmarks.begin(), tagLandmarks.end());
-
-    } else if (auto* pointMeasurement = dynamic_cast<const MeasurementPointBundle*>(pMeasurement.get())) {
-        // Point feature scenario
-        const auto& pointLandmarks = pointMeasurement->getAssociatedLandmarks();
-        associatedLandmarks.assign(pointLandmarks.begin(), pointLandmarks.end());
-
-    } else if (auto* tagMeasurement = dynamic_cast<const MeasurementIdenticalTagBundle*>(pMeasurement.get())) {
-        // Identical Aruco Tag feature scenario
-        const auto& pointLandmarks = pointMeasurement->getAssociatedLandmarks();
-        associatedLandmarks.assign(pointLandmarks.begin(), pointLandmarks.end()); 
-
-    } else {
-        // Handle unexpected measurement type
-        std::cerr << "Unknown measurement type" << std::endl;
+    // Grow landmark quadric plots to match number of landmarks
+    while (qpLandmarks.size() < pSystem->numberLandmarks())
+    {
+        QuadricPlot qp;
+        qpLandmarks.push_back(qp);
+        threeDimRenderer->AddActor(qpLandmarks.back().getActor());
     }
 
+    // Shrink landmark quadric plots to match number of landmarks
+    while (qpLandmarks.size() > pSystem->numberLandmarks())
+    {
+        threeDimRenderer->RemoveActor(qpLandmarks.back().getActor());
+        qpLandmarks.pop_back();
+    }    
 
-    // Process current landmarks
     for (std::size_t i = 0; i < pSystem->numberLandmarks(); ++i)
     {
-        int markerId = pSystem->getLandmarkId(i);
-        
-        // Find or create QuadricPlot for this landmark
-        auto it = std::find_if(qpLandmarks.begin(), qpLandmarks.end(),
-                               [markerId](const QuadricPlot& qp) { return qp.landmarkId == markerId; });
-        
-        QuadricPlot* qp;
-        if (it == qpLandmarks.end())
-        {
-            qpLandmarks.push_back(QuadricPlot());
-            qp = &qpLandmarks.back();
-            qp->landmarkId = markerId;
-            threeDimRenderer->AddActor(qp->getActor());
-            threeDimRenderer->AddActor(qp->textActor);
-        }
-        else
-        {
-            qp = &(*it);
-        }
+        // Add components to render
+        hsv2rgb(300*(i)/(pSystem->numberLandmarks()), 1., 1., r, g, b);
+        Eigen::Vector3d rgb;
+        rgb(0) = r*255;
+        rgb(1) = g*255;
+        rgb(2) = b*255;
 
-        // Get updated landmark position
-        GaussianInfo<double> landmarkDensity = pSystem->landmarkPositionDensity(i);
-        Eigen::Vector3d landmarkPosition = landmarkDensity.mean();
+        GaussianInfo prQOi = pMeasurement->predictFeatureDensity(*pSystem, i);
+        plotGaussianConfidenceEllipse(pSystem->view(), prQOi, rgb);
 
-        // Check if landmark is within field of view
-        cv::Vec3d landmarkPositionCV(landmarkPosition.x(), landmarkPosition.y(), landmarkPosition.z());
-        bool isVisible = camera.isWorldWithinFOV(landmarkPositionCV, Tnb);
-
-        // Check if landmark is detected (associated) in this frame
-        bool isDetected = std::find(associatedLandmarks.begin(), associatedLandmarks.end(), i) != associatedLandmarks.end();
-        
-        // Set color based on visibility and detection
-        Eigen::Vector3d color;
-        if (!isVisible) {
-            color = Eigen::Vector3d(1.0, 1.0, 0.0);  // Yellow for not visible
-        } else if (isDetected) {
-            color = Eigen::Vector3d(0.0, 0.0, 1.0);  // Blue for visible and tracked
-        } else {
-            color = Eigen::Vector3d(1.0, 0.0, 0.0);  // Red for visible but not detected
-        }
-
-        // Update 3D quadric plot with new position and color
-        qp->update(landmarkDensity);
-        qp->getActor()->GetProperty()->SetOpacity(0.3);
-        qp->getActor()->GetProperty()->SetColor(color.x(), color.y(), color.z());
-        qp->bounds.setExtremity(globalBounds); 
-
-        // Plot Gaussian ellipse for visible landmarks
-        if (isVisible) {
-            GaussianInfo<double> prQOi = pMeasurement->predictFeatureDensity(*pSystem, i);
-            plotGaussianConfidenceEllipse(pSystem->view(), prQOi, color);
-        }
-
-       
-    
-        // Update marker ID label
-        // qp->updateLabel("ID: " + std::to_string(markerId), color);
-        
-        // // Ensure the text actor is added to the renderer
-        // if (threeDimRenderer->GetActors()->IsItemPresent(qp->textActor) == 0)
-        // {
-        //     threeDimRenderer->AddActor(qp->textActor);
-        // }
+        QuadricPlot & qp = qpLandmarks[i];
+        qp.update(pSystem->landmarkPositionDensity(i));
+        qp.getActor()->GetProperty()->SetOpacity(0.5);
+        qp.getActor()->GetProperty()->SetColor(r, g, b);
+        qp.bounds.setExtremity(globalBounds); 
     }
 
     ap.update(globalBounds);
+    Eigen::Vector3d rCNn = pSystem->cameraPositionDensity(camera).mean();
+    Eigen::Vector3d Thetanc = pSystem->cameraOrientationEulerDensity(camera).mean();
     bp.update(rCNn, Thetanc);
     fp.update(rCNn, Thetanc);
     ip.update(pSystem->view());
-
-    // Update trajectory
-    updateTrajectory(rCNn);
 
     renderWindow->Render();
 }
@@ -942,8 +974,6 @@ void openCV2VTK(const cv::Mat & viewCVRGB, vtkImageData* viewVTK)
     importer->SetImportVoidPointer( viewCVRGB.data );
     importer->Update();
 }
-#include <vtkTextActor.h>
-#include <vtkTextProperty.h>
 
 void QuadricPlot::updateLabel(const std::string& text, const Eigen::Vector3d& color)
 {

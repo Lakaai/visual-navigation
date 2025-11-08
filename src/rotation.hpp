@@ -8,14 +8,13 @@ Eigen::Matrix3<Scalar> rotx(const Scalar & x)
 {
     using std::cos, std::sin;
     Eigen::Matrix3<Scalar> R = Eigen::Matrix3<Scalar>::Identity();
-    // TODO: Lab 7
     Scalar c = cos(x);
     Scalar s = sin(x);
     R(1,1) = c; R(1,2) = -s;
     R(2,1) = s; R(2,2) = c;
-
     return R;
 }
+
 
 template <typename Scalar>
 Eigen::Matrix3<Scalar> rotx(const Scalar & x, Eigen::Matrix3<Scalar> & dRdx)
@@ -36,7 +35,6 @@ Eigen::Matrix3<Scalar> roty(const Scalar & x)
 {
     using std::cos, std::sin;
     Eigen::Matrix3<Scalar> R = Eigen::Matrix3<Scalar>::Identity();
-    // TODO: Lab 7
     Scalar c = cos(x);
     Scalar s = sin(x);
     R(0,0) = c;     R(0,2) = s;
@@ -64,13 +62,10 @@ Eigen::Matrix3<Scalar> rotz(const Scalar & x)
 {
     using std::cos, std::sin;
     Eigen::Matrix3<Scalar> R = Eigen::Matrix3<Scalar>::Identity();
-    // TODO: Lab 7
     Scalar c = cos(x);
     Scalar s = sin(x);
-
     R(0,0) =  c;  R(0,1) = -s;
     R(1,0) =  s;  R(1,1) =  c;
-    
     return R;
 }
 
@@ -94,15 +89,12 @@ Eigen::Matrix3<typename Derived::Scalar> rpy2rot(const Eigen::MatrixBase<Derived
     using Scalar = typename Derived::Scalar;
     // R = Rz*Ry*Rx
     Eigen::Matrix3<Scalar> R;
-    // TODO: Lab 7
     Scalar roll = Theta[0];
     Scalar pitch = Theta[1];
     Scalar yaw = Theta[2];
-
     Eigen::Matrix3<Scalar> Rx = rotx(roll);
     Eigen::Matrix3<Scalar> Ry = roty(pitch);
     Eigen::Matrix3<Scalar> Rz = rotz(yaw);
-
     R = Rz * Ry * Rx;
 
     return R;
@@ -114,7 +106,6 @@ Eigen::Vector3<typename Derived::Scalar> rot2rpy(const Eigen::MatrixBase<Derived
     using Scalar = typename Derived::Scalar;
     using std::atan2, std::hypot;
     Eigen::Vector3<Scalar> Theta;
-        // TODO: Lab 7
     Scalar pitch = atan2(-R(2,0), hypot(R(0,0), R(1,0)));
     
     if (hypot(R(0,0), R(1,0)) > Scalar(1e-10)) {

@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <Eigen/Core>
+#include <Eigen/SparseCore>
 #include <Eigen/Eigenvalues> 
 #include "funcmin.hpp"
 
@@ -122,6 +123,7 @@ int funcmin::trsSqrt(const Eigen::MatrixXd & Xi, const Eigen::VectorXd & g, doub
     assert(g.cols() == 1);
     assert(Xi.rows() == Xi.cols());
     assert(Xi.rows() == g.rows());
+    assert(Xi.isUpperTriangular());
 
     // Solve Xi^T*gtilde = g for gtilde
     Eigen::VectorXd gtilde = Xi.triangularView<Eigen::Upper>().transpose().solve(g);
@@ -131,6 +133,28 @@ int funcmin::trsSqrt(const Eigen::MatrixXd & Xi, const Eigen::VectorXd & g, doub
 
     // Solve Xi*p = -alpha*gtilde for p
     p = Xi.triangularView<Eigen::Upper>().solve(-alpha*gtilde);
+
+    return 0;
+}
+
+int funcmin::trsSqrtSparse(const Eigen::SparseMatrix<double> & Xi, const Eigen::PermutationMatrix<Eigen::Dynamic> & Pi, const Eigen::VectorXd & g, double D, Eigen::VectorXd & p)
+{
+    assert(g.cols() == 1);
+    assert(Xi.rows() == Xi.cols());
+    assert(Xi.rows() == g.rows());
+    assert(Xi.toDense().isUpperTriangular());
+    assert(Pi.size() == Xi.cols());
+
+    // Solve Xi^T*gtilde = Pi^T*g for gtilde
+    Eigen::VectorXd gtilde = Xi.triangularView<Eigen::Upper>().transpose().solve(Pi.transpose()*g);
+
+    // Step length
+    double alpha = std::min(1.0, D/gtilde.norm());
+
+    // Solve Xi*Pi^T*p = -alpha*gtilde for p
+    // Pi^T*p = Xi^{-1}*(-alpha*gtilde)
+    // p = Pi*Xi^{-1}*(-alpha*gtilde)
+    p = Pi*Xi.triangularView<Eigen::Upper>().solve(-alpha*gtilde);
 
     return 0;
 }

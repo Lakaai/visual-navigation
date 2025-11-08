@@ -31,7 +31,7 @@ public:
      * @brief Predict the system state at a given time.
      * @param time The time to predict the system state for.
      */
-    virtual void predict(double time, int scenario) = 0;
+    virtual void predict(double time) = 0;
 
     /**
      * @brief Compute the system dynamics.

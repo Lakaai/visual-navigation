@@ -63,6 +63,10 @@ struct Camera
 
     template <typename Scalar> Pose<Scalar> cameraToBody(const Pose<Scalar> & Tnc) const { return Tnc*Tbc.inverse(); }  // Tnb = Tnc*Tcb
     template <typename Scalar> Pose<Scalar> bodyToCamera(const Pose<Scalar> & Tnb) const { return Tnb*Tbc; }            // Tnc = Tnb*Tbc
+    Eigen::Matrix<double, 2, Eigen::Dynamic> undistort(const Eigen::Matrix<double, 2, Eigen::Dynamic> & rQOi) const;
+    Eigen::Matrix<double, 3, Eigen::Dynamic> undistort(const Eigen::Matrix<double, 3, Eigen::Dynamic> & pQOi) const;
+    Eigen::Matrix<double, 2, Eigen::Dynamic> distort(const Eigen::Matrix<double, 2, Eigen::Dynamic> & rQbarOi) const;
+    Eigen::Matrix<double, 3, Eigen::Dynamic> distort(const Eigen::Matrix<double, 3, Eigen::Dynamic> & pQbarOi) const;
     
     cv::Vec3d worldToVector(const cv::Vec3d & rPNn, const Pose<double> & Tnb) const;
     cv::Vec2d worldToPixel(const cv::Vec3d &, const Pose<double> &) const;
@@ -72,7 +76,9 @@ struct Camera
 
     cv::Vec3d pixelToVector(const cv::Vec2d &) const;
 
-    bool isWorldWithinFOV(const cv::Vec3d & rPNn, const Pose<double> & Tnb) const;
+
+    bool isWorldWithinFOV(const cv::Vec3d& rPNn, const Pose<double>& Tnb) const;
+    bool isWorldWithinFOV(const Eigen::Vector3d& rPNn, const Pose<double>& Tnb) const;
     bool isVectorWithinFOV(const cv::Vec3d & rPCc) const;
 
     void calcFieldOfView();
@@ -85,6 +91,7 @@ struct Camera
     cv::Size imageSize;                                     // Image size
 
     Pose<double> Tbc;                                       // Relative pose of camera in body coordinates (Rbc, rCBb)
+
     template <typename Scalar>
     Eigen::Vector2<Scalar> worldToPixel(const Eigen::Vector3<Scalar>& rPNn, const Pose<Scalar>& Tnb) const
     {   

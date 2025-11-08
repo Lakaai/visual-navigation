@@ -28,6 +28,7 @@ double Measurement::costJointDensity(const Eigen::VectorXd & x, const SystemEsti
 double Measurement::costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const
 {
     Eigen::VectorXd logpriorGrad(x.size());
+    // std::cout << "x inside cost joint density= " << x.transpose() << std::endl;
     double logprior = system.density.log(x, logpriorGrad);
 
     Eigen::VectorXd loglikGrad(x.size());
@@ -64,6 +65,7 @@ void Measurement::update(SystemBase & system_)
     // Second-order iterated update
     Eigen::VectorXd g(nx);
     Eigen::VectorXd x = system.density.mean(); // Set initial decision variable to prior mean
+    //std::cout << "x in update = " << x.transpose() << std::endl;
     Eigen::MatrixXd Xi = system.density.sqrtInfoMat();
 
     switch (updateMethod_)
@@ -127,8 +129,7 @@ void Measurement::update(SystemBase & system_)
             // Minimise cost
             Eigen::MatrixXd Q(nx, nx);
             Eigen::VectorXd v(nx);
-            //int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, verbosity_);
-            int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, 3);
+            int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, verbosity_);
             assert(ret == 0);
 
             // Post-calculate posterior square-root information matrix from Hessian eigendecomposition
@@ -144,6 +145,5 @@ void Measurement::update(SystemBase & system_)
     // Set posterior mean to maximum a posteriori (MAP) estimate
     Eigen::VectorXd mu = x;
     system.density = GaussianInfo<double>::fromSqrtInfo(Xi*mu, Xi);
-    
 }
 

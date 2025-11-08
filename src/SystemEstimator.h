@@ -35,7 +35,11 @@ public:
      * @brief Predict the system state at a given time.
      * @param time The time to predict the system state for.
      */
-    virtual void predict(double time, int scenario) override;
+    virtual void predict(double time) override;
+
+    // Add method to control zeta update behavior
+    void setZetaUpdateEnabled(bool enabled) { update_zeta_ = enabled; }
+    bool isZetaUpdateEnabled() const { return update_zeta_; }
 
     GaussianInfo<double> density;  ///< The current state density estimate.
 
@@ -76,13 +80,15 @@ protected:
      * @param dt The time step.
      * @return The process noise density.
      */
-    virtual GaussianInfo<double> processNoiseDensity(double dt, int scenario) const = 0;
+    virtual GaussianInfo<double> processNoiseDensity(double dt) const = 0;
 
     /**
      * @brief Get the indices of state variables affected by process noise.
      * @return The indices of affected state variables.
      */
     virtual std::vector<Eigen::Index> processNoiseIndex() const = 0;
+
+    bool update_zeta_ = true;  // Default to true for backward compatibility
 };
 
 #endif
