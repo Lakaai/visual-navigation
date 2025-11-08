@@ -1388,7 +1388,7 @@ HTML_EXTRA_FILES       =
 # The default value is: AUTO_LIGHT.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE        = AUTO_LIGHT
+HTML_COLORSTYLE        = LIGHT
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
@@ -1796,7 +1796,7 @@ FORMULA_MACROFILE      =
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-USE_MATHJAX            = NO
+USE_MATHJAX            = YES
 
 # With MATHJAX_VERSION it is possible to specify the MathJax version to be used.
 # Note that the different versions of MathJax have different requirements with
@@ -1824,7 +1824,7 @@ MATHJAX_VERSION        = MathJax_2
 # The default value is: HTML-CSS.
 # This tag requires that the tag USE_MATHJAX is set to YES.
 
-MATHJAX_FORMAT         = HTML-CSS
+MATHJAX_FORMAT         = SVG
 
 # When MathJax is enabled you need to specify the location relative to the HTML
 # output directory using the MATHJAX_RELPATH option. The destination directory

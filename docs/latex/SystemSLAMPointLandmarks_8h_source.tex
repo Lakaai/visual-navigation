@@ -1,0 +1,46 @@
+\doxysection{System\+SLAMPoint\+Landmarks.\+h}
+\hypertarget{SystemSLAMPointLandmarks_8h_source}{}\label{SystemSLAMPointLandmarks_8h_source}\index{src/SystemSLAMPointLandmarks.h@{src/SystemSLAMPointLandmarks.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ SYSTEMSLAMPOINTLANDMARKS\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ SYSTEMSLAMPOINTLANDMARKS\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{GaussianInfo_8hpp}{GaussianInfo.hpp}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}SystemSLAM.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00010\ \textcolor{comment}{\ *\ State\ containing\ body\ velocities,\ body\ pose\ and\ landmark\ positions}}
+\DoxyCodeLine{00011\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00012\ \textcolor{comment}{\ *\ \ \ \ \ [\ vBNb\ \ \ \ \ ]\ \ Body\ translational\ velocity\ (body-\/fixed)}}
+\DoxyCodeLine{00013\ \textcolor{comment}{\ *\ \ \ \ \ [\ omegaBNb\ ]\ \ Body\ angular\ velocity\ (body-\/fixed)}}
+\DoxyCodeLine{00014\ \textcolor{comment}{\ *\ \ \ \ \ [\ rBNn\ \ \ \ \ ]\ \ Body\ position\ (world-\/fixed)}}
+\DoxyCodeLine{00015\ \textcolor{comment}{\ *\ x\ =\ [\ Thetanb\ \ ]\ \ Body\ orientation\ (world-\/fixed)}}
+\DoxyCodeLine{00016\ \textcolor{comment}{\ *\ \ \ \ \ [\ rL1Nn\ \ \ \ ]\ \ Landmark\ 1\ position\ (world-\/fixed)}}
+\DoxyCodeLine{00017\ \textcolor{comment}{\ *\ \ \ \ \ [\ rL2Nn\ \ \ \ ]\ \ Landmark\ 2\ position\ (world-\/fixed)}}
+\DoxyCodeLine{00018\ \textcolor{comment}{\ *\ \ \ \ \ [\ ...\ \ \ \ \ \ ]\ \ ...}}
+\DoxyCodeLine{00019\ \textcolor{comment}{\ *}}
+\DoxyCodeLine{00020\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00021\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classSystemSLAMPointLandmarks}{SystemSLAMPointLandmarks}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classSystemSLAMPointLandmarks}{SystemSLAMPointLandmarks}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ \&\ \mbox{\hyperlink{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}{density}});}
+\DoxyCodeLine{00025\ \ \ \ \ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ *\ clone()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{virtual}\ std::size\_t\ numberLandmarks()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ std::size\_t\ landmarkPositionIndex(std::size\_t\ idxLandmark)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{comment}{//\ New\ methods}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{void}\ incrementFailedObservations(std::size\_t\ idxLandmark);}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keywordtype}{int}\ getFailedObservations(std::size\_t\ idxLandmark)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ resetFailedObservations(std::size\_t\ idxLandmark);}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ removeLandmark(std::size\_t\ idxLandmark);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ initializeNewLandmark(\textcolor{keyword}{const}\ Eigen::Vector3d\&\ position);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ std::map<std::size\_t,\ int>\ failedObservations\_;}
+\DoxyCodeLine{00038\ \};}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

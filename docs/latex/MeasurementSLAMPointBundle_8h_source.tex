@@ -1,0 +1,133 @@
+\doxysection{Measurement\+SLAMPoint\+Bundle.\+h}
+\hypertarget{MeasurementSLAMPointBundle_8h_source}{}\label{MeasurementSLAMPointBundle_8h_source}\index{src/MeasurementSLAMPointBundle.h@{src/MeasurementSLAMPointBundle.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MEASUREMENTSLAMPOINTBUNDLE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MEASUREMENTSLAMPOINTBUNDLE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{SystemBase_8h}{SystemBase.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{SystemEstimator_8h}{SystemEstimator.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}Camera.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{Pose_8hpp}{Pose.hpp}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}MeasurementSLAM.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}SystemSLAMPointLandmarks.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <set>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <autodiff/forward/real.hpp>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <autodiff/forward/real/eigen.hpp>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classMeasurementPointBundle}{MeasurementPointBundle}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classMeasurementSLAM}{MeasurementSLAM}}}
+\DoxyCodeLine{00016\ \{}
+\DoxyCodeLine{00017\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{classMeasurementPointBundle}{MeasurementPointBundle}}(\textcolor{keywordtype}{double}\ time,\ \textcolor{keyword}{const}\ Eigen::Matrix<double,\ 2,\ Eigen::Dynamic>\ \&\ Y,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structCamera}{Camera}}\ \&\ camera);}
+\DoxyCodeLine{00019\ \ \ \ \ \mbox{\hyperlink{classMeasurementSLAM}{MeasurementSLAM}}\ *\ clone()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classMeasurementPointBundle_ac368052d6c6700daba2676c8c7f767c1}{simulate}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system,\ Eigen::VectorXd\ \&\ g)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{double}\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system,\ Eigen::VectorXd\ \&\ g,\ Eigen::MatrixXd\ \&\ H)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>\ Scalar\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>\ Eigen::Vector2<Scalar>\ predictFeature(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ std::size\_t\ idxLandmark)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00026\ \ \ \ \ Eigen::Vector2d\ predictFeature(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ Eigen::MatrixXd\ \&\ J,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ std::size\_t\ idxLandmark)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ predictFeatureDensity(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ std::size\_t\ idxLandmark)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>\ Eigen::VectorX<Scalar>\ predictFeatureBundle(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ \textcolor{keyword}{const}\ std::vector<std::size\_t>\ \&\ idxLandmarks)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00030\ \ \ \ \ Eigen::VectorXd\ predictFeatureBundle(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ Eigen::MatrixXd\ \&\ J,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ \textcolor{keyword}{const}\ std::vector<std::size\_t>\ \&\ idxLandmarks)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ predictFeatureBundleDensity(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ \textcolor{keyword}{const}\ std::vector<std::size\_t>\ \&\ idxLandmarks)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<int>\&\ getIdxFeatures()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ idxFeatures\_;\ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<std::size\_t>\&\ getIdxLandmarks()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ idxLandmarks\_;\ \}}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{const}\ std::vector<size\_t>\&\ getAssociatedLandmarks()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ associatedLandmarks\_;\ \}}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keyword}{const}\ std::vector<int>\ \&\ associate(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ \textcolor{keyword}{const}\ std::vector<std::size\_t>\ \&\ idxLandmarks)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00036\ \ \ \ \ }
+\DoxyCodeLine{00037\ \ \ \ \ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classMeasurementPointBundle_a4d7ec2ad6e6fe05ffffe8e537f551365}{update}}(\mbox{\hyperlink{classSystemBase}{SystemBase}}\ \&\ system)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00041\ \ \ \ \ Eigen::Matrix<double,\ 2,\ Eigen::Dynamic>\ Y\_;\ \ \ \ \textcolor{comment}{//\ Feature\ bundle}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{double}\ sigma\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feature\ error\ standard\ deviation\ (in\ pixels)}}
+\DoxyCodeLine{00043\ \ \ \ \ std::vector<int>\ idxFeatures\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Features\ associated\ with\ visible\ landmarks}}
+\DoxyCodeLine{00044\ \ \ \ \ std::vector<std::size\_t>\ idxLandmarks\_;}
+\DoxyCodeLine{00045\ \ \ \ \ \mbox{\hyperlink{structCamera}{Camera}}\ camera\_;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Camera\ object\ to\ computer\ image\ size\ |y|\ used\ in\ loglikelihood}}
+\DoxyCodeLine{00046\ \ \ \ \ std::vector<size\_t>\ associatedLandmarks\_;}
+\DoxyCodeLine{00047\ \ \ \ \ std::set<size\_t>\ visibleLandmarks\_;\ \ }
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>}
+\DoxyCodeLine{00052\ Scalar\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{MeasurementPointBundle::logLikelihood}}(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00053\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{comment}{//const\ SystemSLAMPointLandmarks\ \&\ systemSLAM\ =\ dynamic\_cast<const\ SystemSLAM\ \&>(system);}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ Scalar\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}\ =\ Scalar(0);}
+\DoxyCodeLine{00057\ \ \ \ \ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//\ Extract\ body\ pose\ from\ the\ state\ vector}}
+\DoxyCodeLine{00059\ \ \ \ \ Eigen::Vector3<Scalar>\ rBNn\ =\ x.template\ segment<3>(6);\ \ \textcolor{comment}{//\ Assuming\ position\ starts\ at\ index\ 6}}
+\DoxyCodeLine{00060\ \ \ \ \ Eigen::Vector3<Scalar>\ ThetaNb\ =\ x.template\ segment<3>(9);\ \ \textcolor{comment}{//\ Assuming\ orientation\ starts\ at\ index\ 9}}
+\DoxyCodeLine{00061\ \ \ \ \ Eigen::Matrix3<Scalar>\ Rnb\ =\ rpy2rot(ThetaNb);}
+\DoxyCodeLine{00062\ \ \ \ \ \mbox{\hyperlink{structPose}{Pose<Scalar>}}\ Tnb(Rnb,\ rBNn);}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classMeasurementPointBundle_abc7d69eed60bab5f63982e25888ca1c5}{logLikelihood}}\ =\ 0.0;}
+\DoxyCodeLine{00065\ \}}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{comment}{//\ Image\ feature\ location\ for\ a\ given\ landmark}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>}
+\DoxyCodeLine{00069\ Eigen::Vector2<Scalar>\ MeasurementPointBundle::predictFeature(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ std::size\_t\ idxLandmark)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00070\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{comment}{//\ Obtain\ camera\ pose\ from\ state}}
+\DoxyCodeLine{00072\ \ \ \ \ \mbox{\hyperlink{structPose}{Pose<Scalar>}}\ Tnc;}
+\DoxyCodeLine{00073\ \ \ \ \ Tnc.\mbox{\hyperlink{structPose_a82049e6f7167af41a80c29631ae9a9d3}{translationVector}}\ =\ system.cameraPosition(camera\_,\ x);\ \textcolor{comment}{//\ rCNn}}
+\DoxyCodeLine{00074\ \ \ \ \ Tnc.\mbox{\hyperlink{structPose_a9e7f838356fc6b576abaf2faef09f2b0}{rotationMatrix}}\ =\ system.cameraOrientation(camera\_,\ x);\ \textcolor{comment}{//\ Rnc}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{comment}{//\ Obtain\ landmark\ position\ from\ state}}
+\DoxyCodeLine{00077\ \ \ \ \ std::size\_t\ idx\ =\ system.landmarkPositionIndex(idxLandmark);}
+\DoxyCodeLine{00078\ \ \ \ \ Eigen::Vector3<Scalar>\ rPNn\ =\ x.template\ segment<3>(idx);}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{comment}{//\ Camera\ vector}}
+\DoxyCodeLine{00081\ \ \ \ \ Eigen::Vector3<Scalar>\ rPCc;}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Lab\ 7}}
+\DoxyCodeLine{00083\ \ \ \ \ rPCc\ =\ Tnc.\mbox{\hyperlink{structPose_a9e7f838356fc6b576abaf2faef09f2b0}{rotationMatrix}}.transpose()\ *\ (rPNn\ -\/\ Tnc.\mbox{\hyperlink{structPose_a82049e6f7167af41a80c29631ae9a9d3}{translationVector}});}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ Pixel\ coordinates}}
+\DoxyCodeLine{00086\ \ \ \ \ Eigen::Vector2<Scalar>\ rQOi;}
+\DoxyCodeLine{00087\ \ \ \ \ }
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//\ TODO:\ Lab\ 7}}
+\DoxyCodeLine{00089\ \ \ \ \ rQOi\ =\ camera\_.vectorToPixel(rPCc);}
+\DoxyCodeLine{00090\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}Landmark\ "{}\ <<\ idxLandmark\ <<\ std::endl;}}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}Landmark\ position:\ "{}\ <<\ rPNn.transpose()\ <<\ std::endl;}}
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{//\ std::cout\ <<\ "{}Projected\ feature:\ "{}\ <<\ rQOi.transpose()\ <<\ std::endl;}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00096\ \ \ \ \ \textcolor{keywordflow}{return}\ rQOi;}
+\DoxyCodeLine{00097\ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Scalar>}
+\DoxyCodeLine{00100\ Eigen::VectorX<Scalar>\ MeasurementPointBundle::predictFeatureBundle(\textcolor{keyword}{const}\ Eigen::VectorX<Scalar>\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemSLAM}{SystemSLAM}}\ \&\ system,\ \textcolor{keyword}{const}\ std::vector<std::size\_t>\ \&\ idxLandmarks)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00101\ \textcolor{keyword}{}\{}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{comment}{//\ Ensure\ the\ state\ vector\ size\ matches\ the\ system's\ dimension}}
+\DoxyCodeLine{00103\ \ \ \ \ assert(x.size()\ ==\ system.\mbox{\hyperlink{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}{density}}.\mbox{\hyperlink{classGaussianInfo_ac726ca2019576d3297070b77607acb83}{dim}}());}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{comment}{//\ Get\ the\ number\ of\ landmarks}}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keyword}{const}\ std::size\_t\ \&\ nL\ =\ idxLandmarks.size();}
+\DoxyCodeLine{00107\ \ \ \ \ }
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{comment}{//\ Initialize\ the\ output\ vector\ h\ to\ store\ all\ predicted\ features}}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{//\ The\ size\ is\ 2*nL\ because\ each\ feature\ has\ 2\ coordinates\ (x\ and\ y\ in\ the\ image)}}
+\DoxyCodeLine{00110\ \ \ \ \ Eigen::VectorX<Scalar>\ h(2*nL);}
+\DoxyCodeLine{00111\ \ \ \ \ }
+\DoxyCodeLine{00112\ \ \ \ \ \textcolor{comment}{//\ Iterate\ through\ each\ landmark}}
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordflow}{for}\ (std::size\_t\ i\ =\ 0;\ i\ <\ nL;\ ++i)}
+\DoxyCodeLine{00114\ \ \ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Predict\ the\ feature\ location\ for\ the\ current\ landmark}}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ Eigen::Vector2<Scalar>\ rQOi\ =\ predictFeature(x,\ system,\ idxLandmarks[i]);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Set\ the\ pair\ of\ elements\ in\ h\ corresponding\ to\ this\ landmark}}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ We\ use\ 2*i\ as\ the\ starting\ index\ because\ each\ feature\ occupies\ 2\ elements}}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ h.template\ segment<2>(2*i)\ =\ rQOi;}
+\DoxyCodeLine{00121\ \ \ \ \ \}}
+\DoxyCodeLine{00122\ \ \ \ \ }
+\DoxyCodeLine{00123\ \ \ \ \ \textcolor{comment}{//\ Return\ the\ complete\ feature\ bundle\ prediction\ vector}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keywordflow}{return}\ h;}
+\DoxyCodeLine{00125\ \}}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \textcolor{preprocessor}{\#endif\ }}
+
+\end{DoxyCode}

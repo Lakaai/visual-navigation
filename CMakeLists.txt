@@ -55,6 +55,13 @@ find_package(doctest REQUIRED)
 find_package(Boost 1.74 REQUIRED)
 find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 find_package(autodiff 1.0 REQUIRED)
+# ##########################################################################################
+# set(OpenCV_DIR "/home/linuxbrew/.linuxbrew/opt/opencv/lib/cmake/opencv4")
+# if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#   add_compile_options(-std=c++20 -stdlib=libc++)
+#   add_link_options(-stdlib=libc++)
+# endif()
+# ##########################################################################################
 find_package(OpenCV 4.7 REQUIRED)
 find_package(VTK 8.2 REQUIRED)
 find_package(Torch QUIET)       # optional
