@@ -125,8 +125,6 @@ endif()
 set(DIR_SRC src)
 set(DIR_TEST_SRC test/src)
 
-
-
 # Application
 file(GLOB SRC_BIN CONFIGURE_DEPENDS ${DIR_SRC}/*.cpp ${DIR_SRC}/*.h ${DIR_SRC}/*.hpp)
 
@@ -151,9 +149,6 @@ if(SRC_LIB)
     target_link_libraries(${TARGET_BIN} ${TARGET_LIB})
 endif()
 target_link_libraries(${TARGET_BIN} ${LIBS})
-
-add_executable(test_gaussian_add src/test_gaussian_add.cpp src/Gaussian.cpp) # ADDED LINE
-target_link_libraries(test_gaussian_add Eigen3::Eigen) # ADDED LINE
 
 if(VTK_VERSION VERSION_GREATER_EQUAL "8.90.0")
     vtk_module_autoinit(TARGETS ${TARGET_BIN} MODULES ${VTK_LIBRARIES})

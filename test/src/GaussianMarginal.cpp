@@ -1,133 +1,125 @@
 #include <doctest/doctest.h>
+#include <cstddef>
+#include <vector>
 #include <Eigen/Core>
-#include "../../src/Gaussian.h"
+#include "../../src/Gaussian.hpp"
 
 #ifndef CAPTURE_EIGEN
 #define CAPTURE_EIGEN(x) INFO(#x " = \n", x.format(Eigen::IOFormat(Eigen::FullPrecision, 0, ", ", ";\n", "", "", "[", "]")));
 #endif
 
-SCENARIO("Gaussian marginal")
+// Helper function for Gaussian marginal density unit tests
+template <typename IndexType>
+static void testMarginal(const Gaussian<double> & p, const IndexType & idx)
 {
-    GIVEN("A joint Gaussian (na = 1, nb = 1)")
+    const std::size_t n = idx.size();
+    auto m = p.marginal(idx);
+    REQUIRE(m.dim() == n);
+    REQUIRE(m.sqrtCov().rows() == n);
+
+    THEN("Marginal mean matches expected result")
     {
-        const int na = 1;
-        // const int nb = 1;
-
-        Eigen::VectorXd mu(2);
-        mu << 1,
-              2;
-
-        Eigen::MatrixXd S(2, 2);
-        S << 1, 0.5,
-             0, 1;
-        REQUIRE_MESSAGE(S.isUpperTriangular(), "S must be upper triangular");
-
-        Gaussian p(mu, S);
-        Eigen::MatrixXd P = p.cov();
-
-        WHEN("p.marginalHead(na) is called")
-        {
-            Gaussian pa = p.marginalHead(na);
-
-            THEN("mua has correct dimensions")
-            {
-                Eigen::VectorXd mua = pa.mean();
-                REQUIRE(mua.size() == na);
-
-                AND_THEN("mua matches the first part of joint mean mu")
-                {
-                    Eigen::VectorXd mua_expected = mu.head(na);
-                    CAPTURE_EIGEN(mua);
-                    CAPTURE_EIGEN(mua_expected);
-                    CHECK(mua.isApprox(mua_expected));
-                }
-            }
-
-            THEN("Sa has correct dimensions")
-            {
-                Eigen::MatrixXd Sa = pa.sqrtCov();
-                
-                REQUIRE(Sa.cols() == na);
-                
-
-                AND_THEN("Sa is upper triangular")
-                {
-                    CAPTURE_EIGEN(Sa);
-                    CHECK(Sa.isUpperTriangular());
-                }
-
-                AND_THEN("Pa matches the top-left block of joint covariance P")
-                {
-                    Eigen::MatrixXd Pa = pa.cov();
-                    Eigen::MatrixXd Pa_expected = P.topLeftCorner(na, na);
-                    CAPTURE_EIGEN(Pa);
-                    CAPTURE_EIGEN(Pa_expected);
-                    CHECK(Pa.isApprox(Pa_expected));
-                    
-                }
-            }
-        }
+        Eigen::VectorXd mum = m.mean();
+        REQUIRE(mum.rows() == n);
+        REQUIRE(mum.cols() == 1);
+        Eigen::VectorXd mu = p.mean();
+        Eigen::VectorXd mum_expected = mu(idx);
+        CAPTURE_EIGEN(mum);
+        CAPTURE_EIGEN(mum_expected);
+        CHECK(mum.isApprox(mum_expected));
     }
 
-    GIVEN("A joint Gaussian (na = 2, nb = 2)")
+    THEN("Marginal sqrt cov is upper triangular")
     {
-        const int na = 2;
-        //const int nb = 2;
+        Eigen::MatrixXd Sm = m.sqrtCov();
+        CAPTURE_EIGEN(Sm);
+        CHECK(Sm.isUpperTriangular());
+    }
 
-        Eigen::VectorXd mu(4);
-        mu << 1,
-              1,
-              1,
-              1;
+    THEN("Marginal cov matches expected result")
+    {
+        Eigen::MatrixXd Pm = m.cov();
+        REQUIRE(Pm.rows() == n);
+        REQUIRE(Pm.cols() == n);
+        Eigen::MatrixXd P = p.cov();
+        Eigen::MatrixXd Pm_expected = P(idx, idx);
+        CAPTURE_EIGEN(Pm);
+        CAPTURE_EIGEN(Pm_expected);
+        CHECK(Pm.isApprox(Pm_expected));
+    }
+}
 
-        Eigen::MatrixXd S(4, 4);
-        S << 1, 0.5, 0.2, 0.1,
-             0, 0.5, 0.2, 0.1,
-             0, 0,   0.5, 0.2,
-             0, 0,   0,   0.5;
+SCENARIO("Gaussian marginal density")
+{
+    GIVEN("A Gaussian density (size = 5)")
+    {
+        Eigen::VectorXd mu(5);
+        mu << 1, 2, 3, 4, 5;
+        Eigen::MatrixXd S(5, 5);
+        S <<
+            10, 11, 12, 13, 14,
+             0, 15, 16, 17, 18,
+             0,  0, 19, 20, 21,
+             0,  0,  0, 22, 23,
+             0,  0,  0,  0, 24;
         REQUIRE_MESSAGE(S.isUpperTriangular(), "S must be upper triangular");
 
-        Gaussian p(mu, S);
-        Eigen::MatrixXd P = p.cov();
+        auto p = Gaussian<double>::fromSqrtMoment(mu, S);
+        REQUIRE(p.dim() == 5);
 
-        WHEN("p.marginalHead(na) is called")
+        WHEN("Extracting marginal head (size = 2)")
         {
-            Gaussian pa = p.marginalHead(na);
+            std::vector<int> idx = {0, 1};
+            testMarginal(p, idx);
+        }
 
-            THEN("mua has correct dimensions")
+        WHEN("Extracting marginal tail (size = 2)")
+        {
+            std::vector<int> idx = {3, 4};
+            testMarginal(p, idx);
+        }
+
+        WHEN("Extracting marginal segment (size = 3)")
+        {
+            std::vector<int> idx = {1, 2, 3};
+            testMarginal(p, idx);
+        }
+
+        WHEN("Extracting marginal non-continguous elements (size = 3)")
+        {
+            std::vector<int> idx = {0, 2, 4};
+            testMarginal(p, idx);
+        }
+
+        WHEN("Extracting marginal non-continguous elements in non-ascending order (size = 3)")
+        {
+            std::vector<int> idx = {4, 2, 0};
+            testMarginal(p, idx);
+        }
+    }
+}
+
+SCENARIO("Gaussian marginal covariance overflow")
+{
+    GIVEN("Parameters that may cause the covariance to overflow")
+    {
+        int n = 2;
+        Eigen::VectorXd x = Eigen::VectorXd::Zero(n);
+        Eigen::VectorXd mu = Eigen::VectorXd::Zero(n);
+        Eigen::MatrixXd S = 1e300*Eigen::MatrixXd::Identity(n, n);
+        auto p = Gaussian<double>::fromSqrtMoment(mu, S);
+        // Make sure that covariance overflows
+        REQUIRE_FALSE(p.cov().array().isFinite().all());
+
+        WHEN("Evaluating pm = p.marginal({0, 1})")
+        {
+            std::vector<int> idx = {0, 1};
+            auto pm = p.marginal(idx);
+            THEN("pm.sqrtCov() is finite")
             {
-                Eigen::VectorXd mua = pa.mean();
-                REQUIRE(mua.size() == na);
-
-                AND_THEN("mua matches the first part of joint mean mu")
-                {
-                    Eigen::VectorXd mua_expected = mu.head(na);
-                    CAPTURE_EIGEN(mua);
-                    CAPTURE_EIGEN(mua_expected);
-                    CHECK(mua.isApprox(mua_expected));
-                }
-            }
-
-            THEN("Sa has correct dimensions")
-            {
-                Eigen::MatrixXd Sa = pa.sqrtCov();
-                
-                REQUIRE(Sa.cols() == na);
-
-                AND_THEN("Sa is upper triangular")
-                {
-                    CAPTURE_EIGEN(Sa);
-                    CHECK(Sa.isUpperTriangular());
-                }
-
-                AND_THEN("Pa matches the top-left block of joint covariance P")
-                {
-                    Eigen::MatrixXd Pa = pa.cov();
-                    Eigen::MatrixXd Pa_expected = P.topLeftCorner(na, na);
-                    CAPTURE_EIGEN(Pa);
-                    CAPTURE_EIGEN(Pa_expected);
-                    CHECK(Pa.isApprox(Pa_expected));
-                }
+                Eigen::MatrixXd Sm = pm.sqrtCov();
+                CAPTURE_EIGEN(Sm);
+                CHECK(Sm.array().isFinite().all());
             }
         }
     }

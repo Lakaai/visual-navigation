@@ -1,82 +1,173 @@
-#include <cassert>
+/**
+ * @mainpage MCHA4400 Lab 5: Laplace filtering
+ *
+ * @tableofcontents
+ *
+ * @section intro Introduction
+ *
+ * In this lab, you will:
+ * - Implement Gaussian distribution operations in square-root moment form
+ * - Implement the process dynamics and measurement model for a ballistic state estimation problem
+ * - Run a square-root Laplace filter
+ * - Plot the results using VTK
+ *
+ * @section tasks Tasks
+ *
+ * 1. Implement Gaussian distribution operations (log likelihood, affine transform, marginal, conditional)
+ * 2. Implement ballistic process model dynamics 
+ * 3. Implement RADAR range measurement model
+ * 4. Run Laplace filter and visualize results
+ *
+ * @section implementation Key Implementation Files
+ * 
+ * - GaussianBase.hpp: Base class for Gaussian distribution
+ * - Gaussian.hpp: Gaussian distribution in square-root moment form
+ * - SystemBallistic.cpp: System dynamics for ballistic trajectory
+ * - MeasurementRADAR.cpp: Measurement model and likelihood for RADAR
+ * - ballistic_plot.cpp: Plotting functions for ballistic trajectory
+ *
+ * @section testing Unit Tests
+ *
+ * Unit tests are provided to verify your implementations:
+ * 
+ * - GaussianLog.cpp
+ * - GaussianTransform.cpp  
+ * - GaussianMarginal.cpp
+ * - GaussianConditional.cpp
+ * - GaussianConfidence.cpp
+ * - SystemBallistic.cpp
+ * - MeasurementRADAR.cpp
+ *
+ * @section build Building and Running
+ *
+ * 1. Configure CMake build:
+ *    `cmake -G Ninja -B build -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Debug && cd build`
+ * 
+ * 2. Build project and run unit tests:
+ *    `ninja`
+ *
+ * 3. Build and run executable:
+ *    `ninja && ./lab5`
+ */
 #include <cstdlib>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <Eigen/Core>
+#include "Gaussian.hpp"
+#include "SystemBallistic.h"
+#include "MeasurementRADAR.h"
+#include "ballistic_plot.h"
 
 int main(int argc, char *argv[])
 {
-    std::cout << "Eigen version: "
-              << EIGEN_WORLD_VERSION << "."
-              << EIGEN_MAJOR_VERSION << "."
-              << EIGEN_MINOR_VERSION 
-              << std::endl;
-
-    std::cout << "Create a column vector:" << std::endl;
-
-    Eigen::VectorXd x(3);
-    // TODO
-    x << 1, 3.2, 0.01;
-    std::cout << "x = \n" << x << "\n" << std::endl;
-
-    std::cout << "Create a matrix:" << std::endl;
-    Eigen::MatrixXd A(4,3);
-    // TODO: Don't just use a for loop or hardcode all the elements
-    //       Try and be creative :)
+    std::string fileName   = "../data/estimationdata.csv";
     
-    A = (Eigen::ArrayXd::LinSpaced(4, 1, 4).matrix() * Eigen::RowVectorXd::LinSpaced(3, 1, 3)).array();
-    std::cout << "A.size() = " << A.size() << std::endl;
-    std::cout << "A.rows() = " << A.rows() << std::endl;
-    std::cout << "A.cols() = " << A.cols() << std::endl;
-    std::cout << "A = \n" << A << "\n" << std::endl;
-    std::cout << "A.transpose() = \n" << A.transpose() << "\n" << std::endl;
+    // Dimensions of state and measurement vectors for recording results
+    const std::size_t nx = 3;
+    const std::size_t ny = 1;
 
-    std::cout << "Matrix multiplication:" << std::endl;
-    Eigen::VectorXd Ax = A * x;
-    std::cout << "A*x = \n" << Ax << "\n" << std::endl;
+    Eigen::VectorXd x0(nx);
+    Eigen::VectorXd u;
+    Eigen::VectorXd t_hist;
+    Eigen::MatrixXd x_hist, y_hist;
 
-    std::cout << "Matrix concatenation:" << std::endl;
-    Eigen::MatrixXd B(4, 6);
-    B << A, A;
-    std::cout << "B = \n" << B << "\n" << std::endl;
+    // Read from CSV
+    std::fstream input;
+    input.open(fileName, std::fstream::in);
+    if (!input.is_open())
+    {
+        std::cout << "Could not open input file \"" << fileName << "\"! Exiting" << std::endl;
+        return EXIT_FAILURE;
+    }
+    std::cout << "Reading data from " << fileName << std::endl;
 
-    Eigen::MatrixXd C(8, 3);
-    C << A, A;
-    std::cout << "C = \n" << C << "\n" << std::endl;
+    // Determine number of time steps
+    std::size_t rows = 0;
+    std::string line;
+    while (std::getline(input, line))
+    {
+        rows++;
+    }
+    std::cout << "Found " << rows << " rows within " << fileName << std::endl << std::endl;
+    std::size_t nsteps = rows - 1;  // Disregard header row
 
-    std::cout << "Submatrix via block:" << std::endl;
-    Eigen::MatrixXd D = B.block(1, 2, 1, 3);
-    std::cout << "D = \n" << D << "\n" << std::endl;
+    t_hist.resize(nsteps);
+    x_hist.resize(nx, nsteps);
+    y_hist.resize(ny, nsteps);
 
-    std::cout << "Submatrix via slicing:" << std::endl;
-    D = B.row(1).segment(2, 3);
-    std::cout << "D = \n" << D << "\n" << std::endl;
+    // Read each row of data
+    rows = 0;
+    input.clear();
+    input.seekg(0);
+    std::vector<std::string> row;
+    std::string csvElement;
+    while (std::getline(input, line))
+    {
+        if (rows > 0)
+        {
+            std::size_t i = rows - 1;
+            
+            row.clear();
 
-    // std::cout << "Broadcasting:" << std::endl;
-    // Eigen::MatrixXd E;
-    // Eigen::VectorXd v(6);
-    // v << 1, 3, 5, 7, 4, 6;
-    // E = B.rowwise() + v;
-    // std::cout << "E = \n" << E << "\n" << std::endl;
+            std::stringstream s(line);
+            while (std::getline(s, csvElement, ','))
+            {
+                row.push_back(csvElement);
+            }
+            
+            t_hist(i)    = std::stof(row[0]);
+            x_hist(0, i) = std::stof(row[1]);
+            x_hist(1, i) = std::stof(row[2]);
+            x_hist(2, i) = std::stof(row[3]);
+            y_hist(0, i) = std::stof(row[5]);
+        }
+        rows++;
+    }
 
-    std::cout << "Index subscripting:" << std::endl;
-    Eigen::MatrixXd F;
-    Eigen::ArrayXi r(4), c(6);
-    r << 1, 3, 2, 4;
-    c << 1, 4, 2, 5, 3, 6;
-    F = B(r - Eigen::ArrayXi::Ones(4), c - Eigen::ArrayXi::Ones(6));
+    Eigen::MatrixXd mu_hist(nx, nsteps);
+    Eigen::MatrixXd sigma_hist(nx, nsteps);
 
-    std::cout << "F = \n" << F << "\n" << std::endl;
+    // Initial state estimate
+    Eigen::MatrixXd S0(nx, nx);
+    Eigen::VectorXd mu0(nx);
+    S0.fill(0);
+    S0.diagonal() << 2200, 100, 1e-3;
 
-    std::cout << "Memory mapping:" << std::endl;
-    float array[9] = {1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f};
-    // Create an Eigen::Map view of the array as a 3x3 matrix
-    Eigen::Map<Eigen::Matrix<float, 3, 3, Eigen::RowMajor>> G(array);         // TODO: Replace this with an Eigen::Map
-    
-    array[2] = -3.0f;               // Change an element in the raw storage
-    assert(array[2] == G(0,2));     // Ensure the change is reflected in the view
-    G(2,0) = -7.0f;                 // Change an element via the view
-    assert(G(2,0) == array[6]);     // Ensure the change is reflected in the raw storage
-    std::cout << "G = \n" << G << "\n" << std::endl;
+    mu0 << 14000, // Initial height
+            -450, // Initial velocity
+          0.0005; // Ballistic coefficient
+
+    Gaussian<double> p0 = Gaussian<double>::fromSqrtMoment(mu0, S0);
+    SystemBallistic system(p0);
+
+    std::cout << "Initial state estimate" << std::endl;
+    std::cout << "mu[0] = \n" << p0.mean() << std::endl;
+    std::cout << "P[0] = \n" << p0.cov() << std::endl;
+
+    for (std::size_t k = 0; k < nsteps; ++k)
+    {
+        // Create RADAR measurement
+        double t = t_hist(k);
+        Eigen::VectorXd y = y_hist.col(k);
+        MeasurementRADAR measurementRADAR(t, y);
+
+        // Process measurement event (do time update and measurement update)
+        measurementRADAR.process(system);
+
+        // Save results for plotting
+        mu_hist.col(k)       = system.density.mean();
+        sigma_hist.col(k)    = system.density.cov().diagonal().cwiseSqrt();
+    }
+
+    std::cout << std::endl;
+    std::cout << "Final state estimate" << std::endl;
+    std::cout << "mu[end] = \n" << system.density.mean() << std::endl;
+    std::cout << "P[end] = \n" << system.density.cov() << std::endl;
+
+    // Plot results
+    plot_simulation(t_hist, x_hist, mu_hist, sigma_hist);
 
     return EXIT_SUCCESS;
 }
+
