@@ -1,7 +1,0 @@
-torch
-torchvision
-onnx
-matplotlib
-git+https://github.com/huggingface/transformers.git
-datasets
-albumentations
