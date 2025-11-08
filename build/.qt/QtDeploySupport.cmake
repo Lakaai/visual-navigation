@@ -27,18 +27,18 @@ if(QT_DEPLOY_PREFIX STREQUAL "")
     set(QT_DEPLOY_PREFIX .)
 endif()
 if(NOT QT_DEPLOY_IGNORED_LIB_DIRS)
-    set(QT_DEPLOY_IGNORED_LIB_DIRS "/usr/lib/gcc/x86_64-linux-gnu/11;/usr/lib/x86_64-linux-gnu;/usr/lib;/lib/x86_64-linux-gnu;/lib")
+    set(QT_DEPLOY_IGNORED_LIB_DIRS "/lib/x86_64-linux-gnu;/usr/lib/x86_64-linux-gnu")
 endif()
 
 # These are internal implementation details. They may be removed at any time.
 set(__QT_DEPLOY_SYSTEM_NAME "Linux")
 set(__QT_DEPLOY_IS_SHARED_LIBS_BUILD "ON")
 set(__QT_DEPLOY_TOOL "GRD")
-set(__QT_DEPLOY_IMPL_DIR "/home/luke/Documents/Github/MCHA4400/lab2/build/.qt")
+set(__QT_DEPLOY_IMPL_DIR "/home/luke/Documents/Github/MCHA4400/lab3/build/.qt")
 set(__QT_DEPLOY_VERBOSE "")
 set(__QT_CMAKE_EXPORT_NAMESPACE "Qt6")
 set(__QT_DEPLOY_GENERATOR_IS_MULTI_CONFIG "0")
-set(__QT_DEPLOY_ACTIVE_CONFIG "Release")
+set(__QT_DEPLOY_ACTIVE_CONFIG "Debug")
 set(__QT_NO_CREATE_VERSIONLESS_FUNCTIONS "")
 set(__QT_DEFAULT_MAJOR_VERSION "6")
 set(__QT_DEPLOY_QT_ADDITIONAL_PACKAGES_PREFIX_PATH "")
@@ -58,9 +58,9 @@ set(__QT_DEPLOY_QT_DEBUG_POSTFIX "")
 
 # Define the CMake commands to be made available during deployment.
 set(__qt_deploy_support_files
-    "/home/luke/Documents/Github/MCHA4400/lab2/build/.qt/QtDeployTargets.cmake"
-    "/home/linuxbrew/.linuxbrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6Core/Qt6CoreDeploySupport.cmake"
-    "/home/linuxbrew/.linuxbrew/Cellar/qt/6.7.0_1/lib/cmake/Qt6Qml/Qt6QmlDeploySupport.cmake"
+    "/home/luke/Documents/Github/MCHA4400/lab3/build/.qt/QtDeployTargets.cmake"
+    "/home/linuxbrew/.linuxbrew/Cellar/qt/6.7.0_2/lib/cmake/Qt6Core/Qt6CoreDeploySupport.cmake"
+    "/home/linuxbrew/.linuxbrew/Cellar/qt/6.7.0_2/lib/cmake/Qt6Qml/Qt6QmlDeploySupport.cmake"
 )
 foreach(__qt_deploy_support_file IN LISTS __qt_deploy_support_files)
     include("${__qt_deploy_support_file}")

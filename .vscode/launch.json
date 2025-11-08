@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
-            "args": [], // Set command line arguments for debugging here, e.g., ["--calibrate", "../data/config.xml"]
+            "args": ["-c", "-e", "-v=2", "../data/images/config.xml"], // Set command line arguments for debugging here
             "stopAtEntry": false,
             "cwd": "${command:cmake.launchTargetDirectory}",
             "osx": {

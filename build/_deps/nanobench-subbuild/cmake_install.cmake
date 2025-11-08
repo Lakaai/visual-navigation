@@ -1,4 +1,4 @@
-# Install script for directory: /home/luke/Documents/Github/MCHA4400/lab2/build/_deps/nanobench-subbuild
+# Install script for directory: /home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "/home/luke/Documents/Github/MCHA4400/lab2/build/_deps/nanobench-subbuild/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

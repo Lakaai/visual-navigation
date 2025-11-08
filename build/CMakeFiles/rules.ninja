@@ -6,15 +6,45 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: lab2
-# Configurations: Release
+# Project: lab3
+# Configurations: Debug
 # =============================================================================
 # =============================================================================
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__common_Debug
+  depfile = $DEP_FILE
+  command = /usr/bin/c++ $DEFINES $INCLUDES $FLAGS -E -x c++ $in -MT $DYNDEP_INTERMEDIATE_FILE -MD -MF $DEP_FILE -fmodules-ts -fdeps-file=$DYNDEP_INTERMEDIATE_FILE -fdeps-target=$OBJ_FILE -fdeps-format=p1689r5 -o $PREPROCESSED_OUTPUT_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__common_Debug
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -E cmake_ninja_dyndep --tdi=CMakeFiles/common.dir/CXXDependInfo.json --lang=CXX --modmapfmt=gcc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__common_unscanned_Release
+rule CXX_COMPILER__common_scanned_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -fmodules-ts -fmodule-mapper=$DYNDEP_MODULE_MAP_FILE -MD -fdeps-format=p1689r5 -x c++ -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__common_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -24,16 +54,46 @@ rule CXX_COMPILER__common_unscanned_Release
 #############################################
 # Rule for linking CXX static library.
 
-rule CXX_STATIC_LIBRARY_LINKER__common_Release
-  command = $PRE_LINK && /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.1/bin/cmake -E rm -f $TARGET_FILE && /usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /usr/bin/ranlib $TARGET_FILE && $POST_BUILD
+rule CXX_STATIC_LIBRARY_LINKER__common_Debug
+  command = $PRE_LINK && /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f $TARGET_FILE && /usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /usr/bin/ranlib $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__lab3_Debug
+  depfile = $DEP_FILE
+  command = /usr/bin/c++ $DEFINES $INCLUDES $FLAGS -E -x c++ $in -MT $DYNDEP_INTERMEDIATE_FILE -MD -MF $DEP_FILE -fmodules-ts -fdeps-file=$DYNDEP_INTERMEDIATE_FILE -fdeps-target=$OBJ_FILE -fdeps-format=p1689r5 -o $PREPROCESSED_OUTPUT_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__lab3_Debug
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -E cmake_ninja_dyndep --tdi=CMakeFiles/lab3.dir/CXXDependInfo.json --lang=CXX --modmapfmt=gcc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__lab2_unscanned_Release
+rule CXX_COMPILER__lab3_scanned_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -fmodules-ts -fmodule-mapper=$DYNDEP_MODULE_MAP_FILE -MD -fdeps-format=p1689r5 -x c++ -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__lab3_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -43,16 +103,46 @@ rule CXX_COMPILER__lab2_unscanned_Release
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__lab2_Release
+rule CXX_EXECUTABLE_LINKER__lab3_Debug
   command = $PRE_LINK && /usr/bin/c++ $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
 
 
 #############################################
+# Rule for generating CXX dependencies.
+
+rule CXX_SCAN__tests_Debug
+  depfile = $DEP_FILE
+  command = /usr/bin/c++ $DEFINES $INCLUDES $FLAGS -E -x c++ $in -MT $DYNDEP_INTERMEDIATE_FILE -MD -MF $DEP_FILE -fmodules-ts -fdeps-file=$DYNDEP_INTERMEDIATE_FILE -fdeps-target=$OBJ_FILE -fdeps-format=p1689r5 -o $PREPROCESSED_OUTPUT_FILE
+  description = Scanning $in for CXX dependencies
+
+
+#############################################
+# Rule to generate ninja dyndep files for CXX.
+
+rule CXX_DYNDEP__tests_Debug
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -E cmake_ninja_dyndep --tdi=CMakeFiles/tests.dir/CXXDependInfo.json --lang=CXX --modmapfmt=gcc --dd=$out @$out.rsp
+  description = Generating CXX dyndep file $out
+  rspfile = $out.rsp
+  rspfile_content = $in
+  restat = 1
+
+
+#############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__tests_unscanned_Release
+rule CXX_COMPILER__tests_scanned_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -fmodules-ts -fmodule-mapper=$DYNDEP_MODULE_MAP_FILE -MD -fdeps-format=p1689r5 -x c++ -o $out -c $in
+  description = Building CXX object $out
+
+
+#############################################
+# Rule for compiling CXX files.
+
+rule CXX_COMPILER__tests_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -62,7 +152,7 @@ rule CXX_COMPILER__tests_unscanned_Release
 #############################################
 # Rule for linking CXX executable.
 
-rule CXX_EXECUTABLE_LINKER__tests_Release
+rule CXX_EXECUTABLE_LINKER__tests_Debug
   command = $PRE_LINK && /usr/bin/c++ $FLAGS $LINK_FLAGS $in -o $TARGET_FILE $LINK_PATH $LINK_LIBRARIES && $POST_BUILD
   description = Linking CXX executable $TARGET_FILE
   restat = $RESTAT
@@ -79,7 +169,7 @@ rule CUSTOM_COMMAND
 #############################################
 # Rule for compiling CXX files.
 
-rule CXX_COMPILER__nanobench_unscanned_Release
+rule CXX_COMPILER__nanobench_unscanned_Debug
   depfile = $DEP_FILE
   deps = gcc
   command = ${LAUNCHER}${CODE_CHECK}/usr/bin/c++ $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
@@ -89,8 +179,8 @@ rule CXX_COMPILER__nanobench_unscanned_Release
 #############################################
 # Rule for linking CXX static library.
 
-rule CXX_STATIC_LIBRARY_LINKER__nanobench_Release
-  command = $PRE_LINK && /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.1/bin/cmake -E rm -f $TARGET_FILE && /usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /usr/bin/ranlib $TARGET_FILE && $POST_BUILD
+rule CXX_STATIC_LIBRARY_LINKER__nanobench_Debug
+  command = $PRE_LINK && /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -E rm -f $TARGET_FILE && /usr/bin/ar qc $TARGET_FILE $LINK_FLAGS $in && /usr/bin/ranlib $TARGET_FILE && $POST_BUILD
   description = Linking CXX static library $TARGET_FILE
   restat = $RESTAT
 
@@ -99,7 +189,7 @@ rule CXX_STATIC_LIBRARY_LINKER__nanobench_Release
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.1/bin/cmake --regenerate-during-build -S/home/luke/Documents/Github/MCHA4400/lab2 -B/home/luke/Documents/Github/MCHA4400/lab2/build
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake --regenerate-during-build -S/home/luke/Documents/Github/MCHA4400/lab3 -B/home/luke/Documents/Github/MCHA4400/lab3/build
   description = Re-running CMake...
   generator = 1
 
@@ -108,9 +198,17 @@ rule RERUN_CMAKE
 # Rule for re-checking globbed directories.
 
 rule VERIFY_GLOBS
-  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.1/bin/cmake -P /home/luke/Documents/Github/MCHA4400/lab2/build/CMakeFiles/VerifyGlobs.cmake
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -P /home/luke/Documents/Github/MCHA4400/lab3/build/CMakeFiles/VerifyGlobs.cmake
   description = Re-checking globbed directories...
   generator = 1
+
+
+#############################################
+# Rule for cleaning additional files.
+
+rule CLEAN_ADDITIONAL
+  command = /home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/bin/cmake -DCONFIG=$CONFIG -P CMakeFiles/clean_additional.cmake
+  description = Cleaning additional files...
 
 
 #############################################

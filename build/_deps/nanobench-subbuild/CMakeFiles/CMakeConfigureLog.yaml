@@ -4,8 +4,8 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.1/share/cmake/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "/home/linuxbrew/.linuxbrew/Cellar/cmake/3.30.3/share/cmake/Modules/CMakeDetermineSystem.cmake:205 (message)"
       - "CMakeLists.txt:16 (project)"
     message: |
-      The system is: Linux - 6.5.0-45-generic - x86_64
+      The system is: Linux - 6.8.0-40-generic - x86_64
 ...
