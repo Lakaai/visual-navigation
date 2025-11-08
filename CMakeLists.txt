@@ -55,13 +55,6 @@ find_package(doctest REQUIRED)
 find_package(Boost 1.74 REQUIRED)
 find_package(Eigen3 3.4 REQUIRED NO_MODULE)
 find_package(autodiff 1.0 REQUIRED)
-# ##########################################################################################
-# set(OpenCV_DIR "/home/linuxbrew/.linuxbrew/opt/opencv/lib/cmake/opencv4")
-# if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#   add_compile_options(-std=c++20 -stdlib=libc++)
-#   add_link_options(-stdlib=libc++)
-# endif()
-# ##########################################################################################
 find_package(OpenCV 4.7 REQUIRED)
 find_package(VTK 8.2 REQUIRED)
 find_package(Torch QUIET)       # optional
@@ -132,6 +125,8 @@ endif()
 set(DIR_SRC src)
 set(DIR_TEST_SRC test/src)
 
+
+
 # Application
 file(GLOB SRC_BIN CONFIGURE_DEPENDS ${DIR_SRC}/*.cpp ${DIR_SRC}/*.h ${DIR_SRC}/*.hpp)
 
@@ -156,6 +151,9 @@ if(SRC_LIB)
     target_link_libraries(${TARGET_BIN} ${TARGET_LIB})
 endif()
 target_link_libraries(${TARGET_BIN} ${LIBS})
+
+add_executable(test_gaussian_add src/test_gaussian_add.cpp src/Gaussian.cpp) # ADDED LINE
+target_link_libraries(test_gaussian_add Eigen3::Eigen) # ADDED LINE
 
 if(VTK_VERSION VERSION_GREATER_EQUAL "8.90.0")
     vtk_module_autoinit(TARGETS ${TARGET_BIN} MODULES ${VTK_LIBRARIES})
