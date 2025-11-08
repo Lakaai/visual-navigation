@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_20implementation_20files_0',['Key Implementation Files',['../index.html#implementation',1,'']]]
+  ['join_0',['join',['../classGaussianInfo.html#aaaf2df2bac13852f7d0d2bddab9a1507',1,'GaussianInfo']]]
 ];

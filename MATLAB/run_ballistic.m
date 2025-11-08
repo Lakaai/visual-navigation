@@ -22,7 +22,7 @@ for t = 0.1:0.1:60      % Event time stamps
     measurement.time = t;
     % measurement.y = y;                      % Use given data
     measurement.needToSimulate = true;      % Use simulated data (relies on simulated state)
-    measurement.updateMethod = 'BFGSTrustSqrtInv'; % 'affine', 'unscented', 'BFGSTrustSqrtInv', 'SR1TrustEig', 'NewtonTrustEig'
+    measurement.updateMethod = 'BFGSTrustSqrt'; % 'affine', 'BFGSTrustSqrt', 'BFGSLMSqrt', 'SR1TrustEig', 'NewtonTrustEig'
     % measurement.verbosity = 3;
     event_queue(end + 1) = measurement; %#ok<SAGROW>
 end

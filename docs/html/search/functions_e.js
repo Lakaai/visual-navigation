@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rk4sdehelper_0',['RK4SDEHelper',['../classSystemEstimator.html#a249d9ae42fa67c8a82ad5c9b87491b5a',1,'SystemEstimator']]]
+  ['quadricsurface_0',['quadricSurface',['../classGaussianInfo.html#a4b83a7204fbab4539c388e17cdd9e51b',1,'GaussianInfo']]]
 ];

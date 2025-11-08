@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "Event.h"
 #include "SystemEstimator.h"
 #include "funcmin.hpp"
@@ -10,42 +10,42 @@ MeasurementGaussianLikelihood::MeasurementGaussianLikelihood(double time, const 
     : Measurement(time)
     , y_(y)
 {
-    updateMethod_= UpdateMethod::BFGSTRUSTSQRTINV;
+    updateMethod_= UpdateMethod::BFGSTRUSTSQRT;
 }
 
 MeasurementGaussianLikelihood::MeasurementGaussianLikelihood(double time, const Eigen::VectorXd & y, int verbosity)
     : Measurement(time, verbosity)
     , y_(y)
 {
-    updateMethod_= UpdateMethod::BFGSTRUSTSQRTINV;
+    updateMethod_= UpdateMethod::BFGSTRUSTSQRT;
 }
 
 MeasurementGaussianLikelihood::~MeasurementGaussianLikelihood() = default;
 
-Gaussian<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const
+GaussianInfo<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const
 {
     Eigen::VectorXd h = predict(x, system);
-    const Eigen::MatrixXd & SR = noiseDensity(system).sqrtCov();
-    return Gaussian<double>::fromSqrtMoment(h, SR);
+    const Eigen::MatrixXd & Xi = noiseDensity(system).sqrtInfoMat();
+    return GaussianInfo<double>::fromSqrtInfo(Xi*h, Xi);
 }
 
-Gaussian<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx) const
+GaussianInfo<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx) const
 {
     Eigen::VectorXd h = predict(x, system, dhdx);
-    const Eigen::MatrixXd & SR = noiseDensity(system).sqrtCov();
-    return Gaussian<double>::fromSqrtMoment(h, SR);
+    const Eigen::MatrixXd & Xi = noiseDensity(system).sqrtInfoMat();
+    return GaussianInfo<double>::fromSqrtInfo(Xi*h, Xi);
 }
 
-Gaussian<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx, Eigen::Tensor<double, 3> & d2hdx2) const
+GaussianInfo<double> MeasurementGaussianLikelihood::predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx, Eigen::Tensor<double, 3> & d2hdx2) const
 {
     Eigen::VectorXd h = predict(x, system, dhdx, d2hdx2);
-    const Eigen::MatrixXd & SR = noiseDensity(system).sqrtCov();
-    return Gaussian<double>::fromSqrtMoment(h, SR);
+    const Eigen::MatrixXd & Xi = noiseDensity(system).sqrtInfoMat();
+    return GaussianInfo<double>::fromSqrtInfo(Xi*h, Xi);
 }
 
 // Augmented measurement model
-// [ y ] = [ h(x) + v ]
 // [ x ]   [     x    ]
+// [ y ] = [ h(x) + v ]
 // \___/   \__________/
 //   ya  =   ha(x, v)
 //
@@ -61,12 +61,12 @@ Eigen::MatrixXd MeasurementGaussianLikelihood::augmentedPredict(const Eigen::Vec
     Eigen::VectorXd y = predict(x, system, J) + v;
 
     Eigen::VectorXd ha(nx + ny);
-    ha << y,
-          x;
+    ha << x,
+          y;
 
     Ja.resize(nx + ny, nx + ny);
-    Ja <<                                  J, Eigen::MatrixXd::Identity(ny, ny),
-Eigen::MatrixXd::Identity(nx, nx), Eigen::MatrixXd::Zero(nx, ny);
+    Ja << Eigen::MatrixXd::Identity(nx, nx), Eigen::MatrixXd::Zero(nx, ny),
+                                          J, Eigen::MatrixXd::Identity(ny, ny);
 
     return ha;
 }
@@ -84,8 +84,8 @@ void MeasurementGaussianLikelihood::update(SystemBase & system_)
             const Eigen::Index & ny = y_.size();
             auto pxv = system.density*noiseDensity(system);    // p(x, v) = p(x)*p(v)
             auto func = [&](const Eigen::VectorXd & x, Eigen::MatrixXd & J){ return augmentedPredict(x, J, system); };
-            auto pyx = pxv.affineTransform(func);
-            system.density = pyx.conditional(Eigen::lastN(nx), Eigen::seqN(0, ny), y_);
+            auto pxy = pxv.affineTransform(func);
+            system.density = pxy.conditional(Eigen::seqN(0, nx), Eigen::lastN(ny), y_);
             break;
         }
         case UpdateMethod::GAUSSNEWTON:
@@ -196,7 +196,7 @@ double MeasurementGaussianLikelihood::logLikelihood(const Eigen::VectorXd & x, c
     //                      dx_i         dy_k dy_l         dx_j         dx_i dx_j   dy_k   
     //
 
-    // Hint: In MATLAB, this operation would look like the following:
+    // In MATLAB, this operation would look like the following:
     //       nh = length(h);
     //       nx = length(x);
     //       H = dhdx.'*logLikHess*dhdx - reshape(sum(d2hdx2 .* reshape(loglikGrad, [nh, 1, 1]), 1), [nx, nx]);

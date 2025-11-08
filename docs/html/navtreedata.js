@@ -24,8 +24,8 @@
 */
 var NAVTREE =
 [
-  [ "lab5", "index.html", [
-    [ "MCHA4400 Lab 5: Laplace filtering", "index.html", "index" ],
+  [ "lab6", "index.html", [
+    [ "MCHA4400 Lab 6: Laplace information filter", "index.html", "index" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [

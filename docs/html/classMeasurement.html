@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>lab5: Measurement Class Reference</title>
+<title>lab6: Measurement Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">lab5
+   <div id="projectname">lab6
    </div>
   </td>
  </tr>
@@ -171,12 +171,13 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~Event</b> ()</td>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-types" name="pro-types"></a>
 Protected Types</h2></td></tr>
 <tr class="memitem:af49d21e894f7502251497eabcf1f2dff" id="r_af49d21e894f7502251497eabcf1f2dff"><td class="memItemLeft" align="right" valign="top"><a id="af49d21e894f7502251497eabcf1f2dff" name="af49d21e894f7502251497eabcf1f2dff"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af49d21e894f7502251497eabcf1f2dff">UpdateMethod</a> { <br />
-&#160;&#160;<b>BFGSTRUSTSQRTINV</b>
+&#160;&#160;<b>BFGSTRUSTSQRT</b>
+, <b>BFGSLMSQRT</b>
 , <b>SR1TRUSTEIG</b>
 , <b>NEWTONTRUSTEIG</b>
-, <b>AFFINE</b>
 , <br />
-&#160;&#160;<b>GAUSSNEWTON</b>
+&#160;&#160;<b>AFFINE</b>
+, <b>GAUSSNEWTON</b>
 , <b>LEVENBERGMARQUARDT</b>
 <br />
  }</td></tr>
@@ -185,15 +186,15 @@ Protected Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a47b3ad071548478347ad364ccc79869a" id="r_a47b3ad071548478347ad364ccc79869a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a47b3ad071548478347ad364ccc79869a">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system)</td></tr>
-<tr class="memdesc:a47b3ad071548478347ad364ccc79869a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density.  <br /></td></tr>
-<tr class="separator:a47b3ad071548478347ad364ccc79869a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa2f2d1bd7d476083921ce5bb3b9278c" id="r_aaa2f2d1bd7d476083921ce5bb3b9278c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa2f2d1bd7d476083921ce5bb3b9278c">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g)</td></tr>
-<tr class="memdesc:aaa2f2d1bd7d476083921ce5bb3b9278c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density and its gradient.  <br /></td></tr>
-<tr class="separator:aaa2f2d1bd7d476083921ce5bb3b9278c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f9a58e0d42ef27491d2e210bc842bd5" id="r_a0f9a58e0d42ef27491d2e210bc842bd5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f9a58e0d42ef27491d2e210bc842bd5">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H)</td></tr>
-<tr class="memdesc:a0f9a58e0d42ef27491d2e210bc842bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density, its gradient, and Hessian.  <br /></td></tr>
-<tr class="separator:a0f9a58e0d42ef27491d2e210bc842bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e2ef4fbb8d8eeb71940f5ffd6848ea6" id="r_a3e2ef4fbb8d8eeb71940f5ffd6848ea6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e2ef4fbb8d8eeb71940f5ffd6848ea6">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const</td></tr>
+<tr class="memdesc:a3e2ef4fbb8d8eeb71940f5ffd6848ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density.  <br /></td></tr>
+<tr class="separator:a3e2ef4fbb8d8eeb71940f5ffd6848ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea34bb7e795a1c29a28f37b7e252ecf" id="r_aaea34bb7e795a1c29a28f37b7e252ecf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaea34bb7e795a1c29a28f37b7e252ecf">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g) const</td></tr>
+<tr class="memdesc:aaea34bb7e795a1c29a28f37b7e252ecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density and its gradient.  <br /></td></tr>
+<tr class="separator:aaea34bb7e795a1c29a28f37b7e252ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae3ef416c7110a2041fdfb320a57559" id="r_aeae3ef416c7110a2041fdfb320a57559"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeae3ef416c7110a2041fdfb320a57559">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H) const</td></tr>
+<tr class="memdesc:aeae3ef416c7110a2041fdfb320a57559"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density, its gradient, and Hessian.  <br /></td></tr>
+<tr class="separator:aeae3ef416c7110a2041fdfb320a57559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30df1dcc9aac6e9d25e54498ca11758a" id="r_a30df1dcc9aac6e9d25e54498ca11758a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a30df1dcc9aac6e9d25e54498ca11758a">update</a> (<a class="el" href="classSystemBase.html">SystemBase</a> &amp;system) override</td></tr>
 <tr class="memdesc:a30df1dcc9aac6e9d25e54498ca11758a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the system based on this measurement.  <br /></td></tr>
 <tr class="separator:a30df1dcc9aac6e9d25e54498ca11758a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -278,8 +279,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a47b3ad071548478347ad364ccc79869a" name="a47b3ad071548478347ad364ccc79869a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47b3ad071548478347ad364ccc79869a">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[1/3]</span></h2>
+<a id="a3e2ef4fbb8d8eeb71940f5ffd6848ea6" name="a3e2ef4fbb8d8eeb71940f5ffd6848ea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e2ef4fbb8d8eeb71940f5ffd6848ea6">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,7 +296,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>system</em></span>&#160;)</td>
+          <td class="paramtype">const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>system</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -317,8 +318,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
 
 </div>
 </div>
-<a id="aaa2f2d1bd7d476083921ce5bb3b9278c" name="aaa2f2d1bd7d476083921ce5bb3b9278c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaa2f2d1bd7d476083921ce5bb3b9278c">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[2/3]</span></h2>
+<a id="aaea34bb7e795a1c29a28f37b7e252ecf" name="aaea34bb7e795a1c29a28f37b7e252ecf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaea34bb7e795a1c29a28f37b7e252ecf">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,7 +340,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Eigen::VectorXd &amp;</td>          <td class="paramname"><span class="paramname"><em>g</em></span>&#160;)</td>
+          <td class="paramtype">Eigen::VectorXd &amp;</td>          <td class="paramname"><span class="paramname"><em>g</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -362,8 +363,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
 
 </div>
 </div>
-<a id="a0f9a58e0d42ef27491d2e210bc842bd5" name="a0f9a58e0d42ef27491d2e210bc842bd5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f9a58e0d42ef27491d2e210bc842bd5">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[3/3]</span></h2>
+<a id="aeae3ef416c7110a2041fdfb320a57559" name="aeae3ef416c7110a2041fdfb320a57559"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeae3ef416c7110a2041fdfb320a57559">&#9670;&#160;</a></span>costJointDensity() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -389,7 +390,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Eigen::MatrixXd &amp;</td>          <td class="paramname"><span class="paramname"><em>H</em></span>&#160;)</td>
+          <td class="paramtype">Eigen::MatrixXd &amp;</td>          <td class="paramname"><span class="paramname"><em>H</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>

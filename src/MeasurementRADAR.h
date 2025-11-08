@@ -7,7 +7,7 @@
 
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemEstimator.h"
 #include "MeasurementGaussianLikelihood.h"
 
@@ -45,7 +45,7 @@ public:
     virtual Eigen::VectorXd predict(const Eigen::VectorXd & x, const SystemEstimator & system) const override;
     virtual Eigen::VectorXd predict(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & J) const override;
     virtual Eigen::VectorXd predict(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & J, Eigen::Tensor<double, 3> & H) const override;
-    virtual Gaussian<double> noiseDensity(const SystemEstimator & system) const override;
+    virtual GaussianInfo<double> noiseDensity(const SystemEstimator & system) const override;
 protected:
     /**
      * @brief Get a string representation of the RADAR measurement process.

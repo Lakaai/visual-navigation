@@ -49,23 +49,24 @@ void \mbox{\hyperlink{classEvent_a0a4e814f472c519ace0a22f1a23acb0a}{process}} (\
 \item 
 \Hypertarget{classMeasurement_af49d21e894f7502251497eabcf1f2dff}\label{classMeasurement_af49d21e894f7502251497eabcf1f2dff} 
 enum class \mbox{\hyperlink{classMeasurement_af49d21e894f7502251497eabcf1f2dff}{Update\+Method}} \{ \newline
-{\bfseries BFGSTRUSTSQRTINV}
+{\bfseries BFGSTRUSTSQRT}
+, {\bfseries BFGSLMSQRT}
 , {\bfseries SR1\+TRUSTEIG}
 , {\bfseries NEWTONTRUSTEIG}
-, {\bfseries AFFINE}
 , \newline
-{\bfseries GAUSSNEWTON}
+{\bfseries AFFINE}
+, {\bfseries GAUSSNEWTON}
 , {\bfseries LEVENBERGMARQUARDT}
  \}
 \begin{DoxyCompactList}\small\item\em Enumeration of update methods. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-double \mbox{\hyperlink{classMeasurement_a47b3ad071548478347ad364ccc79869a}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system)
+double \mbox{\hyperlink{classMeasurement_a3e2ef4fbb8d8eeb71940f5ffd6848ea6}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density. \end{DoxyCompactList}\item 
-double \mbox{\hyperlink{classMeasurement_aaa2f2d1bd7d476083921ce5bb3b9278c}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g)
+double \mbox{\hyperlink{classMeasurement_aaea34bb7e795a1c29a28f37b7e252ecf}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density and its gradient. \end{DoxyCompactList}\item 
-double \mbox{\hyperlink{classMeasurement_a0f9a58e0d42ef27491d2e210bc842bd5}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g, Eigen\+::\+Matrix\+Xd \&H)
+double \mbox{\hyperlink{classMeasurement_aeae3ef416c7110a2041fdfb320a57559}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g, Eigen\+::\+Matrix\+Xd \&H) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density, its gradient, and Hessian. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classMeasurement_a30df1dcc9aac6e9d25e54498ca11758a}{update}} (\mbox{\hyperlink{classSystemBase}{System\+Base}} \&system) override
 \begin{DoxyCompactList}\small\item\em Update the system based on this measurement. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -130,11 +131,11 @@ Construct a new \doxylink{classMeasurement}{Measurement} object.
 
 
 \doxysubsection{Member Function Documentation}
-\Hypertarget{classMeasurement_a47b3ad071548478347ad364ccc79869a}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
+\Hypertarget{classMeasurement_a3e2ef4fbb8d8eeb71940f5ffd6848ea6}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
 \index{costJointDensity@{costJointDensity}!Measurement@{Measurement}}
 \doxysubsubsection{\texorpdfstring{costJointDensity()}{costJointDensity()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
-{\footnotesize\ttfamily \label{classMeasurement_a47b3ad071548478347ad364ccc79869a} 
-double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+{\footnotesize\ttfamily \label{classMeasurement_a3e2ef4fbb8d8eeb71940f5ffd6848ea6} 
+double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
 
 
 
@@ -150,11 +151,11 @@ Calculate the cost of the joint density.
 \begin{DoxyReturn}{Returns}
 double The cost value. 
 \end{DoxyReturn}
-\Hypertarget{classMeasurement_aaa2f2d1bd7d476083921ce5bb3b9278c}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
+\Hypertarget{classMeasurement_aaea34bb7e795a1c29a28f37b7e252ecf}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
 \index{costJointDensity@{costJointDensity}!Measurement@{Measurement}}
 \doxysubsubsection{\texorpdfstring{costJointDensity()}{costJointDensity()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
-{\footnotesize\ttfamily \label{classMeasurement_aaa2f2d1bd7d476083921ce5bb3b9278c} 
-double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{, }\item[{Eigen\+::\+Vector\+Xd \&}]{g}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+{\footnotesize\ttfamily \label{classMeasurement_aaea34bb7e795a1c29a28f37b7e252ecf} 
+double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{, }\item[{Eigen\+::\+Vector\+Xd \&}]{g}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
 
 
 
@@ -172,11 +173,11 @@ Calculate the cost of the joint density and its gradient.
 \begin{DoxyReturn}{Returns}
 double The cost value. 
 \end{DoxyReturn}
-\Hypertarget{classMeasurement_a0f9a58e0d42ef27491d2e210bc842bd5}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
+\Hypertarget{classMeasurement_aeae3ef416c7110a2041fdfb320a57559}\index{Measurement@{Measurement}!costJointDensity@{costJointDensity}}
 \index{costJointDensity@{costJointDensity}!Measurement@{Measurement}}
 \doxysubsubsection{\texorpdfstring{costJointDensity()}{costJointDensity()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
-{\footnotesize\ttfamily \label{classMeasurement_a0f9a58e0d42ef27491d2e210bc842bd5} 
-double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{, }\item[{Eigen\+::\+Vector\+Xd \&}]{g}{, }\item[{Eigen\+::\+Matrix\+Xd \&}]{H}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+{\footnotesize\ttfamily \label{classMeasurement_aeae3ef416c7110a2041fdfb320a57559} 
+double Measurement\+::cost\+Joint\+Density (\begin{DoxyParamCaption}\item[{const Eigen\+::\+Vector\+Xd \&}]{x}{, }\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{, }\item[{Eigen\+::\+Vector\+Xd \&}]{g}{, }\item[{Eigen\+::\+Matrix\+Xd \&}]{H}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
 
 
 

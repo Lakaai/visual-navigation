@@ -1,6 +1,6 @@
 % Augmented measurement model
-% [ y ] = [ h(x) + v ]
 % [ x ]   [     x    ]
+% [ y ] = [ h(x) + v ]
 % \___/   \__________/
 %   ya  =   ha(x, v)
 
@@ -16,6 +16,6 @@ if nargout < 2
     h = obj.predict(x, system);
 else
     [h, J] = obj.predict(x, system);
-    Ja = [J, eye(ny, ny); eye(nx, nx), zeros(nx, ny)];
+    Ja = [eye(nx, nx), zeros(nx, ny); J, eye(ny, ny)];
 end
-ya = [h + v; x];
+ya = [x; h + v];

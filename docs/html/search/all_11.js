@@ -1,17 +1,10 @@
 var searchData=
 [
-  ['s_5f_0',['S_',['../classGaussian.html#a4c4aadcb551042a9deeb961b2e0ab11e',1,'Gaussian']]],
-  ['sgn_1',['sgn',['../namespacefuncmin.html#a90123447966b46b5a0861a34b68f16dc',1,'funcmin']]],
-  ['simulate_2',['simulate',['../classGaussianBase.html#a80dd97c033cc01bbff9a8fec2446aa82',1,'GaussianBase::simulate()'],['../classMeasurement.html#ad83df4a48099d53eb3af99241974f605',1,'Measurement::simulate()'],['../classMeasurementGaussianLikelihood.html#ac733daf38964b058f5687e07c36c84e4',1,'MeasurementGaussianLikelihood::simulate()']]],
-  ['sqrtcov_3',['sqrtCov',['../classGaussian.html#aeaef85731458efa56e4f2bbf1adb388f',1,'Gaussian::sqrtCov()'],['../classGaussianBase.html#a89b0b3c7a1b6d938b0f2d88d02343235',1,'GaussianBase::sqrtCov()']]],
-  ['sqrtinfomat_4',['sqrtInfoMat',['../classGaussian.html#a00c7a2df5dd3f20b13cbffbc48b920d6',1,'Gaussian::sqrtInfoMat()'],['../classGaussianBase.html#ab1e4ae449123114da73b73cf3c72570e',1,'GaussianBase::sqrtInfoMat()']]],
-  ['sqrtinfovec_5',['sqrtInfoVec',['../classGaussian.html#a2c94bc42fa33b200869486ce1c3bd3e3',1,'Gaussian::sqrtInfoVec()'],['../classGaussianBase.html#a2647644ad1f9377081f79c3fa664fb09',1,'GaussianBase::sqrtInfoVec()']]],
-  ['sr1trust_6',['SR1Trust',['../namespacefuncmin.html#a6b7cf99bbc1aef61696e16452998f81c',1,'funcmin::SR1Trust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a06c21cb0ac4a81c59005ea2ac4eb618b',1,'funcmin::SR1Trust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#adffedbd691dce92b26edfb6d56c8c96f',1,'funcmin::SR1Trust(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
-  ['sr1trusteig_7',['SR1TrustEig',['../namespacefuncmin.html#a5bce3224539c2de39f587273194b07f9',1,'funcmin']]],
-  ['systemballistic_8',['SystemBallistic',['../classSystemBallistic.html',1,'SystemBallistic'],['../classSystemBallistic.html#a949d8bf5fa8807ce07ff1ffab9a4819e',1,'SystemBallistic::SystemBallistic()']]],
-  ['systemballistic_2eh_9',['SystemBallistic.h',['../SystemBallistic_8h.html',1,'']]],
-  ['systembase_10',['SystemBase',['../classSystemBase.html',1,'SystemBase'],['../classSystemBase.html#a83e167c0dc00f221543c06fdf69b846e',1,'SystemBase::SystemBase()']]],
-  ['systembase_2eh_11',['SystemBase.h',['../SystemBase_8h.html',1,'']]],
-  ['systemestimator_12',['SystemEstimator',['../classSystemEstimator.html',1,'SystemEstimator'],['../classSystemEstimator.html#a5affca954084b875c1a5178be1039355',1,'SystemEstimator::SystemEstimator()']]],
-  ['systemestimator_2eh_13',['SystemEstimator.h',['../SystemEstimator_8h.html',1,'']]]
+  ['r_0',['R',['../classSystemBallistic.html#a28098f72cc100580a8785ed2c079e36e',1,'SystemBallistic']]],
+  ['r2_1',['r2',['../classMeasurementRADAR.html#a10c6977eb5b6fed02183f7b7b3a8bb72',1,'MeasurementRADAR']]],
+  ['rk4sdehelper_2',['RK4SDEHelper',['../classSystemEstimator.html#a249d9ae42fa67c8a82ad5c9b87491b5a',1,'SystemEstimator']]],
+  ['rosenbrockanalytical_3',['RosenbrockAnalytical',['../structRosenbrockAnalytical.html',1,'']]],
+  ['rosenbrockfwdautodiff_4',['RosenbrockFwdAutoDiff',['../structRosenbrockFwdAutoDiff.html',1,'']]],
+  ['rosenbrockrevautodiff_5',['RosenbrockRevAutoDiff',['../structRosenbrockRevAutoDiff.html',1,'']]],
+  ['running_6',['Building and Running',['../index.html#build',1,'']]]
 ];

@@ -7,7 +7,7 @@
 
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemEstimator.h"
 #include "Measurement.h"
 
@@ -73,7 +73,7 @@ public:
      * @param system The system estimator.
      * @return The noise density.
      */
-    virtual Gaussian<double> noiseDensity(const SystemEstimator & system) const = 0;
+    virtual GaussianInfo<double> noiseDensity(const SystemEstimator & system) const = 0;
 
     /**
      * @brief Predict the density of the measurement.
@@ -81,7 +81,7 @@ public:
      * @param system The system estimator.
      * @return The predicted density.
      */
-    virtual Gaussian<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const;
+    virtual GaussianInfo<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const;
 
     /**
      * @brief Predict the density of the measurement and calculate its Jacobian.
@@ -90,7 +90,7 @@ public:
      * @param dhdx Output parameter for the Jacobian.
      * @return The predicted density.
      */
-    virtual Gaussian<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx) const;
+    virtual GaussianInfo<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx) const;
 
     /**
      * @brief Predict the density of the measurement, calculate its Jacobian and Hessian.
@@ -100,7 +100,7 @@ public:
      * @param d2hdx2 Output parameter for the Hessian.
      * @return The predicted density.
      */
-    virtual Gaussian<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx, Eigen::Tensor<double, 3> & d2hdx2) const;
+    virtual GaussianInfo<double> predictDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::MatrixXd & dhdx, Eigen::Tensor<double, 3> & d2hdx2) const;
 
     // Inherited virtual functions
     virtual Eigen::VectorXd simulate(const Eigen::VectorXd & x, const SystemEstimator & system) const override;

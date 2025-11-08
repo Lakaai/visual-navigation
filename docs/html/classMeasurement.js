@@ -1,7 +1,8 @@
 var classMeasurement =
 [
     [ "UpdateMethod", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dff", [
-      [ "BFGSTRUSTSQRTINV", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffa517ba929497afd87f3288bcd19886032", null ],
+      [ "BFGSTRUSTSQRT", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffa10d38704cc5a20a52c3fc8ac2c203dc8", null ],
+      [ "BFGSLMSQRT", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffa864403ceeba8f77fbb917561311d1ac8", null ],
       [ "SR1TRUSTEIG", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffa9f559c73e90815091820758889804a52", null ],
       [ "NEWTONTRUSTEIG", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffad208308926a6e309e68dbc5a983c7d61", null ],
       [ "AFFINE", "classMeasurement.html#af49d21e894f7502251497eabcf1f2dffafaeb05d4c0c564dda5628faa3f1e36d5", null ],
@@ -11,9 +12,9 @@ var classMeasurement =
     [ "Measurement", "classMeasurement.html#af524d8e57d33c6b748c27a5059cbcf63", null ],
     [ "Measurement", "classMeasurement.html#a9165a85599c8e49e4d0ee6f614cc6772", null ],
     [ "~Measurement", "classMeasurement.html#ac94dd8728fe078e337e9ac4b2187a5dc", null ],
-    [ "costJointDensity", "classMeasurement.html#a47b3ad071548478347ad364ccc79869a", null ],
-    [ "costJointDensity", "classMeasurement.html#aaa2f2d1bd7d476083921ce5bb3b9278c", null ],
-    [ "costJointDensity", "classMeasurement.html#a0f9a58e0d42ef27491d2e210bc842bd5", null ],
+    [ "costJointDensity", "classMeasurement.html#a3e2ef4fbb8d8eeb71940f5ffd6848ea6", null ],
+    [ "costJointDensity", "classMeasurement.html#aaea34bb7e795a1c29a28f37b7e252ecf", null ],
+    [ "costJointDensity", "classMeasurement.html#aeae3ef416c7110a2041fdfb320a57559", null ],
     [ "logLikelihood", "classMeasurement.html#a9b1d5256fcc2df3e1b103d0d47ea340b", null ],
     [ "logLikelihood", "classMeasurement.html#aad051d0b0f3194e26d2742d828b0f088", null ],
     [ "logLikelihood", "classMeasurement.html#a1dc788a547ed31405e10e895ccbbaf87", null ],

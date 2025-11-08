@@ -1,7 +1,7 @@
 #include <cmath>
 #include <cassert>
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemEstimator.h"
 #include "SystemBallistic.h"
 
@@ -12,24 +12,23 @@ const double SystemBallistic::L  = 0.0065;               // Temperature gradient
 const double SystemBallistic::T0 = 288.15;               // Temperature at sea level [K]
 const double SystemBallistic::g  = 9.81;                 // Acceleration due to gravity [m/s^2]
 
-SystemBallistic::SystemBallistic(const Gaussian<double> & density)
+SystemBallistic::SystemBallistic(const GaussianInfo<double> & density)
     : SystemEstimator(density)
 {}
 
-Gaussian<double> SystemBallistic::processNoiseDensity(double dt) const
+GaussianInfo<double> SystemBallistic::processNoiseDensity(double dt) const
 {
     // SQ is an upper triangular matrix such that SQ.'*SQ = Q is the power spectral density of the continuous time process noise
     Eigen::MatrixXd SQ(2, 2);
-
     // TODO
     SQ.setZero();
 
     // Set the non-zero elements of SQ based on the given Q matrix
     SQ(0, 0) = std::sqrt(1e-20);  // For velocity
     SQ(1, 1) = std::sqrt(25e-12); // For drag coefficient
-
+    
     // Distribution of noise increment dw ~ N(0, Q*dt) for time increment dt
-    return Gaussian<double>::fromSqrtMoment(SQ*std::sqrt(dt));
+    return GaussianInfo<double>::fromSqrtMoment(SQ*std::sqrt(dt));
 }
 
 std::vector<Eigen::Index> SystemBallistic::processNoiseIndex() const
@@ -38,7 +37,6 @@ std::vector<Eigen::Index> SystemBallistic::processNoiseIndex() const
     std::vector<Eigen::Index> idxQ;
     // TODO: Continuous-time process noise in 2nd and 3rd state equations
     idxQ = {1, 2};  // Noise affects velocity (index 1) and drag coefficient (index 2)
-    
     return idxQ;
 }
 
@@ -46,7 +44,7 @@ std::vector<Eigen::Index> SystemBallistic::processNoiseIndex() const
 Eigen::VectorXd SystemBallistic::dynamics(const Eigen::VectorXd & x) const
 {
     Eigen::VectorXd f(x.size());
-    
+    // TODO: Set f
     // Extract state variables
     double h = x(0);  // altitude
     double v = x(1);  // velocity
@@ -65,7 +63,6 @@ Eigen::VectorXd SystemBallistic::dynamics(const Eigen::VectorXd & x) const
     f(0) = v;                 // dh/dt = v
     f(1) = d - g;             // dv/dt = d - g
     f(2) = 0;                 // dc/dt = 0 (drag coefficient is constant)
-
     return f;
 }
 
@@ -74,6 +71,8 @@ Eigen::VectorXd SystemBallistic::dynamics(const Eigen::VectorXd & x, Eigen::Matr
 {
     Eigen::VectorXd f = dynamics(x);
 
+    J.resize(f.size(), x.size());
+    // TODO: Set J
     // Extract state variables
     double h = x(0);  // altitude
     double v = x(1);  // velocity

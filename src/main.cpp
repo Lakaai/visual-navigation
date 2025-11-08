@@ -1,42 +1,46 @@
 /**
- * @mainpage MCHA4400 Lab 5: Laplace filtering
+ * @mainpage MCHA4400 Lab 6: Laplace information filter
  *
  * @tableofcontents
  *
  * @section intro Introduction
  *
  * In this lab, you will:
- * - Implement Gaussian distribution operations in square-root moment form
+ * - Implement optimisation using analytical derivatives and automatic differentiation
+ * - Implement Gaussian distribution operations in square-root information form
  * - Implement the process dynamics and measurement model for a ballistic state estimation problem
- * - Run a square-root Laplace filter
+ * - Run a square-root Laplace information filter
  * - Plot the results using VTK
  *
  * @section tasks Tasks
  *
- * 1. Implement Gaussian distribution operations (log likelihood, affine transform, marginal, conditional)
- * 2. Implement ballistic process model dynamics 
- * 3. Implement RADAR range measurement model
- * 4. Run Laplace filter and visualize results
+ * 1. Implement Rosenbrock function and derivatives using analytical and automatic differentiation
+ * 2. Implement Gaussian distribution operations (log likelihood, affine transform, marginal, conditional)
+ * 3. Implement ballistic process model dynamics 
+ * 4. Implement RADAR range measurement model
+ * 5. Run Laplace information filter and visualise results
  *
  * @section implementation Key Implementation Files
  * 
- * - GaussianBase.hpp: Base class for Gaussian distribution
- * - Gaussian.hpp: Gaussian distribution in square-root moment form
- * - SystemBallistic.cpp: System dynamics for ballistic trajectory
- * - MeasurementRADAR.cpp: Measurement model and likelihood for RADAR
- * - ballistic_plot.cpp: Plotting functions for ballistic trajectory
+ * - `src/rosenbrock.cpp`: Rosenbrock function implementations
+ * - `src/GaussianBase.hpp`: Base class for Gaussian distribution
+ * - `src/GaussianInfo.hpp`: Gaussian distribution in square-root information form
+ * - `src/SystemBallistic.cpp`: System dynamics for ballistic trajectory
+ * - `src/MeasurementRADAR.cpp`: Measurement model and likelihood for RADAR
+ * - `src/ballistic_plot.cpp`: Plotting functions for ballistic trajectory
  *
  * @section testing Unit Tests
  *
  * Unit tests are provided to verify your implementations:
  * 
- * - GaussianLog.cpp
- * - GaussianTransform.cpp  
- * - GaussianMarginal.cpp
- * - GaussianConditional.cpp
- * - GaussianConfidence.cpp
- * - SystemBallistic.cpp
- * - MeasurementRADAR.cpp
+ * - `test/src/rosenbrock.cpp`
+ * - `test/src/GaussianInfoLog.cpp`
+ * - `test/src/GaussianInfoTransform.cpp`
+ * - `test/src/GaussianInfoMarginal.cpp`
+ * - `test/src/GaussianInfoConditional.cpp`
+ * - `test/src/GaussianInfoConfidence.cpp`
+ * - `test/src/SystemBallistic.cpp`
+ * - `test/src/MeasurementRADAR.cpp`
  *
  * @section build Building and Running
  *
@@ -47,20 +51,59 @@
  *    `ninja`
  *
  * 3. Build and run executable:
- *    `ninja && ./lab5`
+ *    `ninja && ./lab6`
  */
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemBallistic.h"
 #include "MeasurementRADAR.h"
 #include "ballistic_plot.h"
+#include "rosenbrock.h"
+#include "funcmin.hpp"
 
 int main(int argc, char *argv[])
 {
+    // ------------------------------------------------------
+    // Optimisation
+    // ------------------------------------------------------
+    
+    Eigen::VectorXd x(2);
+    x << 10.0, 10.0;
+    std::cout << "Initial x =\n" << x << "\n" << std::endl;
+
+    // Experiment with the different Rosenbrock functors below
+    RosenbrockAnalytical func;
+    // RosenbrockFwdAutoDiff func;
+    // RosenbrockRevAutoDiff func;
+
+    Eigen::VectorXd g(2);
+    Eigen::MatrixXd H(2, 2);
+    std::cout << "f = " << func(x, g, H) << "\n" << std::endl;
+    std::cout << "g =\n" << g << "\n" << std::endl;
+    std::cout << "H =\n" << H << "\n" << std::endl;
+
+    std::cout << "Running optimisation" << std::endl;
+    int verbosity = 3;  // 0: silent, 1: dots, 2: summary, 3: iteration details
+    //funcmin::NewtonTrust(func, x, g, H, verbosity);
+    funcmin::BFGSTrust(func, x, g, H, verbosity);
+    std::cout << std::endl;
+    std::cout << "Final x =\n" << x << "\n" << std::endl;
+
+    std::cout << "f = " << func(x) << "\n" << std::endl;
+    std::cout << "g =\n" << g << "\n" << std::endl;
+    std::cout << "H =\n" << H << "\n" << std::endl;
+
+    // Comment out the following line to run the state estimator
+    // return EXIT_SUCCESS;
+
+    // ------------------------------------------------------
+    // Laplace information filter
+    // ------------------------------------------------------
+
     std::string fileName   = "../data/estimationdata.csv";
     
     // Dimensions of state and measurement vectors for recording results
@@ -138,7 +181,7 @@ int main(int argc, char *argv[])
             -450, // Initial velocity
           0.0005; // Ballistic coefficient
 
-    Gaussian<double> p0 = Gaussian<double>::fromSqrtMoment(mu0, S0);
+    GaussianInfo<double> p0 = GaussianInfo<double>::fromSqrtMoment(mu0, S0);
     SystemBallistic system(p0);
 
     std::cout << "Initial state estimate" << std::endl;

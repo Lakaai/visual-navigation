@@ -1,6 +1,6 @@
 classdef SystemEstimator < SystemBase
     properties
-        density Gaussian                        % Estimator state
+        density GaussianInfo                    % Estimator state
         runEstimator (1, 1) logical = true      % Run state estimator
     end
 

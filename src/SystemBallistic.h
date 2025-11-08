@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemEstimator.h"
 
 /**
@@ -24,7 +24,7 @@ public:
      * @brief Construct a new SystemBallistic object with initial density.
      * @param density Initial state density.
      */
-    explicit SystemBallistic(const Gaussian<double> & density);
+    explicit SystemBallistic(const GaussianInfo<double> & density);
 
     /**
      * @brief Compute the system dynamics for the ballistic system.
@@ -46,7 +46,7 @@ protected:
      * @param dt The time step.
      * @return The process noise density.
      */
-    virtual Gaussian<double> processNoiseDensity(double dt) const override;
+    virtual GaussianInfo<double> processNoiseDensity(double dt) const override;
 
     /**
      * @brief Get the indices of state variables affected by process noise in the ballistic system.

@@ -6,16 +6,15 @@ if obj.needToSimulate
 end
 
 switch obj.updateMethod
-    case {'affine', 'unscented'}
-        transform = [obj.updateMethod 'Transform'];
+    case 'affine'
         pxv = system.density.join(obj.noiseDensity(system)); % p(x, v) = p(x)*p(v)
         jointFunc = @(x) obj.augmentedPredict(x, system);
-        pyx = pxv.(transform)(jointFunc);
+        pxy = pxv.affineTransform(jointFunc);
         nx = system.density.dim();
         ny = length(obj.y);
-        idxX = ny+1:nx+ny;
-        idxY = 1:ny;
-        system.density = pyx.conditional(idxX, idxY, obj.y);
+        idxX = 1:nx;
+        idxY = nx+1:nx+ny;
+        system.density = pxy.conditional(idxX, idxY, obj.y);
     case 'gaussnewton'
         error('Not yet implemented');
     case 'levenbergmarquardt'

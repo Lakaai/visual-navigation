@@ -10,5 +10,5 @@ switch nargout
         [h, dhdx, d2hdx2] = obj.predict(x, system);
 end
 
-SR = obj.noiseDensity(system).sqrtCov();
-py = Gaussian.fromSqrtMoment(h, SR);
+Xi = obj.noiseDensity(system).sqrtInfoMat();
+py = GaussianInfo.fromSqrtInfo(Xi*h, Xi);

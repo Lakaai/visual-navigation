@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemBase.h"
 
 /**
@@ -24,7 +24,7 @@ public:
      * @brief Construct a new SystemEstimator object with initial density.
      * @param density Initial state density.
      */
-    SystemEstimator(const Gaussian<double> & density);
+    SystemEstimator(const GaussianInfo<double> & density);
 
     /**
      * @brief Destroy the SystemEstimator object.
@@ -37,7 +37,7 @@ public:
      */
     virtual void predict(double time) override;
 
-    Gaussian<double> density;  ///< The current state density estimate.
+    GaussianInfo<double> density;  ///< The current state density estimate.
 
     /**
      * @brief Compute the estimated system dynamics.
@@ -76,7 +76,7 @@ protected:
      * @param dt The time step.
      * @return The process noise density.
      */
-    virtual Gaussian<double> processNoiseDensity(double dt) const = 0;
+    virtual GaussianInfo<double> processNoiseDensity(double dt) const = 0;
 
     /**
      * @brief Get the indices of state variables affected by process noise.

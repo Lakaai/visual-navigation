@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['update_0',['update',['../classEvent.html#aa89fdd0acff3245e93180f8c425c2278',1,'Event::update()'],['../classMeasurement.html#a30df1dcc9aac6e9d25e54498ca11758a',1,'Measurement::update()'],['../classMeasurementGaussianLikelihood.html#aa3a15797f5e7e5cd8fbf658af56f5a37',1,'MeasurementGaussianLikelihood::update()']]]
+  ['trseig_0',['trsEig',['../namespacefuncmin.html#a07939512747e3786b6a1c38ebc0ebecf',1,'funcmin::trsEig(const Eigen::MatrixXd &amp;H, const Eigen::VectorXd &amp;g, double D, Eigen::VectorXd &amp;p)'],['../namespacefuncmin.html#a07454c34d31cc7a3d436630645c29314',1,'funcmin::trsEig(const Eigen::MatrixXd &amp;Q, const Eigen::VectorXd &amp;v, const Eigen::VectorXd &amp;g, double D, Eigen::VectorXd &amp;p)']]],
+  ['trssqrt_1',['trsSqrt',['../namespacefuncmin.html#aafd08c8cf500feab0ebf4a452c0a88be',1,'funcmin']]],
+  ['trssqrtinv_2',['trsSqrtInv',['../namespacefuncmin.html#ac35752d9f2d6d61e5df0ba0542d5910d',1,'funcmin']]]
 ];

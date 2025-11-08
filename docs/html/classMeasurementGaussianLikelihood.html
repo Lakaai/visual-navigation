@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>lab5: MeasurementGaussianLikelihood Class Reference</title>
+<title>lab6: MeasurementGaussianLikelihood Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">lab5
+   <div id="projectname">lab6
    </div>
   </td>
  </tr>
@@ -112,7 +112,7 @@ $(function(){initNavTree('classMeasurementGaussianLikelihood.html',''); initResi
 </div><!--header-->
 <div class="contents">
 
-<p>Class for measurements with <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> likelihood.  
+<p>Class for measurements with Gaussian likelihood.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="MeasurementGaussianLikelihood_8h_source.html">MeasurementGaussianLikelihood.h</a>&gt;</code></p>
@@ -149,18 +149,18 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~MeasurementGaussi
 <tr class="memitem:aac40c950b4e4f43be4452644181eeca3" id="r_aac40c950b4e4f43be4452644181eeca3"><td class="memItemLeft" align="right" valign="top">virtual Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac40c950b4e4f43be4452644181eeca3">predict</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::MatrixXd &amp;J, Eigen::Tensor&lt; double, 3 &gt; &amp;H) const =0</td></tr>
 <tr class="memdesc:aac40c950b4e4f43be4452644181eeca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the measurement, calculate its Jacobian and Hessian.  <br /></td></tr>
 <tr class="separator:aac40c950b4e4f43be4452644181eeca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e4a031e3359823b627b3c4df9bc13c3" id="r_a4e4a031e3359823b627b3c4df9bc13c3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e4a031e3359823b627b3c4df9bc13c3">noiseDensity</a> (const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const =0</td></tr>
-<tr class="memdesc:a4e4a031e3359823b627b3c4df9bc13c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the noise density for the measurement.  <br /></td></tr>
-<tr class="separator:a4e4a031e3359823b627b3c4df9bc13c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a4b22914cacfb9952e0d8af0926e482" id="r_a7a4b22914cacfb9952e0d8af0926e482"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a4b22914cacfb9952e0d8af0926e482">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const</td></tr>
-<tr class="memdesc:a7a4b22914cacfb9952e0d8af0926e482"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement.  <br /></td></tr>
-<tr class="separator:a7a4b22914cacfb9952e0d8af0926e482"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9381aba5280c3d22434da067de16b13c" id="r_a9381aba5280c3d22434da067de16b13c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9381aba5280c3d22434da067de16b13c">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::MatrixXd &amp;dhdx) const</td></tr>
-<tr class="memdesc:a9381aba5280c3d22434da067de16b13c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement and calculate its Jacobian.  <br /></td></tr>
-<tr class="separator:a9381aba5280c3d22434da067de16b13c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3e705e10b0840cd440746d360c8ba04" id="r_ae3e705e10b0840cd440746d360c8ba04"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3e705e10b0840cd440746d360c8ba04">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::MatrixXd &amp;dhdx, Eigen::Tensor&lt; double, 3 &gt; &amp;d2hdx2) const</td></tr>
-<tr class="memdesc:ae3e705e10b0840cd440746d360c8ba04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement, calculate its Jacobian and Hessian.  <br /></td></tr>
-<tr class="separator:ae3e705e10b0840cd440746d360c8ba04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa722c14af433fe0e5b400a33fa1b783b" id="r_aa722c14af433fe0e5b400a33fa1b783b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa722c14af433fe0e5b400a33fa1b783b">noiseDensity</a> (const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const =0</td></tr>
+<tr class="memdesc:aa722c14af433fe0e5b400a33fa1b783b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the noise density for the measurement.  <br /></td></tr>
+<tr class="separator:aa722c14af433fe0e5b400a33fa1b783b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a610e45ccefff11d30ab0e93170afe257" id="r_a610e45ccefff11d30ab0e93170afe257"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a610e45ccefff11d30ab0e93170afe257">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const</td></tr>
+<tr class="memdesc:a610e45ccefff11d30ab0e93170afe257"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement.  <br /></td></tr>
+<tr class="separator:a610e45ccefff11d30ab0e93170afe257"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a215674afa4f1f3d291eec154f9904e2b" id="r_a215674afa4f1f3d291eec154f9904e2b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a215674afa4f1f3d291eec154f9904e2b">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::MatrixXd &amp;dhdx) const</td></tr>
+<tr class="memdesc:a215674afa4f1f3d291eec154f9904e2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement and calculate its Jacobian.  <br /></td></tr>
+<tr class="separator:a215674afa4f1f3d291eec154f9904e2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46cd33e354776f4c253cc9b33eadcaed" id="r_a46cd33e354776f4c253cc9b33eadcaed"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46cd33e354776f4c253cc9b33eadcaed">predictDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::MatrixXd &amp;dhdx, Eigen::Tensor&lt; double, 3 &gt; &amp;d2hdx2) const</td></tr>
+<tr class="memdesc:a46cd33e354776f4c253cc9b33eadcaed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predict the density of the measurement, calculate its Jacobian and Hessian.  <br /></td></tr>
+<tr class="separator:a46cd33e354776f4c253cc9b33eadcaed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac733daf38964b058f5687e07c36c84e4" id="r_ac733daf38964b058f5687e07c36c84e4"><td class="memItemLeft" align="right" valign="top">virtual Eigen::VectorXd&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac733daf38964b058f5687e07c36c84e4">simulate</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const override</td></tr>
 <tr class="memdesc:ac733daf38964b058f5687e07c36c84e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulate a measurement given a state and system.  <br /></td></tr>
 <tr class="separator:ac733daf38964b058f5687e07c36c84e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -208,15 +208,15 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:aa3a15797f5e7e5cd8fbf658af56f5a37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the system based on this measurement.  <br /></td></tr>
 <tr class="separator:aa3a15797f5e7e5cd8fbf658af56f5a37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classMeasurement"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classMeasurement')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classMeasurement.html">Measurement</a></td></tr>
-<tr class="memitem:a47b3ad071548478347ad364ccc79869a inherit pro_methods_classMeasurement" id="r_a47b3ad071548478347ad364ccc79869a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#a47b3ad071548478347ad364ccc79869a">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system)</td></tr>
-<tr class="memdesc:a47b3ad071548478347ad364ccc79869a inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density.  <br /></td></tr>
-<tr class="separator:a47b3ad071548478347ad364ccc79869a inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa2f2d1bd7d476083921ce5bb3b9278c inherit pro_methods_classMeasurement" id="r_aaa2f2d1bd7d476083921ce5bb3b9278c"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#aaa2f2d1bd7d476083921ce5bb3b9278c">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g)</td></tr>
-<tr class="memdesc:aaa2f2d1bd7d476083921ce5bb3b9278c inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density and its gradient.  <br /></td></tr>
-<tr class="separator:aaa2f2d1bd7d476083921ce5bb3b9278c inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f9a58e0d42ef27491d2e210bc842bd5 inherit pro_methods_classMeasurement" id="r_a0f9a58e0d42ef27491d2e210bc842bd5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#a0f9a58e0d42ef27491d2e210bc842bd5">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H)</td></tr>
-<tr class="memdesc:a0f9a58e0d42ef27491d2e210bc842bd5 inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density, its gradient, and Hessian.  <br /></td></tr>
-<tr class="separator:a0f9a58e0d42ef27491d2e210bc842bd5 inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e2ef4fbb8d8eeb71940f5ffd6848ea6 inherit pro_methods_classMeasurement" id="r_a3e2ef4fbb8d8eeb71940f5ffd6848ea6"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#a3e2ef4fbb8d8eeb71940f5ffd6848ea6">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system) const</td></tr>
+<tr class="memdesc:a3e2ef4fbb8d8eeb71940f5ffd6848ea6 inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density.  <br /></td></tr>
+<tr class="separator:a3e2ef4fbb8d8eeb71940f5ffd6848ea6 inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaea34bb7e795a1c29a28f37b7e252ecf inherit pro_methods_classMeasurement" id="r_aaea34bb7e795a1c29a28f37b7e252ecf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#aaea34bb7e795a1c29a28f37b7e252ecf">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g) const</td></tr>
+<tr class="memdesc:aaea34bb7e795a1c29a28f37b7e252ecf inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density and its gradient.  <br /></td></tr>
+<tr class="separator:aaea34bb7e795a1c29a28f37b7e252ecf inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae3ef416c7110a2041fdfb320a57559 inherit pro_methods_classMeasurement" id="r_aeae3ef416c7110a2041fdfb320a57559"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#aeae3ef416c7110a2041fdfb320a57559">costJointDensity</a> (const Eigen::VectorXd &amp;x, const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;system, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H) const</td></tr>
+<tr class="memdesc:aeae3ef416c7110a2041fdfb320a57559 inherit pro_methods_classMeasurement"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the cost of the joint density, its gradient, and Hessian.  <br /></td></tr>
+<tr class="separator:aeae3ef416c7110a2041fdfb320a57559 inherit pro_methods_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classEvent"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_classEvent')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classEvent.html">Event</a></td></tr>
 <tr class="memitem:a5610e63185ccb47c969fe2f8796921a7 inherit pro_methods_classEvent" id="r_a5610e63185ccb47c969fe2f8796921a7"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEvent.html#a5610e63185ccb47c969fe2f8796921a7">getProcessString</a> () const</td></tr>
 <tr class="memdesc:a5610e63185ccb47c969fe2f8796921a7 inherit pro_methods_classEvent"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a string representation of the event processing.  <br /></td></tr>
@@ -247,12 +247,13 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>verbosity_</b></td></t
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_types_classMeasurement"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_types_classMeasurement')"><img src="closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="classMeasurement.html">Measurement</a></td></tr>
 <tr class="memitem:af49d21e894f7502251497eabcf1f2dff inherit pro_types_classMeasurement" id="r_af49d21e894f7502251497eabcf1f2dff"><td class="memItemLeft" align="right" valign="top"><a id="af49d21e894f7502251497eabcf1f2dff" name="af49d21e894f7502251497eabcf1f2dff"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMeasurement.html#af49d21e894f7502251497eabcf1f2dff">UpdateMethod</a> { <br />
-&#160;&#160;<b>BFGSTRUSTSQRTINV</b>
+&#160;&#160;<b>BFGSTRUSTSQRT</b>
+, <b>BFGSLMSQRT</b>
 , <b>SR1TRUSTEIG</b>
 , <b>NEWTONTRUSTEIG</b>
-, <b>AFFINE</b>
 , <br />
-&#160;&#160;<b>GAUSSNEWTON</b>
+&#160;&#160;<b>AFFINE</b>
+, <b>GAUSSNEWTON</b>
 , <b>LEVENBERGMARQUARDT</b>
 <br />
  }</td></tr>
@@ -260,8 +261,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:af49d21e894f7502251497eabcf1f2dff inherit pro_types_classMeasurement"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class for measurements with <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> likelihood. </p>
-<p>This class represents measurements that have a <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> likelihood function. It inherits from the <a class="el" href="classMeasurement.html" title="Base class for measurement events in the system.">Measurement</a> class and adds functionality specific to <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> likelihoods. </p>
+<div class="textblock"><p>Class for measurements with Gaussian likelihood. </p>
+<p>This class represents measurements that have a Gaussian likelihood function. It inherits from the <a class="el" href="classMeasurement.html" title="Base class for measurement events in the system.">Measurement</a> class and adds functionality specific to Gaussian likelihoods. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a240f19468cb8ef73dec7c4ca861ad418" name="a240f19468cb8ef73dec7c4ca861ad418"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a240f19468cb8ef73dec7c4ca861ad418">&#9670;&#160;</a></span>MeasurementGaussianLikelihood() <span class="overload">[1/2]</span></h2>
@@ -516,8 +517,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a4e4a031e3359823b627b3c4df9bc13c3" name="a4e4a031e3359823b627b3c4df9bc13c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4e4a031e3359823b627b3c4df9bc13c3">&#9670;&#160;</a></span>noiseDensity()</h2>
+<a id="aa722c14af433fe0e5b400a33fa1b783b" name="aa722c14af433fe0e5b400a33fa1b783b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa722c14af433fe0e5b400a33fa1b783b">&#9670;&#160;</a></span>noiseDensity()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -526,7 +527,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt; MeasurementGaussianLikelihood::noiseDensity </td>
+          <td class="memname">virtual <a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt; MeasurementGaussianLikelihood::noiseDensity </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSystemEstimator.html">SystemEstimator</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>system</em></span></td><td>)</td>
           <td> const</td>
@@ -548,7 +549,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The noise density. </dd></dl>
 
-<p>Implemented in <a class="el" href="classMeasurementRADAR.html#a313e279e48a9fb40c2710593145d647a">MeasurementRADAR</a>.</p>
+<p>Implemented in <a class="el" href="classMeasurementRADAR.html#a34bb886bbddd9ca368159c0f4fefd154">MeasurementRADAR</a>.</p>
 
 </div>
 </div>
@@ -693,8 +694,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a7a4b22914cacfb9952e0d8af0926e482" name="a7a4b22914cacfb9952e0d8af0926e482"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a4b22914cacfb9952e0d8af0926e482">&#9670;&#160;</a></span>predictDensity() <span class="overload">[1/3]</span></h2>
+<a id="a610e45ccefff11d30ab0e93170afe257" name="a610e45ccefff11d30ab0e93170afe257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a610e45ccefff11d30ab0e93170afe257">&#9670;&#160;</a></span>predictDensity() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -703,7 +704,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
+          <td class="memname"><a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
           <td>(</td>
           <td class="paramtype">const Eigen::VectorXd &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
@@ -732,8 +733,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a9381aba5280c3d22434da067de16b13c" name="a9381aba5280c3d22434da067de16b13c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9381aba5280c3d22434da067de16b13c">&#9670;&#160;</a></span>predictDensity() <span class="overload">[2/3]</span></h2>
+<a id="a215674afa4f1f3d291eec154f9904e2b" name="a215674afa4f1f3d291eec154f9904e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a215674afa4f1f3d291eec154f9904e2b">&#9670;&#160;</a></span>predictDensity() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -742,7 +743,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
+          <td class="memname"><a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
           <td>(</td>
           <td class="paramtype">const Eigen::VectorXd &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>
@@ -777,8 +778,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3e705e10b0840cd440746d360c8ba04" name="ae3e705e10b0840cd440746d360c8ba04"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3e705e10b0840cd440746d360c8ba04">&#9670;&#160;</a></span>predictDensity() <span class="overload">[3/3]</span></h2>
+<a id="a46cd33e354776f4c253cc9b33eadcaed" name="a46cd33e354776f4c253cc9b33eadcaed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46cd33e354776f4c253cc9b33eadcaed">&#9670;&#160;</a></span>predictDensity() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -787,7 +788,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classGaussian.html">Gaussian</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
+          <td class="memname"><a class="el" href="classGaussianInfo.html">GaussianInfo</a>&lt; double &gt; MeasurementGaussianLikelihood::predictDensity </td>
           <td>(</td>
           <td class="paramtype">const Eigen::VectorXd &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span>, </td>
         </tr>

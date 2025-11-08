@@ -31,7 +31,7 @@ virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classMeasurementRADAR_ad99265f88e
 \begin{DoxyCompactList}\small\item\em Predict the measurement and calculate its Jacobian. \end{DoxyCompactList}\item 
 virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classMeasurementRADAR_aee2321a5425505a5d487dde0999bee54}{predict}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Matrix\+Xd \&J, Eigen\+::\+Tensor$<$ double, 3 $>$ \&H) const override
 \begin{DoxyCompactList}\small\item\em Predict the measurement, calculate its Jacobian and Hessian. \end{DoxyCompactList}\item 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlink{classMeasurementRADAR_a313e279e48a9fb40c2710593145d647a}{noise\+Density}} (const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const override
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classMeasurementRADAR_a34bb886bbddd9ca368159c0f4fefd154}{noise\+Density}} (const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const override
 \begin{DoxyCompactList}\small\item\em Get the noise density for the measurement. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classMeasurementGaussianLikelihood}{Measurement\+Gaussian\+Likelihood}}}
 \begin{DoxyCompactItemize}
@@ -42,11 +42,11 @@ virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlin
 \begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classMeasurementGaussianLikelihood}{Measurement\+Gaussian\+Likelihood} object with verbosity setting. \end{DoxyCompactList}\item 
 virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Measurement\+Gaussian\+Likelihood} ()
 \begin{DoxyCompactList}\small\item\em Destroy the \doxylink{classMeasurementGaussianLikelihood}{Measurement\+Gaussian\+Likelihood} object. \end{DoxyCompactList}\item 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_a7a4b22914cacfb9952e0d8af0926e482}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_a610e45ccefff11d30ab0e93170afe257}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const
 \begin{DoxyCompactList}\small\item\em Predict the density of the measurement. \end{DoxyCompactList}\item 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_a9381aba5280c3d22434da067de16b13c}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Matrix\+Xd \&dhdx) const
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_a215674afa4f1f3d291eec154f9904e2b}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Matrix\+Xd \&dhdx) const
 \begin{DoxyCompactList}\small\item\em Predict the density of the measurement and calculate its Jacobian. \end{DoxyCompactList}\item 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_ae3e705e10b0840cd440746d360c8ba04}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Matrix\+Xd \&dhdx, Eigen\+::\+Tensor$<$ double, 3 $>$ \&d2hdx2) const
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classMeasurementGaussianLikelihood_a46cd33e354776f4c253cc9b33eadcaed}{predict\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Matrix\+Xd \&dhdx, Eigen\+::\+Tensor$<$ double, 3 $>$ \&d2hdx2) const
 \begin{DoxyCompactList}\small\item\em Predict the density of the measurement, calculate its Jacobian and Hessian. \end{DoxyCompactList}\item 
 virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classMeasurementGaussianLikelihood_ac733daf38964b058f5687e07c36c84e4}{simulate}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const override
 \begin{DoxyCompactList}\small\item\em Simulate a measurement given a state and system. \end{DoxyCompactList}\item 
@@ -91,11 +91,11 @@ virtual void \mbox{\hyperlink{classMeasurementGaussianLikelihood_aa3a15797f5e7e5
 \doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classMeasurement}{Measurement}}}
 \begin{DoxyCompactItemize}
 \item 
-double \mbox{\hyperlink{classMeasurement_a47b3ad071548478347ad364ccc79869a}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system)
+double \mbox{\hyperlink{classMeasurement_a3e2ef4fbb8d8eeb71940f5ffd6848ea6}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density. \end{DoxyCompactList}\item 
-double \mbox{\hyperlink{classMeasurement_aaa2f2d1bd7d476083921ce5bb3b9278c}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g)
+double \mbox{\hyperlink{classMeasurement_aaea34bb7e795a1c29a28f37b7e252ecf}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density and its gradient. \end{DoxyCompactList}\item 
-double \mbox{\hyperlink{classMeasurement_a0f9a58e0d42ef27491d2e210bc842bd5}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g, Eigen\+::\+Matrix\+Xd \&H)
+double \mbox{\hyperlink{classMeasurement_aeae3ef416c7110a2041fdfb320a57559}{cost\+Joint\+Density}} (const Eigen\+::\+Vector\+Xd \&x, const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&system, Eigen\+::\+Vector\+Xd \&g, Eigen\+::\+Matrix\+Xd \&H) const
 \begin{DoxyCompactList}\small\item\em Calculate the cost of the joint density, its gradient, and Hessian. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{classEvent}{Event}}}
 \doxysubsubsection*{Static Protected Attributes}
@@ -113,12 +113,13 @@ static const double {\bfseries r2} = 5000
 \item 
 \Hypertarget{classMeasurement_af49d21e894f7502251497eabcf1f2dff}\label{classMeasurement_af49d21e894f7502251497eabcf1f2dff} 
 enum class \mbox{\hyperlink{classMeasurement_af49d21e894f7502251497eabcf1f2dff}{Update\+Method}} \{ \newline
-{\bfseries BFGSTRUSTSQRTINV}
+{\bfseries BFGSTRUSTSQRT}
+, {\bfseries BFGSLMSQRT}
 , {\bfseries SR1\+TRUSTEIG}
 , {\bfseries NEWTONTRUSTEIG}
-, {\bfseries AFFINE}
 , \newline
-{\bfseries GAUSSNEWTON}
+{\bfseries AFFINE}
+, {\bfseries GAUSSNEWTON}
 , {\bfseries LEVENBERGMARQUARDT}
  \}
 \begin{DoxyCompactList}\small\item\em Enumeration of update methods. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -203,11 +204,11 @@ std\+::string A string describing the RADAR measurement process.
 
 Reimplemented from \mbox{\hyperlink{classEvent_a5610e63185ccb47c969fe2f8796921a7}{Event}}.
 
-\Hypertarget{classMeasurementRADAR_a313e279e48a9fb40c2710593145d647a}\index{MeasurementRADAR@{MeasurementRADAR}!noiseDensity@{noiseDensity}}
+\Hypertarget{classMeasurementRADAR_a34bb886bbddd9ca368159c0f4fefd154}\index{MeasurementRADAR@{MeasurementRADAR}!noiseDensity@{noiseDensity}}
 \index{noiseDensity@{noiseDensity}!MeasurementRADAR@{MeasurementRADAR}}
 \doxysubsubsection{\texorpdfstring{noiseDensity()}{noiseDensity()}}
-{\footnotesize\ttfamily \label{classMeasurementRADAR_a313e279e48a9fb40c2710593145d647a} 
-\mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ Measurement\+RADAR\+::noise\+Density (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+{\footnotesize\ttfamily \label{classMeasurementRADAR_a34bb886bbddd9ca368159c0f4fefd154} 
+\mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ Measurement\+RADAR\+::noise\+Density (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classSystemEstimator}{System\+Estimator}} \&}]{system}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -223,7 +224,7 @@ The noise density.
 \end{DoxyReturn}
 
 
-Implements \mbox{\hyperlink{classMeasurementGaussianLikelihood_a4e4a031e3359823b627b3c4df9bc13c3}{Measurement\+Gaussian\+Likelihood}}.
+Implements \mbox{\hyperlink{classMeasurementGaussianLikelihood_aa722c14af433fe0e5b400a33fa1b783b}{Measurement\+Gaussian\+Likelihood}}.
 
 \Hypertarget{classMeasurementRADAR_a4b70f74c6a9cd691a3ca3c7c37bf5475}\index{MeasurementRADAR@{MeasurementRADAR}!predict@{predict}}
 \index{predict@{predict}!MeasurementRADAR@{MeasurementRADAR}}

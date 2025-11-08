@@ -8,19 +8,19 @@
 \DoxyCodeLine{00008\ }
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <vector>}}
 \DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
-\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{Gaussian_8hpp}{Gaussian.hpp}}"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{GaussianInfo_8hpp}{GaussianInfo.hpp}}"{}}}
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{SystemEstimator_8h}{SystemEstimator.h}}"{}}}
 \DoxyCodeLine{00013\ }
 \DoxyCodeLine{00020\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classSystemBallistic}{SystemBallistic}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}}
 \DoxyCodeLine{00021\ \{}
 \DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
-\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classSystemBallistic_a949d8bf5fa8807ce07ff1ffab9a4819e}{SystemBallistic}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classGaussian}{Gaussian<double>}}\ \&\ \mbox{\hyperlink{classSystemEstimator_a6db5323501c2609c2cb34964fbe1db21}{density}});}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{explicit}\ \mbox{\hyperlink{classSystemBallistic_adb6b36cb4e873be604471916e261a90f}{SystemBallistic}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ \&\ \mbox{\hyperlink{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}{density}});}
 \DoxyCodeLine{00028\ }
 \DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classSystemBallistic_aea315138a22bbe77de41ef133fec9d0a}{dynamics}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00035\ }
 \DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classSystemBallistic_aea315138a22bbe77de41ef133fec9d0a}{dynamics}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ Eigen::MatrixXd\ \&\ J)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00043\ \textcolor{keyword}{protected}:}
-\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussian}{Gaussian<double>}}\ \mbox{\hyperlink{classSystemBallistic_a9ab771162ef45a8398df0bca2736c822}{processNoiseDensity}}(\textcolor{keywordtype}{double}\ dt)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ \mbox{\hyperlink{classSystemBallistic_add3723cc9586f38b768566ef9b63f9b7}{processNoiseDensity}}(\textcolor{keywordtype}{double}\ dt)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00050\ }
 \DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{virtual}\ std::vector<Eigen::Index>\ \mbox{\hyperlink{classSystemBallistic_a62d10dfa945004877f99a42ece1e9ca2}{processNoiseIndex}}()\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00056\ }

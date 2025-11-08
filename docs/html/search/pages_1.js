@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['filtering_0',['MCHA4400 Lab 5: Laplace filtering',['../index.html',1,'']]]
+  ['filter_0',['MCHA4400 Lab 6: Laplace information filter',['../index.html',1,'']]]
 ];

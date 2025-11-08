@@ -8,7 +8,7 @@
 \DoxyCodeLine{00007\ }
 \DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <Eigen/Core>}}
 \DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <unsupported/Eigen/CXX11/Tensor>}}
-\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{Gaussian_8hpp}{Gaussian.hpp}}"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{GaussianInfo_8hpp}{GaussianInfo.hpp}}"{}}}
 \DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{SystemEstimator_8h}{SystemEstimator.h}}"{}}}
 \DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{MeasurementGaussianLikelihood_8h}{MeasurementGaussianLikelihood.h}}"{}}}
 \DoxyCodeLine{00013\ }
@@ -25,7 +25,7 @@
 \DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classMeasurementRADAR_a4b70f74c6a9cd691a3ca3c7c37bf5475}{predict}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classMeasurementRADAR_a4b70f74c6a9cd691a3ca3c7c37bf5475}{predict}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system,\ Eigen::MatrixXd\ \&\ J)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{virtual}\ Eigen::VectorXd\ \mbox{\hyperlink{classMeasurementRADAR_a4b70f74c6a9cd691a3ca3c7c37bf5475}{predict}}(\textcolor{keyword}{const}\ Eigen::VectorXd\ \&\ x,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system,\ Eigen::MatrixXd\ \&\ J,\ Eigen::Tensor<double,\ 3>\ \&\ H)\ \textcolor{keyword}{const\ override};}
-\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussian}{Gaussian<double>}}\ \mbox{\hyperlink{classMeasurementRADAR_a313e279e48a9fb40c2710593145d647a}{noiseDensity}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{classGaussianInfo}{GaussianInfo<double>}}\ \mbox{\hyperlink{classMeasurementRADAR_a34bb886bbddd9ca368159c0f4fefd154}{noiseDensity}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classSystemEstimator}{SystemEstimator}}\ \&\ system)\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00049\ \textcolor{keyword}{protected}:}
 \DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{virtual}\ std::string\ \mbox{\hyperlink{classMeasurementRADAR_ac92712423f9ca60e2dad0c6b65ef7900}{getProcessString}}()\ \textcolor{keyword}{const\ override};}
 \DoxyCodeLine{00055\ }

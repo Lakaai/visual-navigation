@@ -1,7 +1,7 @@
 #include <cmath>
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "MeasurementGaussianLikelihood.h"
 #include "MeasurementRADAR.h"
 
@@ -11,7 +11,8 @@ const double MeasurementRADAR::r2 = 5000;    // Vertical position of sensor [m]
 MeasurementRADAR::MeasurementRADAR(double time, const Eigen::VectorXd & y)
     : MeasurementGaussianLikelihood(time, y)
 {
-    // updateMethod_ = UpdateMethod::BFGSTRUSTSQRTINV;
+    // updateMethod_ = UpdateMethod::BFGSLMSQRT;
+    // updateMethod_ = UpdateMethod::BFGSTRUSTSQRT;
     // updateMethod_ = UpdateMethod::SR1TRUSTEIG;
     updateMethod_ = UpdateMethod::NEWTONTRUSTEIG;
 
@@ -23,7 +24,8 @@ MeasurementRADAR::MeasurementRADAR(double time, const Eigen::VectorXd & y)
 MeasurementRADAR::MeasurementRADAR(double time, const Eigen::VectorXd & y, int verbosity)
     : MeasurementGaussianLikelihood(time, y, verbosity)
 {
-    // updateMethod_ = UpdateMethod::BFGSTRUSTSQRTINV;
+    // updateMethod_ = UpdateMethod::BFGSLMSQRT;
+    // updateMethod_ = UpdateMethod::BFGSTRUSTSQRT;
     // updateMethod_ = UpdateMethod::SR1TRUSTEIG;
     updateMethod_ = UpdateMethod::NEWTONTRUSTEIG;
 
@@ -81,15 +83,14 @@ Eigen::VectorXd MeasurementRADAR::predict(const Eigen::VectorXd & x, const Syste
     double range = std::sqrt(r1*r1 + (h1 - r2)*(h1 - r2));
     d2hdx2(0, 0, 0) = 1 / range - std::pow((h1 - r2) / range, 2) / range;
     // Other elements remain zero
-
     return h;
-
 }
 
-Gaussian<double> MeasurementRADAR::noiseDensity(const SystemEstimator & system) const
+GaussianInfo<double> MeasurementRADAR::noiseDensity(const SystemEstimator & system) const
 {
+    // SR is an upper triangular matrix such that SR.'*SR = R is the measurement noise covariance
     double sigma_rng = 50.0;  // 50 meters standard deviation
     Eigen::MatrixXd SR = Eigen::MatrixXd::Identity(1, 1) * sigma_rng;
-    return Gaussian<double>::fromSqrtMoment(SR);
+    return GaussianInfo<double>::fromSqrtMoment(SR);
 }
 

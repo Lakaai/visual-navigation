@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>lab5: GaussianBase&lt; Scalar &gt; Class Template Reference</title>
+<title>lab6: GaussianBase&lt; Scalar &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">lab5
+   <div id="projectname">lab6
    </div>
   </td>
  </tr>
@@ -111,7 +111,7 @@ $(function(){initNavTree('classGaussianBase.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 
-<p>Base class for <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distributions.  
+<p>Base class for Gaussian distributions.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="GaussianBase_8hpp_source.html">GaussianBase.hpp</a>&gt;</code></p>
@@ -132,10 +132,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~GaussianBase</b> 
 <tr class="memdesc:a53f1c1f208045897039d8ef283d3b813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor. <br /></td></tr>
 <tr class="separator:a53f1c1f208045897039d8ef283d3b813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95301f98075e0a6f9d26dab060d298f7" id="r_a95301f98075e0a6f9d26dab060d298f7"><td class="memItemLeft" align="right" valign="top">virtual Eigen::Index&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95301f98075e0a6f9d26dab060d298f7">dim</a> () const =0</td></tr>
-<tr class="memdesc:a95301f98075e0a6f9d26dab060d298f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the dimension of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.  <br /></td></tr>
+<tr class="memdesc:a95301f98075e0a6f9d26dab060d298f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the dimension of the Gaussian distribution.  <br /></td></tr>
 <tr class="separator:a95301f98075e0a6f9d26dab060d298f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea1e81723c3f3402cd60b11f838b8325" id="r_aea1e81723c3f3402cd60b11f838b8325"><td class="memItemLeft" align="right" valign="top">virtual Eigen::VectorX&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea1e81723c3f3402cd60b11f838b8325">mean</a> () const =0</td></tr>
-<tr class="memdesc:aea1e81723c3f3402cd60b11f838b8325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the mean of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.  <br /></td></tr>
+<tr class="memdesc:aea1e81723c3f3402cd60b11f838b8325"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the mean of the Gaussian distribution.  <br /></td></tr>
 <tr class="separator:aea1e81723c3f3402cd60b11f838b8325"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89b0b3c7a1b6d938b0f2d88d02343235" id="r_a89b0b3c7a1b6d938b0f2d88d02343235"><td class="memItemLeft" align="right" valign="top">virtual Eigen::MatrixX&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a89b0b3c7a1b6d938b0f2d88d02343235">sqrtCov</a> () const =0</td></tr>
 <tr class="memdesc:a89b0b3c7a1b6d938b0f2d88d02343235"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the square root of the covariance matrix.  <br /></td></tr>
@@ -156,19 +156,19 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><b>~GaussianBase</b> 
 <tr class="memdesc:a2647644ad1f9377081f79c3fa664fb09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the square root of the information vector.  <br /></td></tr>
 <tr class="separator:a2647644ad1f9377081f79c3fa664fb09"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80dd97c033cc01bbff9a8fec2446aa82" id="r_a80dd97c033cc01bbff9a8fec2446aa82"><td class="memItemLeft" align="right" valign="top">Eigen::VectorX&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80dd97c033cc01bbff9a8fec2446aa82">simulate</a> () const</td></tr>
-<tr class="memdesc:a80dd97c033cc01bbff9a8fec2446aa82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates a sample from the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.  <br /></td></tr>
+<tr class="memdesc:a80dd97c033cc01bbff9a8fec2446aa82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simulates a sample from the Gaussian distribution.  <br /></td></tr>
 <tr class="separator:a80dd97c033cc01bbff9a8fec2446aa82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5f1a37da126fc89dcf7c0457ec6c6ca8" id="r_a5f1a37da126fc89dcf7c0457ec6c6ca8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f1a37da126fc89dcf7c0457ec6c6ca8">isWithinConfidenceRegion</a> (const Eigen::VectorX&lt; Scalar &gt; &amp;x, double nSigma=3.0) const =0</td></tr>
-<tr class="memdesc:a5f1a37da126fc89dcf7c0457ec6c6ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given point is within the confidence region of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.  <br /></td></tr>
+<tr class="memdesc:a5f1a37da126fc89dcf7c0457ec6c6ca8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if a given point is within the confidence region of the Gaussian distribution.  <br /></td></tr>
 <tr class="separator:a5f1a37da126fc89dcf7c0457ec6c6ca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae8a883329fc03d4b2fcc30163dd552" id="r_a8ae8a883329fc03d4b2fcc30163dd552"><td class="memItemLeft" align="right" valign="top">Eigen::Matrix&lt; Scalar, 2, Eigen::Dynamic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ae8a883329fc03d4b2fcc30163dd552">confidenceEllipse</a> (double nSigma=3.0, int nSamples=100) const</td></tr>
 <tr class="memdesc:a8ae8a883329fc03d4b2fcc30163dd552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes points on the boundary of the confidence ellipse.  <br /></td></tr>
 <tr class="separator:a8ae8a883329fc03d4b2fcc30163dd552"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaeec2dd1eb35e0df204bfaf3b820204f" id="r_aaeec2dd1eb35e0df204bfaf3b820204f"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaeec2dd1eb35e0df204bfaf3b820204f">logIntegral</a> (Scalar a, Scalar b) const</td></tr>
-<tr class="memdesc:aaeec2dd1eb35e0df204bfaf3b820204f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the log of the integral of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution between two points.  <br /></td></tr>
+<tr class="memdesc:aaeec2dd1eb35e0df204bfaf3b820204f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the log of the integral of the Gaussian distribution between two points.  <br /></td></tr>
 <tr class="separator:aaeec2dd1eb35e0df204bfaf3b820204f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a753f3e63e71907cb446c55e64de67aa6" id="r_a753f3e63e71907cb446c55e64de67aa6"><td class="memItemLeft" align="right" valign="top">Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a753f3e63e71907cb446c55e64de67aa6">logIntegral</a> (Scalar a, Scalar b, Scalar &amp;dldmu) const</td></tr>
-<tr class="memdesc:a753f3e63e71907cb446c55e64de67aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the log of the integral of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution between two points and its derivative with respect to the mean.  <br /></td></tr>
+<tr class="memdesc:a753f3e63e71907cb446c55e64de67aa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the log of the integral of the Gaussian distribution between two points and its derivative with respect to the mean.  <br /></td></tr>
 <tr class="separator:a753f3e63e71907cb446c55e64de67aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classDensityBase"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classDensityBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classDensityBase.html">DensityBase&lt; double &gt;</a></td></tr>
 <tr class="memitem:aecb91caeec7717a5572413c2db6dc2c7 inherit pub_methods_classDensityBase" id="r_aecb91caeec7717a5572413c2db6dc2c7"><td class="memItemLeft" align="right" valign="top">
@@ -199,8 +199,8 @@ Static Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Scalar = double&gt;<br />
-class GaussianBase&lt; Scalar &gt;</div><p>Base class for <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distributions. </p>
-<p>This class provides a common interface and utility functions for <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distributions.</p>
+class GaussianBase&lt; Scalar &gt;</div><p>Base class for Gaussian distributions. </p>
+<p>This class provides a common interface and utility functions for Gaussian distributions.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Scalar</td><td>The scalar type used for calculations (default: double). </td></tr>
@@ -318,7 +318,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the covariance matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>The covariance matrix. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#afe7297cb30034030e79a647b4f26caed">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#afe7297cb30034030e79a647b4f26caed">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#ae9e3f8be04be322e1fec36986774af22">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#ae9e3f8be04be322e1fec36986774af22">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -347,10 +347,10 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the dimension of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution. </p>
+<p>Returns the dimension of the Gaussian distribution. </p>
 <dl class="section return"><dt>Returns</dt><dd>The dimension of the distribution. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a416b1486d74f1567aca071a779404f3d">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a416b1486d74f1567aca071a779404f3d">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#ac726ca2019576d3297070b77607acb83">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#ac726ca2019576d3297070b77607acb83">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -418,7 +418,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the information matrix (inverse of covariance). </p>
 <dl class="section return"><dt>Returns</dt><dd>The information matrix. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a506cad2a4b25b31cfb0866a779cdf12a">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a506cad2a4b25b31cfb0866a779cdf12a">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a5af43345a5a6443cdc52c311c53476ad">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#a5af43345a5a6443cdc52c311c53476ad">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -450,7 +450,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the information vector. </p>
 <dl class="section return"><dt>Returns</dt><dd>The information vector. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a2d59f2aecd35ff0c47658925d794da17">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a2d59f2aecd35ff0c47658925d794da17">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a4ebe3246138cac38bb009727687f805b">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#a4ebe3246138cac38bb009727687f805b">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -483,8 +483,8 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Check if a given point is within the confidence region of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution. </p>
-<p>This method determines whether the input vector x is within the confidence region defined by nSigma standard deviations from the mean of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.</p>
+<p>Check if a given point is within the confidence region of the Gaussian distribution. </p>
+<p>This method determines whether the input vector x is within the confidence region defined by nSigma standard deviations from the mean of the Gaussian distribution.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">x</td><td>The input vector to check. </td></tr>
@@ -494,7 +494,7 @@ template&lt;typename Scalar  = double&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the point is within the confidence region, false otherwise. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a5cfc431373d485b389f54d6702e3c28b">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a8a40f20e8d0fde44bdde239eea310540">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -527,14 +527,14 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Computes the log of the integral of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution between two points. </p>
+<p>Computes the log of the integral of the Gaussian distribution between two points. </p>
 <p>This function returns the following value:</p>
 <p class="formulaDsp">
 \[
 \log \int_a^b \mathcal{N}(x; \mu, \sigma^2) \,\mathrm{d}x
 \]
 </p>
-<p>where \(\mu\) is the mean and \(\sigma\) is the standard deviation of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.</p>
+<p>where \(\mu\) is the mean and \(\sigma\) is the standard deviation of the Gaussian distribution.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>The lower bound of the integral. </td></tr>
@@ -580,7 +580,7 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Computes the log of the integral of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution between two points and its derivative with respect to the mean. </p>
+<p>Computes the log of the integral of the Gaussian distribution between two points and its derivative with respect to the mean. </p>
 <p>This function returns the following value:</p>
 <p class="formulaDsp">
 \[
@@ -593,7 +593,7 @@ l = \log \int_a^b \mathcal{N}(x; \mu, \sigma^2) \,\mathrm{d}x
 \frac{\partial l}{\partial \mu} = \frac{\mathcal{N}(b; \mu, \sigma^2) - \mathcal{N}(a; \mu, \sigma^2)}{\int_a^b \mathcal{N}(x; \mu, \sigma^2) \,\mathrm{d}x}
 \]
 </p>
-<p>where \(\mu\) is the mean and \(\sigma\) is the standard deviation of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution.</p>
+<p>where \(\mu\) is the mean and \(\sigma\) is the standard deviation of the Gaussian distribution.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">a</td><td>The lower bound of the integral. </td></tr>
@@ -631,10 +631,10 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the mean of the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution. </p>
+<p>Returns the mean of the Gaussian distribution. </p>
 <dl class="section return"><dt>Returns</dt><dd>The mean vector. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a39e92048ba667390e2c29e5edc3c0689">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a39e92048ba667390e2c29e5edc3c0689">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a09ea34257421e518cd44b1061cd1bda5">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#a09ea34257421e518cd44b1061cd1bda5">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -746,7 +746,7 @@ template&lt;typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Simulates a sample from the <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution. </p>
+<p>Simulates a sample from the Gaussian distribution. </p>
 <dl class="section return"><dt>Returns</dt><dd>A random vector drawn from the distribution. </dd></dl>
 
 </div>
@@ -779,7 +779,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the square root of the covariance matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>The square root of the covariance matrix. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#aeaef85731458efa56e4f2bbf1adb388f">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#aeaef85731458efa56e4f2bbf1adb388f">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#af1ecfcdd9ae8d439d39a555c153d83f6">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#af1ecfcdd9ae8d439d39a555c153d83f6">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -811,7 +811,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the square root of the information matrix. </p>
 <dl class="section return"><dt>Returns</dt><dd>The square root of the information matrix. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a00c7a2df5dd3f20b13cbffbc48b920d6">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a00c7a2df5dd3f20b13cbffbc48b920d6">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a1b8c76e48a970b00157cea62db5933bf">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#a1b8c76e48a970b00157cea62db5933bf">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>
@@ -843,7 +843,7 @@ template&lt;typename Scalar  = double&gt; </div>
 <p>Returns the square root of the information vector. </p>
 <dl class="section return"><dt>Returns</dt><dd>The square root of the information vector. </dd></dl>
 
-<p>Implemented in <a class="el" href="classGaussian.html#a2c94bc42fa33b200869486ce1c3bd3e3">Gaussian&lt; Scalar &gt;</a>, and <a class="el" href="classGaussian.html#a2c94bc42fa33b200869486ce1c3bd3e3">Gaussian&lt; double &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classGaussianInfo.html#a36299f8a059f76aa995cfdf43bb97ebb">GaussianInfo&lt; Scalar &gt;</a>, and <a class="el" href="classGaussianInfo.html#a36299f8a059f76aa995cfdf43bb97ebb">GaussianInfo&lt; double &gt;</a>.</p>
 
 </div>
 </div>

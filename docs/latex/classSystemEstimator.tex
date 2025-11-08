@@ -18,7 +18,7 @@ Inheritance diagram for System\+Estimator\+:\begin{figure}[H]
 \doxysubsubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classSystemEstimator_a5affca954084b875c1a5178be1039355}{System\+Estimator}} (const \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \&\mbox{\hyperlink{classSystemEstimator_a6db5323501c2609c2cb34964fbe1db21}{density}})
+\mbox{\hyperlink{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a}{System\+Estimator}} (const \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \&\mbox{\hyperlink{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}{density}})
 \begin{DoxyCompactList}\small\item\em Construct a new \doxylink{classSystemEstimator}{System\+Estimator} object with initial density. \end{DoxyCompactList}\item 
 \Hypertarget{classSystemEstimator_af4181a32f0ffd4506a7c6564f292fd85}\label{classSystemEstimator_af4181a32f0ffd4506a7c6564f292fd85} 
 virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+System\+Estimator} ()
@@ -43,8 +43,8 @@ virtual Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemBase_a008fdd35de670645
 \doxysubsubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\Hypertarget{classSystemEstimator_a6db5323501c2609c2cb34964fbe1db21}\label{classSystemEstimator_a6db5323501c2609c2cb34964fbe1db21} 
-\mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ {\bfseries density}
+\Hypertarget{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790}\label{classSystemEstimator_a3459a820d965e53e8984ffdf800ef790} 
+\mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ {\bfseries density}
 \begin{DoxyCompactList}\small\item\em The current state density estimate. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
@@ -53,7 +53,7 @@ Eigen\+::\+Matrix\+Xd \mbox{\hyperlink{classSystemEstimator_aea72cb60a0b33d1dff0
 \begin{DoxyCompactList}\small\item\em Compute the augmented dynamics estimate. \end{DoxyCompactList}\item 
 Eigen\+::\+Vector\+Xd \mbox{\hyperlink{classSystemEstimator_a249d9ae42fa67c8a82ad5c9b87491b5a}{RK4\+SDEHelper}} (const Eigen\+::\+Vector\+Xd \&xdw, double dt, Eigen\+::\+Matrix\+Xd \&J) const
 \begin{DoxyCompactList}\small\item\em Helper function for Runge-\/\+Kutta 4th order method for SDEs. \end{DoxyCompactList}\item 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \mbox{\hyperlink{classSystemEstimator_a12a1b53d0f9fb78e85ce4252c3b8b0c3}{process\+Noise\+Density}} (double dt) const =0
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \mbox{\hyperlink{classSystemEstimator_af89b075a120ff794abd6a42fe95c44a6}{process\+Noise\+Density}} (double dt) const =0
 \begin{DoxyCompactList}\small\item\em Compute the process noise density. \end{DoxyCompactList}\item 
 virtual std\+::vector$<$ Eigen\+::\+Index $>$ \mbox{\hyperlink{classSystemEstimator_aa276332cdb668a97daaaeb732bedb706}{process\+Noise\+Index}} () const =0
 \begin{DoxyCompactList}\small\item\em Get the indices of state variables affected by process noise. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -71,11 +71,11 @@ Class for system state estimation.
 This class extends \doxylink{classSystemBase}{System\+Base} to provide state estimation functionality. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\Hypertarget{classSystemEstimator_a5affca954084b875c1a5178be1039355}\index{SystemEstimator@{SystemEstimator}!SystemEstimator@{SystemEstimator}}
+\Hypertarget{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a}\index{SystemEstimator@{SystemEstimator}!SystemEstimator@{SystemEstimator}}
 \index{SystemEstimator@{SystemEstimator}!SystemEstimator@{SystemEstimator}}
 \doxysubsubsection{\texorpdfstring{SystemEstimator()}{SystemEstimator()}}
-{\footnotesize\ttfamily \label{classSystemEstimator_a5affca954084b875c1a5178be1039355} 
-System\+Estimator\+::\+System\+Estimator (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ \&}]{density}{}\end{DoxyParamCaption})}
+{\footnotesize\ttfamily \label{classSystemEstimator_ad83d8c162de6eae4c5574dca76fd640a} 
+System\+Estimator\+::\+System\+Estimator (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ \&}]{density}{}\end{DoxyParamCaption})}
 
 
 
@@ -164,11 +164,11 @@ Predict the system state at a given time.
 
 Implements \mbox{\hyperlink{classSystemBase_a9645cf56eee3efdb7ef397fcfa3fb4f4}{System\+Base}}.
 
-\Hypertarget{classSystemEstimator_a12a1b53d0f9fb78e85ce4252c3b8b0c3}\index{SystemEstimator@{SystemEstimator}!processNoiseDensity@{processNoiseDensity}}
+\Hypertarget{classSystemEstimator_af89b075a120ff794abd6a42fe95c44a6}\index{SystemEstimator@{SystemEstimator}!processNoiseDensity@{processNoiseDensity}}
 \index{processNoiseDensity@{processNoiseDensity}!SystemEstimator@{SystemEstimator}}
 \doxysubsubsection{\texorpdfstring{processNoiseDensity()}{processNoiseDensity()}}
-{\footnotesize\ttfamily \label{classSystemEstimator_a12a1b53d0f9fb78e85ce4252c3b8b0c3} 
-virtual \mbox{\hyperlink{classGaussian}{Gaussian}}$<$ double $>$ System\+Estimator\+::process\+Noise\+Density (\begin{DoxyParamCaption}\item[{double}]{dt}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+{\footnotesize\ttfamily \label{classSystemEstimator_af89b075a120ff794abd6a42fe95c44a6} 
+virtual \mbox{\hyperlink{classGaussianInfo}{Gaussian\+Info}}$<$ double $>$ System\+Estimator\+::process\+Noise\+Density (\begin{DoxyParamCaption}\item[{double}]{dt}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
 
 
 
@@ -184,7 +184,7 @@ The process noise density.
 \end{DoxyReturn}
 
 
-Implemented in \mbox{\hyperlink{classSystemBallistic_a9ab771162ef45a8398df0bca2736c822}{System\+Ballistic}}.
+Implemented in \mbox{\hyperlink{classSystemBallistic_add3723cc9586f38b768566ef9b63f9b7}{System\+Ballistic}}.
 
 \Hypertarget{classSystemEstimator_aa276332cdb668a97daaaeb732bedb706}\index{SystemEstimator@{SystemEstimator}!processNoiseIndex@{processNoiseIndex}}
 \index{processNoiseIndex@{processNoiseIndex}!SystemEstimator@{SystemEstimator}}

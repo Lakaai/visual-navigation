@@ -80,7 +80,7 @@ protected:
      * @param system The system estimator.
      * @return double The cost value.
      */
-    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system);
+    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const;
 
     /**
      * @brief Calculate the cost of the joint density and its gradient.
@@ -89,7 +89,7 @@ protected:
      * @param g Output parameter for the gradient.
      * @return double The cost value.
      */
-    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g);
+    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const;
 
     /**
      * @brief Calculate the cost of the joint density, its gradient, and Hessian.
@@ -99,7 +99,7 @@ protected:
      * @param H Output parameter for the Hessian.
      * @return double The cost value.
      */
-    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g, Eigen::MatrixXd & H);
+    double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g, Eigen::MatrixXd & H) const;
 
     /**
      * @brief Update the system based on this measurement.
@@ -110,7 +110,7 @@ protected:
     /**
      * @brief Enumeration of update methods.
      */
-    enum class UpdateMethod {BFGSTRUSTSQRTINV, SR1TRUSTEIG, NEWTONTRUSTEIG, AFFINE, GAUSSNEWTON, LEVENBERGMARQUARDT};
+    enum class UpdateMethod {BFGSTRUSTSQRT, BFGSLMSQRT, SR1TRUSTEIG, NEWTONTRUSTEIG, AFFINE, GAUSSNEWTON, LEVENBERGMARQUARDT};
 
     UpdateMethod updateMethod_;  ///< The method used for updating the system.
 };

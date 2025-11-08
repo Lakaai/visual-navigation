@@ -1,7 +1,7 @@
 #include <doctest/doctest.h>
 #include <cstddef>
 #include <Eigen/Core>
-#include "../../src/Gaussian.hpp"
+#include "../../src/GaussianInfo.hpp"
 #include "../../src/SystemBallistic.h"
 
 #ifndef CAPTURE_EIGEN
@@ -11,7 +11,7 @@
 SCENARIO("SystemBallistic")
 {
     const std::size_t n = 3;
-    Gaussian<double> p0 = Gaussian<double>::fromSqrtMoment(Eigen::MatrixXd::Zero(n, n));
+    GaussianInfo<double> p0 = GaussianInfo<double>::fromSqrtInfo(Eigen::MatrixXd::Zero(n, n));
     SystemBallistic state(p0);
 
     GIVEN("A state vector")

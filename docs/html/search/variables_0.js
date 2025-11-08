@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['density_0',['density',['../classSystemEstimator.html#a6db5323501c2609c2cb34964fbe1db21',1,'SystemEstimator']]]
+  ['density_0',['density',['../classSystemEstimator.html#a3459a820d965e53e8984ffdf800ef790',1,'SystemEstimator']]]
 ];

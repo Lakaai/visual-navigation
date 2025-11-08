@@ -12,6 +12,7 @@ end
 
 assert(size(Xi, 1) == size(Xi, 2));
 assert(size(Xi, 1) == size(g, 1));
+assert(istriu(Xi));
 
 % Cache structure used by linsolve
 persistent s_ut s_ut_transa

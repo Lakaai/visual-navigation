@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
-#include "../../src/Gaussian.hpp"
+#include "../../src/GaussianInfo.hpp"
 #include "../../src/SystemBallistic.h"
 #include "../../src/MeasurementRADAR.h"
 
@@ -18,7 +18,7 @@ SCENARIO("MeasurementRADAR")
     y << 100.0;
     double t = 0.0;
     MeasurementRADAR measurement(t, y);
-    Gaussian<double> p0 = Gaussian<double>::fromSqrtMoment(Eigen::MatrixXd::Zero(3, 3));
+    GaussianInfo<double> p0 = GaussianInfo<double>::fromSqrtInfo(Eigen::MatrixXd::Zero(3, 3));
     SystemBallistic system(p0);
 
     GIVEN("A state vector")

@@ -30,7 +30,7 @@ classdef SystemBallistic < SystemSimulatorEstimator
                 0.0005 ...          % Ballistic coefficient
                 ];
             S0 = diag([2200, 100, 1e-3]);
-            obj.density = Gaussian.fromSqrtMoment(mu0, S0);
+            obj.density = GaussianInfo.fromSqrtMoment(mu0, S0);
         end
 
         [f, J] = dynamics(obj, t, x, u)

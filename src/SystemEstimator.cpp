@@ -1,9 +1,9 @@
 #include <Eigen/Core>
-#include "Gaussian.hpp"
+#include "GaussianInfo.hpp"
 #include "SystemEstimator.h"
 
 
-SystemEstimator::SystemEstimator(const Gaussian<double> & density)
+SystemEstimator::SystemEstimator(const GaussianInfo<double> & density)
     : SystemBase()
     , density(density)
 {}
@@ -67,10 +67,7 @@ Eigen::VectorXd SystemEstimator::RK4SDEHelper(const Eigen::VectorXd & xdw, doubl
     const std::vector<Eigen::Index> & idxQ = processNoiseIndex();
 
     const std::size_t nx = density.dim();
-    std::cout << "nx = \n" << nx << std::endl;
     const std::size_t nq = idxQ.size();
-    std::cout << "nq = \n" << nq << std::endl;
-    std::cout << "xdw size = \n" << xdw.size() << std::endl;
     assert(xdw.size() == nx + nq);
 
     Eigen::VectorXd x(nx), dw(nx);

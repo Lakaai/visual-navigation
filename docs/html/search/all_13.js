@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['unit_20tests_0',['Unit Tests',['../index.html#testing',1,'']]],
-  ['update_1',['update',['../classEvent.html#aa89fdd0acff3245e93180f8c425c2278',1,'Event::update()'],['../classMeasurement.html#a30df1dcc9aac6e9d25e54498ca11758a',1,'Measurement::update()'],['../classMeasurementGaussianLikelihood.html#aa3a15797f5e7e5cd8fbf658af56f5a37',1,'MeasurementGaussianLikelihood::update()']]],
-  ['updatemethod_2',['UpdateMethod',['../classMeasurement.html#af49d21e894f7502251497eabcf1f2dff',1,'Measurement']]],
-  ['updatemethod_5f_3',['updateMethod_',['../classMeasurement.html#abe8eaa4cbbf444ebd137e3768b7e3f28',1,'Measurement']]]
+  ['t0_0',['T0',['../classSystemBallistic.html#adf025d3f8cb9a4a2c5a708910ccb23fc',1,'SystemBallistic']]],
+  ['tasks_1',['Tasks',['../index.html#tasks',1,'']]],
+  ['tests_2',['Unit Tests',['../index.html#testing',1,'']]],
+  ['time_5f_3',['time_',['../classEvent.html#a716a3d53e3f3b6798c6279a118a179c1',1,'Event::time_'],['../classSystemBase.html#a7362e3ac2dcc51acefcaf68dcc087f90',1,'SystemBase::time_']]],
+  ['trseig_4',['trsEig',['../namespacefuncmin.html#a07939512747e3786b6a1c38ebc0ebecf',1,'funcmin::trsEig(const Eigen::MatrixXd &amp;H, const Eigen::VectorXd &amp;g, double D, Eigen::VectorXd &amp;p)'],['../namespacefuncmin.html#a07454c34d31cc7a3d436630645c29314',1,'funcmin::trsEig(const Eigen::MatrixXd &amp;Q, const Eigen::VectorXd &amp;v, const Eigen::VectorXd &amp;g, double D, Eigen::VectorXd &amp;p)']]],
+  ['trssqrt_5',['trsSqrt',['../namespacefuncmin.html#aafd08c8cf500feab0ebf4a452c0a88be',1,'funcmin']]],
+  ['trssqrtinv_6',['trsSqrtInv',['../namespacefuncmin.html#ac35752d9f2d6d61e5df0ba0542d5910d',1,'funcmin']]]
 ];

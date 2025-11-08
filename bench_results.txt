@@ -1,0 +1,171 @@
+===========================================================================================================================
+| relative |               ns/op |                op/s |    err% |     total | Rosenbrock gradient only
+|---------:|--------------------:|--------------------:|--------:|----------:|:-------------------------
+|   100.0% |               11.17 |       89,488,216.61 |    2.0% |      0.01 | `Analytical derivatives`
+|    33.2% |               33.69 |       29,683,516.13 |    3.0% |      0.01 | `Forward-mode autodiff`
+|     2.4% |              467.04 |        2,141,122.33 |    1.0% |      0.01 | `Reverse-mode autodiff`
+
+| relative |               ns/op |                op/s |    err% |     total | Rosenbrock gradient and Hessian
+|---------:|--------------------:|--------------------:|--------:|----------:|:--------------------------------
+|   100.0% |               12.69 |       78,781,012.28 |    4.8% |      0.01 | `Analytical derivatives`
+|    17.9% |               70.89 |       14,107,184.13 |    1.5% |      0.01 | `Forward-mode autodiff`
+|     1.0% |            1,275.90 |          783,758.26 |    0.7% |      0.01 | `Reverse-mode autodiff`
+===========================================================================================================================
+
+
+TASK 1 J NEWTON TRUST RESULTS: 
+luke@basement:~/Documents/Github/MCHA4400/lab6/build$ ./lab6
+Initial x =
+10
+10
+
+f = 810081
+
+g =
+360018
+-18000
+
+H =
+116002  -4000
+ -4000    200
+
+Running optimisation
+Iter =     0, Cost =   8.10e+05, Newton decr^2 =   3.60e+05, Delta =   1.00e+00
+Iter =     1, Cost =   5.04e+05, Newton decr^2 =   5.11e+05, Delta =   2.00e+00
+Iter =     2, Cost =   1.51e+05, Newton decr^2 =   2.23e+05, Delta =   4.00e+00
+Iter =     3, Cost =   1.82e+04, Newton decr^2 =   3.34e+04, Delta =   8.00e+00
+Iter =     4, Cost =   1.74e+02, Newton decr^2 =   3.19e+02, Delta =   1.60e+01
+Iter =     5, Cost =   1.44e+01, Newton decr^2 =   1.26e+01, Delta =   1.60e+01
+Iter =     6, Cost =   1.44e+01, Newton decr^2 =   3.15e+00, Delta =   4.00e+00
+Iter =     7, Cost =   1.43e+01, Newton decr^2 =   6.39e+00, Delta =   1.00e+00
+Iter =     8, Cost =   1.08e+01, Newton decr^2 =   7.95e-01, Delta =   1.00e+00
+Iter =     9, Cost =   1.00e+01, Newton decr^2 =   1.55e+00, Delta =   2.00e+00
+Iter =    10, Cost =   8.83e+00, Newton decr^2 =   2.03e+00, Delta =   4.00e+00
+Iter =    11, Cost =   7.51e+00, Newton decr^2 =   1.82e+00, Delta =   4.00e+00
+Iter =    12, Cost =   6.28e+00, Newton decr^2 =   1.64e+00, Delta =   4.00e+00
+Iter =    13, Cost =   5.33e+00, Newton decr^2 =   1.56e+00, Delta =   4.00e+00
+Iter =    14, Cost =   4.28e+00, Newton decr^2 =   1.56e+00, Delta =   4.00e+00
+Iter =    15, Cost =   4.28e+00, Newton decr^2 =   5.04e-01, Delta =   5.38e-01
+Iter =    16, Cost =   3.86e+00, Newton decr^2 =   7.18e-01, Delta =   1.08e+00
+Iter =    17, Cost =   3.27e+00, Newton decr^2 =   1.09e+00, Delta =   2.15e+00
+Iter =    18, Cost =   2.76e+00, Newton decr^2 =   1.18e+00, Delta =   2.15e+00
+Iter =    19, Cost =   2.03e+00, Newton decr^2 =   1.23e+00, Delta =   2.15e+00
+Iter =    20, Cost =   2.03e+00, Newton decr^2 =   3.39e-01, Delta =   5.18e-01
+Iter =    21, Cost =   1.73e+00, Newton decr^2 =   6.01e-01, Delta =   1.04e+00
+Iter =    22, Cost =   1.42e+00, Newton decr^2 =   6.79e-01, Delta =   1.04e+00
+Iter =    23, Cost =   9.86e-01, Newton decr^2 =   5.29e-01, Delta =   1.04e+00
+Iter =    24, Cost =   9.56e-01, Newton decr^2 =   9.18e-01, Delta =   2.59e-01
+Iter =    25, Cost =   4.62e-01, Newton decr^2 =   1.04e-01, Delta =   2.59e-01
+Iter =    26, Cost =   3.67e-01, Newton decr^2 =   1.92e-01, Delta =   5.18e-01
+Iter =    27, Cost =   2.56e-01, Newton decr^2 =   1.80e-01, Delta =   1.04e+00
+Iter =    28, Cost =   1.40e-01, Newton decr^2 =   1.29e-01, Delta =   1.04e+00
+Iter =    29, Cost =   1.14e-01, Newton decr^2 =   1.57e-01, Delta =   1.04e+00
+Iter =    30, Cost =   3.02e-02, Newton decr^2 =   4.99e-02, Delta =   1.04e+00
+Iter =    31, Cost =   3.02e-02, Newton decr^2 =   1.29e-02, Delta =   9.12e-02
+Iter =    32, Cost =   1.89e-02, Newton decr^2 =   2.04e-02, Delta =   1.82e-01
+Iter =    33, Cost =   6.77e-03, Newton decr^2 =   9.44e-03, Delta =   3.65e-01
+Iter =    34, Cost =   1.14e-03, Newton decr^2 =   1.95e-03, Delta =   3.65e-01
+Iter =    35, Cost =   8.22e-05, Newton decr^2 =   1.57e-04, Delta =   3.65e-01
+Iter =    36, Cost =   4.92e-07, Newton decr^2 =   9.81e-07, Delta =   3.65e-01
+Iter =    37, Cost =   2.74e-11, Newton decr^2 =   5.48e-11, Delta =   3.65e-01
+Iter =    38, Cost =   6.49e-20, Newton decr^2 =   1.30e-19, Delta =   3.65e-01
+CONVERGED: Newton decrement below threshold in 38 iterations
+
+Final x =
+1
+1
+
+f = 6.48805e-20
+
+g =
+ 3.45909e-09
+-1.48592e-09
+
+H =
+ 802 -400
+-400  200
+=================================================================================================================================
+TASK 1 J BFGS-TRUST RESULTS: 
+Initial x =
+10
+10
+
+f = 810081
+
+g =
+360018
+-18000
+
+H =
+116002  -4000
+ -4000    200
+
+Running optimisation
+Iter =     0, Cost =   8.10e+05, Newton decr^2 =   3.60e+06, Delta =   1.00e+01
+Iter =     1, Cost =   1.10e+04, Newton decr^2 =   2.09e+04, Delta =   1.00e+01
+Iter =     2, Cost =   7.13e+00, Newton decr^2 =   1.04e+01, Delta =   1.00e+01
+Iter =     3, Cost =   2.48e+00, Newton decr^2 =   1.02e-01, Delta =   1.00e+01
+Iter =     4, Cost =   2.43e+00, Newton decr^2 =   2.38e-04, Delta =   1.00e+01
+Iter =     5, Cost =   2.43e+00, Newton decr^2 =   5.71e+00, Delta =   1.00e+01
+Iter =     6, Cost =   2.43e+00, Newton decr^2 =   9.02e-03, Delta =   5.97e-01
+Iter =     7, Cost =   2.42e+00, Newton decr^2 =   7.37e-02, Delta =   5.97e-01
+Iter =     8, Cost =   2.36e+00, Newton decr^2 =   1.42e-01, Delta =   5.97e-01
+Iter =     9, Cost =   2.22e+00, Newton decr^2 =   7.96e+01, Delta =   5.97e-01
+Iter =    10, Cost =   2.22e+00, Newton decr^2 =   5.63e-04, Delta =   1.49e-01
+Iter =    11, Cost =   2.22e+00, Newton decr^2 =   6.09e-02, Delta =   1.49e-01
+Iter =    12, Cost =   2.17e+00, Newton decr^2 =   6.70e-02, Delta =   2.99e-01
+Iter =    13, Cost =   2.14e+00, Newton decr^2 =   1.73e-05, Delta =   5.97e-01
+Iter =    14, Cost =   2.14e+00, Newton decr^2 =   2.79e-01, Delta =   5.97e-01
+Iter =    15, Cost =   1.99e+00, Newton decr^2 =   9.81e-02, Delta =   1.19e+00
+Iter =    16, Cost =   1.90e+00, Newton decr^2 =   6.63e-01, Delta =   1.19e+00
+Iter =    17, Cost =   1.59e+00, Newton decr^2 =   7.90e-01, Delta =   1.19e+00
+Iter =    18, Cost =   1.26e+00, Newton decr^2 =   3.74e-01, Delta =   1.19e+00
+Iter =    19, Cost =   9.90e-01, Newton decr^2 =   1.24e-01, Delta =   1.19e+00
+Iter =    20, Cost =   9.02e-01, Newton decr^2 =   4.61e-01, Delta =   1.19e+00
+Iter =    21, Cost =   6.05e-01, Newton decr^2 =   2.19e-01, Delta =   1.19e+00
+Iter =    22, Cost =   6.05e-01, Newton decr^2 =   5.12e-02, Delta =   1.17e-01
+Iter =    23, Cost =   5.57e-01, Newton decr^2 =   1.38e-01, Delta =   2.34e-01
+Iter =    24, Cost =   4.36e-01, Newton decr^2 =   2.51e-01, Delta =   4.68e-01
+Iter =    25, Cost =   4.36e-01, Newton decr^2 =   3.20e-02, Delta =   1.17e-01
+Iter =    26, Cost =   4.05e-01, Newton decr^2 =   1.26e-01, Delta =   2.34e-01
+Iter =    27, Cost =   3.01e-01, Newton decr^2 =   1.39e-01, Delta =   4.68e-01
+Iter =    28, Cost =   3.01e-01, Newton decr^2 =   2.31e-02, Delta =   9.31e-02
+Iter =    29, Cost =   2.79e-01, Newton decr^2 =   8.13e-02, Delta =   1.86e-01
+Iter =    30, Cost =   2.14e-01, Newton decr^2 =   8.13e-02, Delta =   3.72e-01
+Iter =    31, Cost =   1.96e-01, Newton decr^2 =   7.87e-02, Delta =   3.72e-01
+Iter =    32, Cost =   1.52e-01, Newton decr^2 =   3.62e-02, Delta =   3.72e-01
+Iter =    33, Cost =   1.22e-01, Newton decr^2 =   7.58e-02, Delta =   3.72e-01
+Iter =    34, Cost =   7.01e-02, Newton decr^2 =   2.99e-02, Delta =   3.72e-01
+Iter =    35, Cost =   4.77e-02, Newton decr^2 =   5.07e-02, Delta =   3.72e-01
+Iter =    36, Cost =   2.39e-02, Newton decr^2 =   4.15e-02, Delta =   3.72e-01
+Iter =    37, Cost =   2.39e-02, Newton decr^2 =   5.45e-03, Delta =   5.10e-02
+Iter =    38, Cost =   1.85e-02, Newton decr^2 =   3.53e-02, Delta =   1.02e-01
+Iter =    39, Cost =   1.85e-02, Newton decr^2 =   2.40e-03, Delta =   2.55e-02
+Iter =    40, Cost =   1.61e-02, Newton decr^2 =   1.52e-02, Delta =   5.10e-02
+Iter =    41, Cost =   4.60e-03, Newton decr^2 =   3.37e-03, Delta =   1.02e-01
+Iter =    42, Cost =   4.60e-03, Newton decr^2 =   7.24e-04, Delta =   1.45e-02
+Iter =    43, Cost =   3.92e-03, Newton decr^2 =   1.98e-03, Delta =   2.90e-02
+Iter =    44, Cost =   2.34e-03, Newton decr^2 =   2.22e-03, Delta =   5.81e-02
+Iter =    45, Cost =   1.06e-03, Newton decr^2 =   7.84e-04, Delta =   1.16e-01
+Iter =    46, Cost =   4.34e-04, Newton decr^2 =   7.45e-04, Delta =   1.16e-01
+Iter =    47, Cost =   2.07e-05, Newton decr^2 =   3.55e-05, Delta =   1.16e-01
+Iter =    48, Cost =   6.34e-07, Newton decr^2 =   1.24e-06, Delta =   1.16e-01
+Iter =    49, Cost =   1.27e-09, Newton decr^2 =   2.69e-09, Delta =   1.16e-01
+Iter =    50, Cost =   6.32e-12, Newton decr^2 =   1.27e-11, Delta =   1.16e-01
+Iter =    51, Cost =   1.89e-16, Newton decr^2 =   3.81e-16, Delta =   1.16e-01
+CONVERGED: Newton decrement below threshold in 51 iterations
+
+Final x =
+1
+1
+
+f = 1.89489e-16
+
+g =
+-5.28019e-07
+ 2.67305e-07
+
+H =
+ 799.709 -398.785
+-398.785  199.356
+=============================================================================================================================

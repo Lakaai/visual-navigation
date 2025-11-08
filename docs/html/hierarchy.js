@@ -3,8 +3,8 @@ var hierarchy =
     [ "DensityBase< Scalar >", "classDensityBase.html", null ],
     [ "DensityBase< double >", "classDensityBase.html", [
       [ "GaussianBase< double >", "classGaussianBase.html", [
-        [ "Gaussian< double >", "classGaussian.html", null ],
-        [ "Gaussian< Scalar >", "classGaussian.html", null ]
+        [ "GaussianInfo< double >", "classGaussianInfo.html", null ],
+        [ "GaussianInfo< Scalar >", "classGaussianInfo.html", null ]
       ] ],
       [ "GaussianBase< Scalar >", "classGaussianBase.html", null ]
     ] ],
@@ -15,6 +15,9 @@ var hierarchy =
         ] ]
       ] ]
     ] ],
+    [ "RosenbrockAnalytical", "structRosenbrockAnalytical.html", null ],
+    [ "RosenbrockFwdAutoDiff", "structRosenbrockFwdAutoDiff.html", null ],
+    [ "RosenbrockRevAutoDiff", "structRosenbrockRevAutoDiff.html", null ],
     [ "SystemBase", "classSystemBase.html", [
       [ "SystemEstimator", "classSystemEstimator.html", [
         [ "SystemBallistic", "classSystemBallistic.html", null ]

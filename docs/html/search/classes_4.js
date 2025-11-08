@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['systemballistic_0',['SystemBallistic',['../classSystemBallistic.html',1,'']]],
-  ['systembase_1',['SystemBase',['../classSystemBase.html',1,'']]],
-  ['systemestimator_2',['SystemEstimator',['../classSystemEstimator.html',1,'']]]
+  ['rosenbrockanalytical_0',['RosenbrockAnalytical',['../structRosenbrockAnalytical.html',1,'']]],
+  ['rosenbrockfwdautodiff_1',['RosenbrockFwdAutoDiff',['../structRosenbrockFwdAutoDiff.html',1,'']]],
+  ['rosenbrockrevautodiff_2',['RosenbrockRevAutoDiff',['../structRosenbrockRevAutoDiff.html',1,'']]]
 ];

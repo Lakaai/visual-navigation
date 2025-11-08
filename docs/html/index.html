@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>lab5: MCHA4400 Lab 5: Laplace filtering</title>
+<title>lab6: MCHA4400 Lab 6: Laplace information filter</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -34,7 +34,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">lab5
+   <div id="projectname">lab6
    </div>
   </td>
  </tr>
@@ -103,7 +103,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">MCHA4400 Lab 5: Laplace filtering </div></div>
+  <div class="headertitle"><div class="title">MCHA4400 Lab 6: Laplace information filter </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="toc"><h3>Table of Contents</h3>
@@ -128,47 +128,50 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="textblock"><h1><a class="anchor" id="intro"></a>
 Introduction</h1>
 <p>In this lab, you will:</p><ul>
-<li>Implement <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution operations in square-root moment form</li>
+<li>Implement optimisation using analytical derivatives and automatic differentiation</li>
+<li>Implement Gaussian distribution operations in square-root information form</li>
 <li>Implement the process dynamics and measurement model for a ballistic state estimation problem</li>
-<li>Run a square-root Laplace filter</li>
+<li>Run a square-root Laplace information filter</li>
 <li>Plot the results using VTK</li>
 </ul>
 <h1><a class="anchor" id="tasks"></a>
 Tasks</h1>
 <ol type="1">
-<li>Implement <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution operations (log likelihood, affine transform, marginal, conditional)</li>
+<li>Implement Rosenbrock function and derivatives using analytical and automatic differentiation</li>
+<li>Implement Gaussian distribution operations (log likelihood, affine transform, marginal, conditional)</li>
 <li>Implement ballistic process model dynamics</li>
 <li>Implement RADAR range measurement model</li>
-<li>Run Laplace filter and visualize results</li>
+<li>Run Laplace information filter and visualise results</li>
 </ol>
 <h1><a class="anchor" id="implementation"></a>
 Key Implementation Files</h1>
 <ul>
-<li><a class="el" href="GaussianBase_8hpp.html" title="Defines the base class for Gaussian distributions.">GaussianBase.hpp</a>: Base class for <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution</li>
-<li><a class="el" href="Gaussian_8hpp.html" title="Defines the Gaussian class for representing and manipulating Gaussian distributions.">Gaussian.hpp</a>: <a class="el" href="classGaussian.html" title="Represents a Gaussian distribution.">Gaussian</a> distribution in square-root moment form</li>
-<li>SystemBallistic.cpp: System dynamics for ballistic trajectory</li>
-<li>MeasurementRADAR.cpp: <a class="el" href="classMeasurement.html" title="Base class for measurement events in the system.">Measurement</a> model and likelihood for RADAR</li>
-<li>ballistic_plot.cpp: Plotting functions for ballistic trajectory</li>
+<li><code>src/rosenbrock.cpp</code>: Rosenbrock function implementations</li>
+<li><code><a class="el" href="GaussianBase_8hpp.html" title="Defines the base class for Gaussian distributions.">src/GaussianBase.hpp</a></code>: Base class for Gaussian distribution</li>
+<li><code><a class="el" href="GaussianInfo_8hpp.html" title="Defines the GaussianInfo class for representing Gaussian distributions using information form.">src/GaussianInfo.hpp</a></code>: Gaussian distribution in square-root information form</li>
+<li><code>src/SystemBallistic.cpp</code>: System dynamics for ballistic trajectory</li>
+<li><code>src/MeasurementRADAR.cpp</code>: <a class="el" href="classMeasurement.html" title="Base class for measurement events in the system.">Measurement</a> model and likelihood for RADAR</li>
+<li><code>src/ballistic_plot.cpp</code>: Plotting functions for ballistic trajectory</li>
 </ul>
 <h1><a class="anchor" id="testing"></a>
 Unit Tests</h1>
 <p>Unit tests are provided to verify your implementations:</p>
 <ul>
-<li>GaussianLog.cpp</li>
-<li>GaussianTransform.cpp <br  />
-</li>
-<li>GaussianMarginal.cpp</li>
-<li>GaussianConditional.cpp</li>
-<li>GaussianConfidence.cpp</li>
-<li>SystemBallistic.cpp</li>
-<li>MeasurementRADAR.cpp</li>
+<li><code>test/src/rosenbrock.cpp</code></li>
+<li><code>test/src/GaussianInfoLog.cpp</code></li>
+<li><code>test/src/GaussianInfoTransform.cpp</code></li>
+<li><code>test/src/GaussianInfoMarginal.cpp</code></li>
+<li><code>test/src/GaussianInfoConditional.cpp</code></li>
+<li><code>test/src/GaussianInfoConfidence.cpp</code></li>
+<li><code>test/src/SystemBallistic.cpp</code></li>
+<li><code>test/src/MeasurementRADAR.cpp</code></li>
 </ul>
 <h1><a class="anchor" id="build"></a>
 Building and Running</h1>
 <ol type="1">
 <li>Configure CMake build: <code>cmake -G Ninja -B build -DBUILD_DOCUMENTATION=ON -DCMAKE_BUILD_TYPE=Debug &amp;&amp; cd build</code></li>
 <li>Build project and run unit tests: <code>ninja</code></li>
-<li>Build and run executable: <code>ninja &amp;&amp; ./lab5</code> </li>
+<li>Build and run executable: <code>ninja &amp;&amp; ./lab6</code> </li>
 </ol>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
