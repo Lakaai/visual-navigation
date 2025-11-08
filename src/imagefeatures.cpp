@@ -198,8 +198,10 @@ cv::Mat detectAndDrawFAST(const cv::Mat & img, int maxNumFeatures)
     return imgout;
 }
 
-ArUcoDetectionResult detectAndDrawArUco(const cv::Mat & img, int maxNumFeatures)
+
+cv::Mat detectAndDrawArUco(const cv::Mat & img, int maxNumFeatures)
 {
+    // TODO
     // Copy the input image to draw features on
     cv::Mat imgout = img.clone();
 
@@ -229,5 +231,14 @@ ArUcoDetectionResult detectAndDrawArUco(const cv::Mat & img, int maxNumFeatures)
         return a.first < b.first;
     });
 
-    return {imgout, markerIds, markerCorners};
+    // Print sorted marker corner locations
+    std::cout << "Detected ArUco markers:\n";
+    for (const auto& marker : markers) {
+        std::cout << "Marker ID: " << marker.first << "\n";
+        std::cout << "Corners:\n";
+        for (const auto& corner : marker.second) {
+            std::cout << "  (" << corner.x << ", " << corner.y << ")\n";
+        }
+    }
+    return imgout;
 }

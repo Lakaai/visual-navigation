@@ -78,15 +78,11 @@ if(BUILD_DOCUMENTATION)
         # Request to configure the file
         configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
 
-        # Get all source files
-        file(GLOB_RECURSE DOC_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
-
         # Add doxygen target
         doxygen_add_docs(docs
-            ${DOC_SOURCES} # Can't be a directory or wildcards if USE_STAMP_FILE is used (https://cmake.org/cmake/help/latest/module/FindDoxygen.html)
+            ${CMAKE_CURRENT_SOURCE_DIR}/src
             CONFIG_FILE ${DOXYGEN_OUT}
             COMMENT "Generating API documentation with Doxygen"
-            USE_STAMP_FILE
         )
     else()
         message(STATUS "Doxygen not found, documentation will not be built")
