@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['gaussianbase_0',['GaussianBase',['../classGaussianBase.html',1,'']]],
-  ['gaussianbase_3c_20double_20_3e_1',['GaussianBase&lt; double &gt;',['../classGaussianBase.html',1,'']]],
-  ['gaussianinfo_2',['GaussianInfo',['../classGaussianInfo.html',1,'']]],
-  ['gaussianinfo_3c_20double_20_3e_3',['GaussianInfo&lt; double &gt;',['../classGaussianInfo.html',1,'']]]
+  ['camera_0',['Camera',['../structCamera.html',1,'']]],
+  ['chessboard_1',['Chessboard',['../structChessboard.html',1,'']]],
+  ['chessboarddata_2',['ChessboardData',['../structChessboardData.html',1,'']]],
+  ['chessboardimage_3',['ChessboardImage',['../structChessboardImage.html',1,'']]]
 ];

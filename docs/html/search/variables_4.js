@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nu_5f_0',['nu_',['../classGaussianInfo.html#a909812a8835af12e6b58d62558b0b386',1,'GaussianInfo']]]
+  ['updatemethod_5f_0',['updateMethod_',['../classMeasurement.html#abe8eaa4cbbf444ebd137e3768b7e3f28',1,'Measurement']]]
 ];

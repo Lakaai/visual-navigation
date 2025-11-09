@@ -1,10 +1,7 @@
 var searchData=
 [
-  ['density_0',['density',['../classSystemEstimator.html#a3459a820d965e53e8984ffdf800ef790',1,'SystemEstimator']]],
-  ['densitybase_1',['DensityBase',['../classDensityBase.html',1,'']]],
-  ['densitybase_2ehpp_2',['DensityBase.hpp',['../DensityBase_8hpp.html',1,'']]],
-  ['densitybase_3c_20double_20_3e_3',['DensityBase&lt; double &gt;',['../classDensityBase.html',1,'']]],
-  ['dim_4',['dim',['../classGaussianBase.html#a95301f98075e0a6f9d26dab060d298f7',1,'GaussianBase::dim()'],['../classGaussianInfo.html#ac726ca2019576d3297070b77607acb83',1,'GaussianInfo::dim()']]],
-  ['dynamics_5',['dynamics',['../classSystemBallistic.html#aea315138a22bbe77de41ef133fec9d0a',1,'SystemBallistic::dynamics(const Eigen::VectorXd &amp;x) const override'],['../classSystemBallistic.html#aac86e2a4315c47102aa1c40fde6b1db4',1,'SystemBallistic::dynamics(const Eigen::VectorXd &amp;x, Eigen::MatrixXd &amp;J) const override'],['../classSystemBase.html#a6467036f6d258b0558b6408167859475',1,'SystemBase::dynamics(const Eigen::VectorXd &amp;x) const =0'],['../classSystemBase.html#a008fdd35de6706459dffd2064d37d0c1',1,'SystemBase::dynamics(const Eigen::VectorXd &amp;x, Eigen::MatrixXd &amp;J) const =0']]],
-  ['dynamicsest_6',['dynamicsEst',['../classSystemEstimator.html#a32bf8c1a8f14d7f3f1e543ee663a4bbf',1,'SystemEstimator::dynamicsEst(const Eigen::VectorXd &amp;x) const'],['../classSystemEstimator.html#a4527ea358f87a013d662cb9b0e4bd132',1,'SystemEstimator::dynamicsEst(const Eigen::VectorXd &amp;x, Eigen::MatrixXd &amp;J) const']]]
+  ['erfcx_0',['erfcx',['../classGaussianBase.html#a4187029ae32273600bc54c5d6b40835b',1,'GaussianBase']]],
+  ['eval_1',['eval',['../classDensityBase.html#a3980cb1edaa1b1e26d2ccefe75e1dcba',1,'DensityBase']]],
+  ['event_2',['Event',['../classEvent.html',1,'Event'],['../classEvent.html#aebd4c54256dbf46040053babdfcdf987',1,'Event::Event(double time)'],['../classEvent.html#a74d66e95b362dc9cca69269fc91fe041',1,'Event::Event(double time, int verbosity)']]],
+  ['event_2eh_3',['Event.h',['../Event_8h.html',1,'']]]
 ];

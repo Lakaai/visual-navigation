@@ -24,8 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "lab6", "index.html", [
-    [ "MCHA4400 Lab 6: Laplace information filter", "index.html", "index" ],
+  [ "lab7", "index.html", [
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -53,7 +52,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"DensityBase_8hpp.html"
+"Camera_8h_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

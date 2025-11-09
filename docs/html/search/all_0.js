@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['6_3a_20laplace_20information_20filter_0',['MCHA4400 Lab 6: Laplace information filter',['../index.html',1,'']]]
+  ['affinetransform_0',['affineTransform',['../classGaussianInfo.html#ae3bd74ba4255ba1464ed5c7afb589337',1,'GaussianInfo']]],
+  ['augmenteddynamicsest_1',['augmentedDynamicsEst',['../classSystemEstimator.html#aea72cb60a0b33d1dff001bc4cb632d14',1,'SystemEstimator']]],
+  ['axisplot_2',['AxisPlot',['../structAxisPlot.html',1,'']]]
 ];

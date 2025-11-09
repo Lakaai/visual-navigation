@@ -1,5 +1,12 @@
 var hierarchy =
 [
+    [ "AxisPlot", "structAxisPlot.html", null ],
+    [ "BasisPlot", "structBasisPlot.html", null ],
+    [ "Bounds", "structBounds.html", null ],
+    [ "Camera", "structCamera.html", null ],
+    [ "Chessboard", "structChessboard.html", null ],
+    [ "ChessboardData", "structChessboardData.html", null ],
+    [ "ChessboardImage", "structChessboardImage.html", null ],
     [ "DensityBase< Scalar >", "classDensityBase.html", null ],
     [ "DensityBase< double >", "classDensityBase.html", [
       [ "GaussianBase< double >", "classGaussianBase.html", [
@@ -10,17 +17,23 @@ var hierarchy =
     ] ],
     [ "Event", "classEvent.html", [
       [ "Measurement", "classMeasurement.html", [
-        [ "MeasurementGaussianLikelihood", "classMeasurementGaussianLikelihood.html", [
-          [ "MeasurementRADAR", "classMeasurementRADAR.html", null ]
+        [ "MeasurementSLAM", "classMeasurementSLAM.html", [
+          [ "MeasurementPointBundle", "classMeasurementPointBundle.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "RosenbrockAnalytical", "structRosenbrockAnalytical.html", null ],
-    [ "RosenbrockFwdAutoDiff", "structRosenbrockFwdAutoDiff.html", null ],
-    [ "RosenbrockRevAutoDiff", "structRosenbrockRevAutoDiff.html", null ],
+    [ "FrustumPlot", "structFrustumPlot.html", null ],
+    [ "ImagePlot", "structImagePlot.html", null ],
+    [ "Plot", "structPlot.html", null ],
+    [ "Pose< Scalar >", "structPose.html", null ],
+    [ "Pose< double >", "structPose.html", null ],
+    [ "QuadricPlot", "structQuadricPlot.html", null ],
     [ "SystemBase", "classSystemBase.html", [
       [ "SystemEstimator", "classSystemEstimator.html", [
-        [ "SystemBallistic", "classSystemBallistic.html", null ]
+        [ "SystemSLAM", "classSystemSLAM.html", [
+          [ "SystemSLAMPointLandmarks", "classSystemSLAMPointLandmarks.html", null ],
+          [ "SystemSLAMPoseLandmarks", "classSystemSLAMPoseLandmarks.html", null ]
+        ] ]
       ] ]
     ] ]
 ];

@@ -12,17 +12,19 @@
 #endif
 
 // Example functions to test Gaussian transforms
-static Eigen::VectorXd transformTestFuncSquareFullRank(const Eigen::VectorXd & x, Eigen::MatrixXd & J)
+static Eigen::VectorXd transformTestFunc(const Eigen::VectorXd & x, Eigen::MatrixXd & J)
 {
     Eigen::VectorXd f(2);
     double r = std::hypot(x(0), x(1));
     f(0) = std::atan2(x(0), x(1));
     f(1) = r;
 
-    J.resize(2, 2);
+    J.resize(2,2);
     double r2 = r*r;
-    J << x(1)/r2, -x(0)/r2,
-         x(0)/r,   x(1)/r;
+    J(0,0) =  x(1)/r2;
+    J(0,1) = -x(0)/r2;
+    J(1,0) =  x(0)/r;
+    J(1,1) =  x(1)/r;
 
     return f;
 }
@@ -84,20 +86,6 @@ static Eigen::VectorXd transformTestFuncTall(const Eigen::VectorXd & x, Eigen::M
     return f;
 }
 
-static Eigen::VectorXd transformTestFuncSquareLowRank(const Eigen::VectorXd & x, Eigen::MatrixXd & J)
-{
-    Eigen::VectorXd f(2);
-    double r = std::hypot(x(0), x(1));
-    f(0) = r;
-    f(1) = 2*r;
-
-    J.resize(2, 2);
-    J << x(0)/r,   x(1)/r,
-         2*x(0)/r, 2*x(1)/r;
-
-    return f;
-}
-
 SCENARIO("GaussianInfo affine transform")
 {
     GIVEN("A bivariate Gaussian density")
@@ -109,9 +97,9 @@ SCENARIO("GaussianInfo affine transform")
                 0,   0.01;
         auto px2 = GaussianInfo<double>::fromSqrtMoment(mux2, Sxx2);
 
-        WHEN("Transforming through square full rank function")
+        WHEN("Transforming through square function")
         {
-            auto py = px2.affineTransform(transformTestFuncSquareFullRank);
+            auto py = px2.affineTransform(transformTestFunc);
 
             Eigen::VectorXd muy = py.mean();
             Eigen::MatrixXd Pyy = py.cov();
@@ -188,36 +176,6 @@ SCENARIO("GaussianInfo affine transform")
                 CHECK(Pyy.isApprox(Pyy_exp, 1e-7));
             }
         }
-
-        WHEN("Transforming through square low rank function")
-        {
-            auto py = px2.affineTransform(transformTestFuncSquareLowRank);
-
-            Eigen::VectorXd muy = py.mean();
-            Eigen::MatrixXd Pyy = py.cov();
-            REQUIRE(muy.size() == 2);
-            REQUIRE(Pyy.rows() == 2);
-            REQUIRE(Pyy.cols() == 2);
-
-            THEN("Mean matches expected values")
-            {
-                Eigen::VectorXd muy_exp(2);
-                muy_exp << 3.16227766016838, 6.32455531152522;
-                CAPTURE_EIGEN(muy);
-                CAPTURE_EIGEN(muy_exp);
-                CHECK(muy.isApprox(muy_exp, 1e-7));
-            }
-
-            THEN("Covariance matches expected values")
-            {
-                Eigen::MatrixXd Pyy_exp(2, 2);
-                Pyy_exp << 0.00178, 0.00356,
-                           0.00356, 0.00712;
-                CAPTURE_EIGEN(Pyy);
-                CAPTURE_EIGEN(Pyy_exp);
-                CHECK(Pyy.isApprox(Pyy_exp, 1e-7));
-            }
-        }
     }
 
     GIVEN("A trivariate Gaussian density")
@@ -235,7 +193,6 @@ SCENARIO("GaussianInfo affine transform")
             auto py = px3.affineTransform(transformTestFuncWide);
 
             Eigen::VectorXd muy = py.mean();
-
             Eigen::MatrixXd Pyy = py.cov();
             REQUIRE(muy.size() == 2);
             REQUIRE(Pyy.rows() == 2);

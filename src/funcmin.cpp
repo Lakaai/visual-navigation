@@ -122,7 +122,6 @@ int funcmin::trsSqrt(const Eigen::MatrixXd & Xi, const Eigen::VectorXd & g, doub
     assert(g.cols() == 1);
     assert(Xi.rows() == Xi.cols());
     assert(Xi.rows() == g.rows());
-    assert(Xi.isUpperTriangular());
 
     // Solve Xi^T*gtilde = g for gtilde
     Eigen::VectorXd gtilde = Xi.triangularView<Eigen::Upper>().transpose().solve(g);

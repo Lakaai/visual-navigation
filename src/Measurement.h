@@ -42,7 +42,7 @@ public:
      * @brief Simulate a measurement given a state and system.
      * @param x The state vector.
      * @param system The system estimator.
-     * @return Eigen::VectorXd The simulated measurement.
+     * @return The simulated measurement.
      */
     virtual Eigen::VectorXd simulate(const Eigen::VectorXd & x, const SystemEstimator & system) const = 0;
 
@@ -50,7 +50,7 @@ public:
      * @brief Calculate the log-likelihood of a measurement.
      * @param x The state vector.
      * @param system The system estimator.
-     * @return double The log-likelihood value.
+     * @return The log-likelihood value.
      */
     virtual double logLikelihood(const Eigen::VectorXd & x, const SystemEstimator & system) const = 0;
 
@@ -59,7 +59,7 @@ public:
      * @param x The state vector.
      * @param system The system estimator.
      * @param g Output parameter for the gradient.
-     * @return double The log-likelihood value.
+     * @return The log-likelihood value.
      */
     virtual double logLikelihood(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const = 0;
 
@@ -69,7 +69,7 @@ public:
      * @param system The system estimator.
      * @param g Output parameter for the gradient.
      * @param H Output parameter for the Hessian.
-     * @return double The log-likelihood value.
+     * @return The log-likelihood value.
      */
     virtual double logLikelihood(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g, Eigen::MatrixXd & H) const = 0;
 
@@ -78,7 +78,7 @@ protected:
      * @brief Calculate the cost of the joint density.
      * @param x The state vector.
      * @param system The system estimator.
-     * @return double The cost value.
+     * @return The cost value.
      */
     double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system) const;
 
@@ -87,7 +87,7 @@ protected:
      * @param x The state vector.
      * @param system The system estimator.
      * @param g Output parameter for the gradient.
-     * @return double The cost value.
+     * @return The cost value.
      */
     double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const;
 
@@ -97,7 +97,7 @@ protected:
      * @param system The system estimator.
      * @param g Output parameter for the gradient.
      * @param H Output parameter for the Hessian.
-     * @return double The cost value.
+     * @return The cost value.
      */
     double costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g, Eigen::MatrixXd & H) const;
 

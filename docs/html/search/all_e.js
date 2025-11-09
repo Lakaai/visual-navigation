@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['operator_2a_0',['operator*',['../classGaussianInfo.html#a56371d89ea874f0faca22b6ce49edc2f',1,'GaussianInfo']]],
-  ['operator_2a_3d_1',['operator*=',['../classGaussianInfo.html#a9c4e9c5da96b92bae66a41828e6d8838',1,'GaussianInfo']]]
+  ['quadricplot_0',['QuadricPlot',['../structQuadricPlot.html',1,'']]],
+  ['quadricsurface_1',['quadricSurface',['../classGaussianInfo.html#a4b83a7204fbab4539c388e17cdd9e51b',1,'GaussianInfo']]]
 ];

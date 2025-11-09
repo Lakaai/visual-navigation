@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['bfgslm_0',['BFGSLM',['../namespacefuncmin.html#a867b4540fa51827a73fe33a6e9ff09de',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a00ba900dd12b931cca42c9440c400e19',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#aa7255f9a4333476845bc6527fd280ecb',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
-  ['bfgslmsqrt_1',['BFGSLMSqrt',['../namespacefuncmin.html#aa0ef432f7bf2f373a36fe1a0a5ed986f',1,'funcmin']]],
-  ['bfgstrust_2',['BFGSTrust',['../namespacefuncmin.html#a50c78b531d01ee12ab57fac2fa026c64',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a7b84b4d95417401f7872c1c2d44d06fd',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#a0f028cd54a9e280ba9f798d463a2489d',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
-  ['bfgstrustinv_3',['BFGSTrustInv',['../namespacefuncmin.html#a4bba38561b6514f722b6878fdf9381a0',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#ac27869fdf9c701651280265739faba63',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#af20e21a733457f03ccffe0cbfb14f0ba',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
-  ['bfgstrustsqrt_4',['BFGSTrustSqrt',['../namespacefuncmin.html#ac1f73e1e0cf8ec583ff407b4db1bc470',1,'funcmin']]],
-  ['bfgstrustsqrtinv_5',['BFGSTrustSqrtInv',['../namespacefuncmin.html#a1f4d972989b5a583f5fdc8e70d87ebaa',1,'funcmin']]],
-  ['building_20and_20running_6',['Building and Running',['../index.html#build',1,'']]]
+  ['camera_0',['Camera',['../structCamera.html',1,'']]],
+  ['cast_1',['cast',['../classGaussianInfo.html#aacf57ce3b2cd74d994e94e1283832a1e',1,'GaussianInfo']]],
+  ['chessboard_2',['Chessboard',['../structChessboard.html',1,'']]],
+  ['chessboarddata_3',['ChessboardData',['../structChessboardData.html',1,'']]],
+  ['chessboardimage_4',['ChessboardImage',['../structChessboardImage.html',1,'']]],
+  ['chi2inv_5',['chi2inv',['../classGaussianBase.html#ad7a08a532a4a4bfef50960e1ceae45c6',1,'GaussianBase']]],
+  ['conditional_6',['conditional',['../classGaussianInfo.html#a66981b90484d489f04e2b78e636cd31c',1,'GaussianInfo::conditional(const IndexTypeA &amp;idxA, const IndexTypeB &amp;idxB, const Eigen::VectorX&lt; Scalar &gt; &amp;xB) const'],['../classGaussianInfo.html#a55334dff4a7328e2e38b995edf4a741e',1,'GaussianInfo::conditional(const IndexTypeA &amp;idxA, const IndexTypeB &amp;idxB, const GaussianInfo &amp;pxB_y) const']]],
+  ['confidenceellipse_7',['confidenceEllipse',['../classGaussianBase.html#a8ae8a883329fc03d4b2fcc30163dd552',1,'GaussianBase']]],
+  ['costjointdensity_8',['costJointDensity',['../classMeasurement.html#a3e2ef4fbb8d8eeb71940f5ffd6848ea6',1,'Measurement::costJointDensity(const Eigen::VectorXd &amp;x, const SystemEstimator &amp;system) const'],['../classMeasurement.html#aaea34bb7e795a1c29a28f37b7e252ecf',1,'Measurement::costJointDensity(const Eigen::VectorXd &amp;x, const SystemEstimator &amp;system, Eigen::VectorXd &amp;g) const'],['../classMeasurement.html#aeae3ef416c7110a2041fdfb320a57559',1,'Measurement::costJointDensity(const Eigen::VectorXd &amp;x, const SystemEstimator &amp;system, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H) const']]],
+  ['cov_9',['cov',['../classGaussianBase.html#a93d9a75118e38b3a0bbbd3c8704593d0',1,'GaussianBase::cov()'],['../classGaussianInfo.html#ae9e3f8be04be322e1fec36986774af22',1,'GaussianInfo::cov()']]]
 ];

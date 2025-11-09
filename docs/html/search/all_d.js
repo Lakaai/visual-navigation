@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['newtontrust_0',['NewtonTrust',['../namespacefuncmin.html#a7610fb352ec73e4da5add06ab144d139',1,'funcmin::NewtonTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a345194296ea671b071e1ec040efef32e',1,'funcmin::NewtonTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#a6ab4305064c9339f40232d606e5693a6',1,'funcmin::NewtonTrust(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
-  ['newtontrusteig_1',['NewtonTrustEig',['../namespacefuncmin.html#a177ce87c99954482d2836fb7ec0ec8d1',1,'funcmin']]],
-  ['noisedensity_2',['noiseDensity',['../classMeasurementGaussianLikelihood.html#aa722c14af433fe0e5b400a33fa1b783b',1,'MeasurementGaussianLikelihood::noiseDensity()'],['../classMeasurementRADAR.html#a34bb886bbddd9ca368159c0f4fefd154',1,'MeasurementRADAR::noiseDensity()']]],
-  ['normcdf_3',['normcdf',['../classGaussianBase.html#a8437c8ae7f2d45391fc68d0e18e3e5e9',1,'GaussianBase::normcdf(double w)'],['../classGaussianBase.html#a340d39f075cf8039a5ad11b239d7a19a',1,'GaussianBase::normcdf(double x, double mu, double sigma)']]],
-  ['nu_5f_4',['nu_',['../classGaussianInfo.html#a909812a8835af12e6b58d62558b0b386',1,'GaussianInfo']]]
+  ['plot_0',['Plot',['../structPlot.html',1,'']]],
+  ['pose_1',['Pose',['../structPose.html',1,'Pose&lt; Scalar &gt;'],['../structPose.html#a60f2e141b0e2e38ae58e631106509b68',1,'Pose::Pose()'],['../structPose.html#a3f42bbb39b1756a7db61219a5c251243',1,'Pose::Pose(const Matrix3 &amp;R, const Vector3 &amp;t)'],['../structPose.html#a358c564e80cc7f481c8ecda4facdab98',1,'Pose::Pose(const cv::Matx33d &amp;R, const cv::Vec3d &amp;t)'],['../structPose.html#a7f37674fde11e0d6a6b08d6a4b6dc169',1,'Pose::Pose(const cv::Mat &amp;rvec, const cv::Mat &amp;tvec)'],['../structPose.html#aec9445a6e2c8ac2347a87f5e7b2f4684',1,'Pose::Pose(const Pose&lt; OtherScalar &gt; &amp;T)']]],
+  ['pose_2ehpp_2',['Pose.hpp',['../Pose_8hpp.html',1,'']]],
+  ['pose_3c_20double_20_3e_3',['Pose&lt; double &gt;',['../structPose.html',1,'']]],
+  ['predict_4',['predict',['../classSystemBase.html#a9645cf56eee3efdb7ef397fcfa3fb4f4',1,'SystemBase::predict()'],['../classSystemEstimator.html#afdea327c9daacaad2eb496f454b75a8a',1,'SystemEstimator::predict()']]],
+  ['process_5',['process',['../classEvent.html#a0a4e814f472c519ace0a22f1a23acb0a',1,'Event']]],
+  ['processnoisedensity_6',['processNoiseDensity',['../classSystemEstimator.html#af89b075a120ff794abd6a42fe95c44a6',1,'SystemEstimator::processNoiseDensity()'],['../classSystemSLAM.html#a4258d544d44ad19a0c8ebc4d3a97c0ca',1,'SystemSLAM::processNoiseDensity()']]],
+  ['processnoiseindex_7',['processNoiseIndex',['../classSystemEstimator.html#aa276332cdb668a97daaaeb732bedb706',1,'SystemEstimator::processNoiseIndex()'],['../classSystemSLAM.html#a21be1262b942ad302b8fef3efdf68a75',1,'SystemSLAM::processNoiseIndex()']]]
 ];

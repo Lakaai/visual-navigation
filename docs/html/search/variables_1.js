@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['g_0',['g',['../classSystemBallistic.html#aebdb2b886ae3594d1bd821e48ac006af',1,'SystemBallistic']]]
+  ['nu_5f_0',['nu_',['../classGaussianInfo.html#a909812a8835af12e6b58d62558b0b386',1,'GaussianInfo']]]
 ];

@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['affinetransform_0',['affineTransform',['../classGaussianInfo.html#ae3bd74ba4255ba1464ed5c7afb589337',1,'GaussianInfo']]],
-  ['and_20running_1',['Building and Running',['../index.html#build',1,'']]],
-  ['augmenteddynamicsest_2',['augmentedDynamicsEst',['../classSystemEstimator.html#aea72cb60a0b33d1dff001bc4cb632d14',1,'SystemEstimator']]],
-  ['augmentedpredict_3',['augmentedPredict',['../classMeasurementGaussianLikelihood.html#abdae6ec5b6c2f27d93e72b66e1f5997b',1,'MeasurementGaussianLikelihood']]]
+  ['basisplot_0',['BasisPlot',['../structBasisPlot.html',1,'']]],
+  ['bfgslm_1',['BFGSLM',['../namespacefuncmin.html#a867b4540fa51827a73fe33a6e9ff09de',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a00ba900dd12b931cca42c9440c400e19',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#aa7255f9a4333476845bc6527fd280ecb',1,'funcmin::BFGSLM(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
+  ['bfgslmsqrt_2',['BFGSLMSqrt',['../namespacefuncmin.html#aa0ef432f7bf2f373a36fe1a0a5ed986f',1,'funcmin']]],
+  ['bfgstrust_3',['BFGSTrust',['../namespacefuncmin.html#a50c78b531d01ee12ab57fac2fa026c64',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#a7b84b4d95417401f7872c1c2d44d06fd',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#a0f028cd54a9e280ba9f798d463a2489d',1,'funcmin::BFGSTrust(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
+  ['bfgstrustinv_4',['BFGSTrustInv',['../namespacefuncmin.html#a4bba38561b6514f722b6878fdf9381a0',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, Eigen::MatrixXd &amp;H, int verbosity=0)'],['../namespacefuncmin.html#ac27869fdf9c701651280265739faba63',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, Eigen::VectorXd &amp;g, int verbosity=0)'],['../namespacefuncmin.html#af20e21a733457f03ccffe0cbfb14f0ba',1,'funcmin::BFGSTrustInv(Func costFunc, Eigen::VectorXd &amp;x, int verbosity=0)']]],
+  ['bfgstrustsqrt_5',['BFGSTrustSqrt',['../namespacefuncmin.html#ac1f73e1e0cf8ec583ff407b4db1bc470',1,'funcmin']]],
+  ['bfgstrustsqrtinv_6',['BFGSTrustSqrtInv',['../namespacefuncmin.html#a1f4d972989b5a583f5fdc8e70d87ebaa',1,'funcmin']]],
+  ['bounds_7',['Bounds',['../structBounds.html',1,'']]]
 ];
