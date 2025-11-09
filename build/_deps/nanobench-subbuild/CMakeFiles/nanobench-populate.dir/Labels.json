@@ -2,37 +2,37 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate-complete.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/CMakeFiles/nanobench-populate-complete.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-build.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-build.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-configure.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-configure.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-download.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-download.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-install.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-install.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-mkdir.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-mkdir.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-patch.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-patch.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-test.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-test.rule"
 		},
 		{
-			"file" : "/home/luke/Documents/Github/MCHA4400/lab3/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-update.rule"
+			"file" : "/home/luke/MCHA4400/build/_deps/nanobench-subbuild/nanobench-populate-prefix/src/nanobench-populate-stamp/nanobench-populate-update.rule"
 		}
 	],
 	"target" : 
