@@ -1,1 +1,1 @@
-# MCHA4400
+find . -name "*:Zone.Identifier" -type f -delete
