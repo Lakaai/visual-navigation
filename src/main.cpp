@@ -1,22 +1,23 @@
-#include <cstdlib>
-#include <iostream>
 #include <filesystem>
+#include <iostream>
+#include <string>
+#include <opencv2/core.hpp>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 #include "Camera.h"
-#include "confidence_region_demo.h"
+#include "association_demo.h"
 
-int main(int argc, char* argv[])
+int main(int argc, char* argv [])
 {
     const cv::String keys =
         // Argument names | defaults | help message
         "{help h usage ?  |        | print this message}"
         "{@config         | <none> | path to configuration XML}"
-        "{calibrate c     |        | perform camera calibration for given configuration XML}"
         "{export e        |        | export files to the ./out/ directory}"
-        "{interactive i   | 2      | interactivity (0:none, 1:last image, 2:all images)}"
         ;
 
     cv::CommandLineParser parser(argc, argv, keys);
-    parser.about("MCHA4400 Lab 7");
+    parser.about("MCHA4400 Lab 8");
     
     if (parser.has("help"))
     {
@@ -25,10 +26,8 @@ int main(int argc, char* argv[])
     }
 
     // Parse input arguments
-    bool hasCalibrate = parser.has("calibrate");
     bool hasExport = parser.has("export");
     std::filesystem::path configPath = parser.get<std::string>("@config");
-    int interactive = parser.get<int>("interactive");
 
     // Check for syntax errors
     if (!parser.check())
@@ -68,32 +67,39 @@ int main(int argc, char* argv[])
     std::filesystem::path cameraPath = configPath.parent_path() / "camera.xml";
 
     Camera camera;
-    if (hasCalibrate)
-    {
-        // Calibrate camera from chessboard data
-        camera.calibrate(chessboardData);
+    assert(std::filesystem::exists(cameraPath));
+    cv::FileStorage fs(cameraPath.string(), cv::FileStorage::READ);
+    assert(fs.isOpened());
+    fs["camera"] >> camera;
 
-        // Write camera calibration to file
-        cv::FileStorage fs(cameraPath.string(), cv::FileStorage::WRITE);
-        fs << "camera" << camera;
-        fs.release();
-    }
-    else
-    {
-        // Do confidence region demo
+    // Reconstruct extrinsic parameters (camera pose) for each chessboard image
+    chessboardData.recoverPoses(camera);
 
-        // Read camera calibration using default camera file path
-        if (!std::filesystem::exists(cameraPath))
+    // ------------------------------------------------------------
+    // Run geometric matcher demo
+    // ------------------------------------------------------------
+    for (const auto & chessboardImage : chessboardData.chessboardImages)
+    {
+        cv::Mat img = associationDemo(camera, chessboardImage);
+
+        if (hasExport)
         {
-            std::cout << "File: " << cameraPath << " does not exist" << std::endl;
-            return EXIT_FAILURE;
+            std::string outputFilename = chessboardImage.filename.stem().string()
+                                       + "_out"
+                                       + chessboardImage.filename.extension().string();
+            std::filesystem::path outputPath = outputDirectory / outputFilename;
+            cv::imwrite(outputPath.string(), img);
         }
-        cv::FileStorage fs(cameraPath.string(), cv::FileStorage::READ);
-        assert(fs.isOpened());
-        fs["camera"] >> camera;
-
-        // Run confidence region demo
-        confidenceRegionDemo(camera, chessboardData, outputDirectory, interactive);
+        else
+        {
+            const double resize_scale = 0.5;
+            cv::Mat resized_img;
+            cv::resize(img, resized_img, cv::Size(img.cols*resize_scale, img.rows*resize_scale), cv::INTER_LINEAR);
+            cv::imshow("Data association demo (press ESC, q or Q to quit)", resized_img);
+            char c = static_cast<char>(cv::waitKey(0));
+            if (c == 27 || c == 'q' || c == 'Q') // ESC, q or Q to quit, any other key to continue
+                break;
+        }
     }
 
     return EXIT_SUCCESS;

@@ -118,15 +118,9 @@ double snn(const SystemSLAM & system, const GaussianInfo<double> & featureBundle
     return s;
 }
 
-bool individualCompatibility(const int & i, const int & j, const Eigen::Matrix<double, 2, Eigen::Dynamic> & Y, const GaussianInfo<double> & density, const double & nSigma)
-{
-    GaussianInfo<double> marginal = density.marginal(Eigen::seqN(2*j, 2));
-    return individualCompatibility(Y.col(i), marginal, nSigma);
-}
-
 bool individualCompatibility(const Eigen::Vector2d & y, const GaussianInfo<double> & marginal, const double & nSigma)
 {
-    return marginal.isWithinConfidenceRegion(y, nSigma);
+    return false;       // TODO: Lab 8
 }
 
 bool jointCompatibility(const std::vector<int> & idx, const double & sU, const Eigen::Matrix<double, 2, Eigen::Dynamic> & Y, const GaussianInfo<double> & density, const double & nSigma, double & surprisal)
@@ -157,15 +151,11 @@ bool jointCompatibility(const std::vector<int> & idx, const double & sU, const E
     // Set surprisal and return joint compatibility
     if (nA > 0)
     {
-        // Measurement vector for associated landmarks
-        Eigen::VectorXd yA = Y(Eigen::all, idxi).reshaped();
-        GaussianInfo<double> marginal = density.marginal(idxyj);
-
         // Surprisal for unassociated landmarks plus surprisal for associated landmarks
-        surprisal = nU*sU - marginal.log(yA);
-        
+        surprisal = 0;      // TODO: Lab 8
+
         // Joint compatibility
-        return marginal.isWithinConfidenceRegion(yA, nSigma);
+        return false;       // TODO: Lab 8
     }
     else
     {

@@ -1,6 +1,6 @@
 /**
  * @file GaussianInfo.hpp
- * @brief Defines the GaussianInfo class for representing Gaussian distributions using information form.
+ * @brief Defines the GaussianInfo class for representing Gaussian distributions using square-root information form.
  */
 
 #ifndef GAUSSIANINFO_HPP
@@ -413,38 +413,19 @@ public:
         assert(n == dim());
 
         // Form [Xi(:, idxNot), Xi(:, idx), nu]
-        // TODO
-        Eigen::MatrixX<Scalar> RR(n, n + 1);
-        RR.leftCols(nNotI) = Xi_(Eigen::all, idxNot);
-        RR.middleCols(nNotI, nI) = Xi_(Eigen::all, idx);
-        RR.rightCols(1) = nu_;
-
+        // TODO: Merge from Lab 6
 
         // Q-less QR yields
         // [R1, R2, nu1;
         //   0, R3, nu2]
-        Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>> qr(RR);
-        RR = qr.matrixQR();
+        
+        // TODO: Merge from Lab 6
 
-        // R3 = RR(nNotI+1:n, nNotI+1:n);
-        // nu2 = RR(nNotI+1:n, n+1);  -------------> will be kinda different because cpp indexing
-        // Extract R3 and nu2
-        // Eigen::MatrixX<Scalar> R3 = RR.bottomRightCorner(nI, nI).template triangularView<Eigen::Upper>();
-        // Eigen::VectorX<Scalar> nu2 = RR.bottomRightCorner(nI, 1);
-        Eigen::MatrixX<Scalar> R3 = RR.block(nNotI, nNotI, nI, nI).template triangularView<Eigen::Upper>();
-        Eigen::VectorX<Scalar> nu2 = RR.block(nNotI, n, nI, 1);
-        // TODO
         // p(x(idx)) = N^-0.5(x(idx); nu2, R3)
         GaussianInfo out(nI);
-        // TODO
+        // TODO: Merge from Lab 6
         // out.nu_ = ???;
         // out.Xi_ = ???;
-        out.nu_ = nu2;
-        out.Xi_ = R3;
-        // Print for debugging
-    // std::cout << "Marginal function - R3:" << std::endl << R3 << std::endl;
-    // std::cout << "Marginal function - nu2:" << std::endl << nu2 << std::endl;
-    // std::cout << "Marginal function - calculated mean:" << std::endl << R3.template triangularView<Eigen::Upper>().solve(nu2) << std::endl;
         return out;
     }
 
@@ -504,37 +485,18 @@ public:
         assert(n == dim());
 
         // Form [Xi(:, idxA), Xi(:, idxB), nu]
-        // TODO
-        Eigen::MatrixX<Scalar> RR(n, n + 1);
-        RR << Xi_(Eigen::all, idxA), Xi_(Eigen::all, idxB), nu_;
+        // TODO: Merge from Lab 6
 
         // Q-less QR yields
         // [R1, R2, nu1;
         //   0, R3, nu2]
-        // TODO
-        Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>> qr(RR);
+        // TODO: Merge from Lab 6
 
-        // R1 = RR(1:nA, 1:nA);
-        Eigen::MatrixX<Scalar> R1 = RR.topLeftCorner(nA, nA).template triangularView<Eigen::Upper>();
-
-        // R2 = RR(1:nA, nA+1:n);
-        Eigen::MatrixX<Scalar> R2 = RR.block(0, nA, nA, nB);
-
-        // R3 = RR(nA+1:n, nA+1:n);
-        // Eigen::MatrixX<Scalar> R3 = RR.bottomRightCorner(nB, nB).template triangularView<Eigen::Upper>();
-
-        // nu1 = RR(1:nA, n+1);
-        Eigen::VectorX<Scalar> nu1 = RR.block(0, n, nA, 1);
         // p(x(idxA) | x(idxB) = xB) = N^-0.5(x(idxA); nu1 - R2*xB, R1)
-
         GaussianInfo out(nA);
-        // TODO
-        // Calculate nu1 - R2*xB
-        out.nu_ = nu1 - R2 * xB;
-
-        // Use R1 as the new Xi_
-        out.Xi_ = R1;
-
+        // TODO: Merge from Lab 6
+        // out.nu_ = ???;
+        // out.Xi_ = ???;
         return out;
     }
 
@@ -615,70 +577,23 @@ public:
         // y ~= h(mux) + J*(x - mux)
         //    = J*x + h(mux) - J*mux
 
-        // SVD approach for robustness
-        Eigen::JacobiSVD<Eigen::MatrixX<Scalar>> svd(J, Eigen::ComputeFullU | Eigen::ComputeFullV);
-        Eigen::VectorX<Scalar> s = svd.singularValues();
-        Scalar tol = std::max(m, n) * std::numeric_limits<Scalar>::epsilon() * s.maxCoeff();
-        std::size_t r = (s.array() > tol).count();  // Rank
+        // TODO: Merge from Lab 6
 
-        Eigen::VectorX<Scalar> s1 = s.head(r);
-        Eigen::MatrixX<Scalar> U1 = svd.matrixU().leftCols(r);
-        Eigen::MatrixX<Scalar> U2 = svd.matrixU().rightCols(m - r);
-        Eigen::MatrixX<Scalar> V1 = svd.matrixV().leftCols(r);
-        Eigen::MatrixX<Scalar> V2 = svd.matrixV().rightCols(n - r);
-        Eigen::MatrixX<Scalar> Jp = V1 * (s1.asDiagonal().inverse()) * U1.transpose();
+        // Solve Y*J = Xi for Y
+        // Y = Xi*inv(J) = (inv(J.')*Xi.').'
+        Eigen::MatrixX<Scalar> Y = J.transpose().lu().solve(Xi_.transpose()).transpose();
 
-        Eigen::MatrixX<Scalar> X = Xi_ * V2;
-        Eigen::MatrixX<Scalar> Y = Xi_ * Jp;
-        Eigen::VectorX<Scalar> b = muy - J * mux;
-        // std::cout << "Variable muy:" << std::endl;
-        // std::cout << muy << std::endl;
-        // Corrected sigma_max_ub calculation
-        Eigen::MatrixX<Scalar> XY(X.rows(), X.cols() + Y.cols());
-        XY << X, Y;
-        Scalar sigma_max_ub = std::sqrt(XY.array().square().sum());
-        Scalar kappa = 1e7 * sigma_max_ub;
-
-        // Build QR matrix given in equation 41
-        Eigen::MatrixX<Scalar> QR(n - r + m, n - r + m + 1);
-        QR.topRows(n) << X, Y, nu_ + Y * b;
-        QR.bottomRows(m - r) << Eigen::MatrixX<Scalar>::Zero(m - r, n - r), 
-                                kappa * U2.transpose(), 
-                                kappa * U2.transpose() * b;
+        // Form [Y, nu]
+        Eigen::MatrixX<Scalar> RR(n, n + 1);
+        RR << Y, nu_;
         // Q-less QR yields
-        // [R1, R2, nu1;
-        //   0, R3, nu2];
-        Eigen::MatrixX<Scalar> RR(n - r + m, n - r + m + 1);
-        Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>> qr(QR);
-        RR = qr.matrixQR();
-        // Print RR
-        // std::cout << "RR after QR decomposition:" << std::endl;
-        // std::cout << RR << std::endl;
-        // std::cout << "RR dimensions: " << RR.rows() << " x " << RR.cols() << std::endl;
-        // std::cout << "n: " << n << ", m: " << m << ", r: " << r << std::endl;
+        // [R, r]
+        Eigen::HouseholderQR<Eigen::Ref<Eigen::MatrixX<Scalar>>> qr(RR);        // In-place QR decomposition
 
         // p(y) = N^-0.5(y; r + R*(h(mux) - J*mux), R)
         GaussianInfo out(m);
-        // matrix.block(startRow, startCol, numRows, numCols)
-        // Extract R3 (m x m matrix, left of nu2)
-        Eigen::MatrixX<Scalar> R3 = RR.block(n - r, n - r, m, m).template triangularView<Eigen::Upper>();
-
-        // Extract nu2 (m x 1 matrix, last column of the bottom m rows)
-        Eigen::VectorX<Scalar> nu2 = RR.block(n - r, n - r + m, m, 1);
-
-
-        // std::cout << "R3 Values:" << std::endl;
-        // std::cout << R3 << std::endl;
-        // std::cout << "nu2 values:" << std::endl;
-        // std::cout << nu2 << std::endl;
-
-        out.Xi_ = R3;
-        out.nu_ = nu2;
-
-        // Print for debugging
-        // std::cout << "AffineTransform function - R3:" << std::endl << out.Xi_ << std::endl;
-        // std::cout << "AffineTransform function - nu2:" << std::endl << out.nu_ << std::endl;
-        // std::cout << "AffineTransform function - calculated mean:" << std::endl << out.Xi_.template triangularView<Eigen::Upper>().solve(out.nu_) << std::endl;
+        out.Xi_ = RR.leftCols(m).template triangularView<Eigen::Upper>();
+        out.nu_ = RR.col(m) + out.Xi_*(muy - J*mux);
         return out;
     }
 
@@ -697,8 +612,8 @@ public:
         assert(x.size() == dim());
 
         static const Scalar halflog2pi = std::log(2*M_PI)/2.0;
-        Eigen::VectorX<Scalar> z = Xi_ * x - nu_;
-        return -halflog2pi * dim() + Xi_.diagonal().array().abs().log().sum() - 0.5 * z.squaredNorm();
+        // TODO: Merge from Lab 6
+        return 1.0;
     }
 
     /**
@@ -715,9 +630,7 @@ public:
     Scalar log(const Eigen::VectorX<Scalar> & x, Eigen::VectorX<Scalar> & g) const
     {
         // Compute gradient g
-        // TODO
-        Eigen::VectorX<Scalar> z = Xi_ * x - nu_;
-        g = -Xi_.transpose() * z;
+        // TODO: Merge from Lab 6
         return log(x);
     }
 
@@ -736,10 +649,7 @@ public:
     Scalar log(const Eigen::VectorX<Scalar> & x, Eigen::VectorX<Scalar> & g, Eigen::MatrixX<Scalar> & H) const
     {
         // Compute Hessian H
-        // TODO
-        static const Scalar halflog2pi = std::log(2*M_PI)/2.0;
-        Eigen::VectorX<Scalar> z = Xi_ * x - nu_;    
-        H = -Xi_.transpose() * Xi_;
+        // TODO: Merge from Lab 6
         return log(x, g);
     }
 
@@ -814,23 +724,8 @@ public:
     virtual bool isWithinConfidenceRegion(const Eigen::VectorX<Scalar> & x, double nSigma = 3.0) const override
     {
         const Eigen::Index & n = dim();
-        assert(x.size() == n);
-
-        // Probability mass enclosed by nSigma standard deviations
-        double c = normcdf(nSigma) - normcdf(-nSigma);
-
-        // Squared radius in w coordinates
-        double r2 = chi2inv(c, n);
-
-        // Compute w = Xi * (x - mu)
-        // First, calculate mu by solving Xi * mu = nu
-        Eigen::VectorX<Scalar> mu = Xi_.template triangularView<Eigen::Upper>().solve(nu_);
-        
-        // Now compute w
-        Eigen::VectorX<Scalar> w = Xi_ * (x - mu);
-
-        // Check if the point is within the confidence region
-        return w.squaredNorm() <= r2;
+        // TODO: Merge from Lab 6
+        return false;
     }
 
     /**
@@ -847,25 +742,11 @@ public:
      */
     Eigen::Matrix4<Scalar> quadricSurface(double nSigma = 3.0) const
     {
-        assert(dim() == 3 && "Expected trivariate Gaussian");
+        const Eigen::Index & n = dim();
+        assert(n == 3);
         
-        Scalar c = 2 * normcdf(nSigma) - 1;
-        Scalar r2 = chi2inv(c, dim());
-
-        // In square root information form, Xi_ is already the upper triangular matrix
-        Eigen::Matrix3<Scalar> XiT = Xi_.transpose();
-
-        // Calculate mu by solving Xi * mu = nu
-        Eigen::Vector3<Scalar> mu = Xi_.template triangularView<Eigen::Upper>().solve(nu_);
-
         Eigen::Matrix4<Scalar> Q;
-        Q.template topLeftCorner<3,3>() = XiT * Xi_;
-        Q.template topRightCorner<3,1>() = -XiT * nu_;
-        Q.template bottomLeftCorner<1,3>() = (-XiT * nu_).transpose();
-        Q(3,3) = nu_.dot(nu_) - r2;
-
-    return Q;
-
+        // TODO: Merge from Lab 6
         return Q;
     }
 

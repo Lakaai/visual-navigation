@@ -7,11 +7,10 @@
 #define GAUSSIANBASE_HPP
 
 #include <cmath>
+#include <ctime>
 #include <cassert>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
-#include <boost/math/special_functions/erf.hpp>
-#include <boost/math/special_functions/gamma.hpp>
 #include <Eigen/Core>
 #include "DensityBase.hpp"
 
@@ -112,14 +111,12 @@ public:
      * @param nu Degrees of freedom.
      * @return The inverse of the chi-squared distribution function.
      */
-
     static double chi2inv(double p, double nu)
     {
-        assert(p >= double(0));
-        assert(p < double(1));
-        assert(nu > double(0));
-
-        return 2.0 * boost::math::gamma_p_inv(nu / 2.0, p);
+        assert(p >= 0);
+        assert(p < 1);
+        // TODO: Merge from Lab 5 or 6
+        return 0.0;
     }
 
     /**
@@ -129,8 +126,8 @@ public:
      */
     static double normcdf(double w)
     {
-        // TODO
-        return 0.5 * boost::math::erfc(-w * M_SQRT1_2);
+        // TODO: Merge from Lab 5 or 6
+        return 0.0;
     }
 
     /**
@@ -238,35 +235,11 @@ public:
      */
     Eigen::Matrix<Scalar, 2, Eigen::Dynamic> confidenceEllipse(double nSigma = 3.0, int nSamples = 100) const
     {
-        // const Eigen::Index & n = dim();
-        // assert(n == 2);
-
-        // Eigen::Matrix<Scalar, 2, Eigen::Dynamic> X(2, nSamples);
-        // // TODO
-        // assert(X.cols() == nSamples);
-        // assert(X.rows() == 2);
-        // return X;
         const Eigen::Index & n = dim();
-        assert(n == 2 && "Expected bivariate Gaussian");
+        assert(n == 2);
 
-        // Calculate the probability mass enclosed by n_sigma standard deviations
-        Scalar c = normcdf(nSigma) - normcdf(-nSigma);
-
-        // Calculate the radius in w coordinates
-        Scalar r = std::sqrt(chi2inv(c, n));
-
-        // Generate sampling angles for circle
-        Eigen::VectorX<Scalar> t = Eigen::VectorX<Scalar>::LinSpaced(nSamples, 0, 2 * M_PI);
-
-        // Create circle sampling points in w coordinates
-        Eigen::Matrix<Scalar, 2, Eigen::Dynamic> W(2, nSamples);
-        W.row(0) = r * t.array().cos();
-        W.row(1) = r * t.array().sin();
-
-        // Transform to points on ellipse in x coordinates
-        Eigen::Matrix<Scalar, 2, Eigen::Dynamic> X = this->sqrtCov().transpose() * W;
-        X.colwise() += this->mean();
-
+        Eigen::Matrix<Scalar, 2, Eigen::Dynamic> X(2, nSamples);
+        // TODO: Merge from Lab 5 or 6
         assert(X.cols() == nSamples);
         assert(X.rows() == 2);
         return X;
