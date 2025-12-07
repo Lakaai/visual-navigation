@@ -354,8 +354,6 @@ void Camera::calibrate(ChessboardData & chessboardData)
     double rms = cv::calibrateCamera(rPNn_allImages, rQOi_all, imageSize, cameraMatrix, distCoeffs, 
                                      Thetacn_all, rNCc_all, flags);
     
-    std::cout << " done" << std::endl;
-    
     // Calculate horizontal, vertical and diagonal field of view
     std::cout << "done" << std::endl;
     
@@ -388,7 +386,8 @@ void Camera::calibrate(ChessboardData & chessboardData)
     
     printCalibration();
     std::cout << std::setw(30) << "RMS reprojection error: " << rms << std::endl;
-
+    std::cout << "cameraMatrix: " << cameraMatrix << std::endl;
+    std::cout << "distCoeffs: " << distCoeffs << std::endl;
     assert(cv::checkRange(cameraMatrix));
     assert(cv::checkRange(distCoeffs));
 }
@@ -485,6 +484,20 @@ Eigen::Vector2d Camera::vectorToPixel(const Eigen::Vector3d & rPCc, Eigen::Matri
 {
     Eigen::Vector2d rQOi;
     // TODO: Lab 7 (optional)
+    auto  uPCc = rPCc.normalized();
+    std::cout << "uPCc using normalised: " << uPCc.transpose() << std::endl;
+    std::cerr << "[DEBUG] uPCc = " << uPCc.transpose() << std::endl;
+    std::vector<cv::Point3f> objectPoints = {
+        cv::Point3f(static_cast<float>(uPCc(0)),
+                    static_cast<float>(uPCc(1)),
+                    static_cast<float>(uPCc(2)))
+    };
+    auto uPCc2 = rPCc / cv::norm(objectPoints);
+    std::cout << "uPCc using cv::norm: " << uPCc2.transpose() << std::endl;
+    std::cerr << "[DEBUG] uPCc2 = " << uPCc2.transpose() << std::endl;
+    // rQOi = cameraMatrix * uPCc;
+    // rQOi /= rQOi(2);
+
     return rQOi;
 }
 

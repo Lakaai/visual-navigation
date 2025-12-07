@@ -10,5 +10,5 @@ ninja && ./lab10 -c ../data/config.xml
 
 ## Run
 ```bash
-ninja && ./lab10 -c ../data/config.xml
+./lab10 ../data/DJI_0121.MOV
 ```

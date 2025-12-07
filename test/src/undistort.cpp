@@ -39,10 +39,8 @@ SCENARIO("Lens distortion")
                 std::vector<cv::Point2d> rQOi_cv = {cv::Point2d(rQOi(0), rQOi(1))};
                 std::vector<cv::Point2d> rQbarOi_cv;
 
-                // TODO: Lab 10
                 cv::undistortPoints(rQOi_cv, rQbarOi_cv, camera.cameraMatrix, camera.distCoeffs, cv::noArray(), camera.cameraMatrix);
-
-
+               
                 REQUIRE(rQbarOi_cv.size() == 1);
                 THEN("rQbarOi has the correct pixel coordinates")
                 {
@@ -58,7 +56,7 @@ SCENARIO("Lens distortion")
                 // Solve K*rPCc = pQbarOi for rPCc
             
                 Eigen::Vector3d rPCc;
-                // TODO: Lab 10
+                
                 Eigen::Vector3d pQbarOi(rQbarOi_cv[0].x, rQbarOi_cv[0].y, 1.0);
                 
                 // Build the 3x3 camera matrix K using Eigen
