@@ -2,8 +2,10 @@
 #include <opencv2/highgui.hpp>
 #include "Camera.h"
 #include "calibrate.h"
+#include <filesystem>
 
-void calibrateCamera(const std::filesystem::path & configPath)
+void calibrateCamera(const std::filesystem::path & configPath, bool exportImages, 
+                     const std::filesystem::path & outputDirectory)
 {
     // Read chessboard data using configuration file
     ChessboardData chessboardData(configPath);
@@ -17,6 +19,17 @@ void calibrateCamera(const std::filesystem::path & configPath)
     cv::FileStorage fs(cameraPath.string(), cv::FileStorage::WRITE);
     fs << "camera" << cam;
     fs.release();
+
+    // Export calibration images if requested
+    if (exportImages)
+    {
+        for (const auto & chessboardImage : chessboardData.chessboardImages)
+        {
+            std::filesystem::path outputPath = outputDirectory / chessboardImage.filename;
+            cv::imwrite(outputPath.string(), chessboardImage.image);
+            std::cout << "Exported calibration image: " << outputPath.string() << std::endl;
+        }
+    }
 
     // Visualise the camera calibration results
     chessboardData.drawBoxes(cam);

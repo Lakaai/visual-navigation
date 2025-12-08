@@ -6,5 +6,15 @@ var annotated_dup =
     [ "Chessboard", "structChessboard.html", null ],
     [ "ChessboardData", "structChessboardData.html", null ],
     [ "ChessboardImage", "structChessboardImage.html", null ],
-    [ "Pose", "structPose.html", "structPose" ]
+    [ "DensityBase", "classDensityBase.html", "classDensityBase" ],
+    [ "DJIVideoCaption", "structDJIVideoCaption.html", null ],
+    [ "Event", "classEvent.html", "classEvent" ],
+    [ "GaussianBase", "classGaussianBase.html", "classGaussianBase" ],
+    [ "GaussianInfo", "classGaussianInfo.html", "classGaussianInfo" ],
+    [ "Measurement", "classMeasurement.html", "classMeasurement" ],
+    [ "MeasurementOutdoorFlowBundle", "classMeasurementOutdoorFlowBundle.html", "classMeasurementOutdoorFlowBundle" ],
+    [ "Pose", "structPose.html", "structPose" ],
+    [ "SystemBase", "classSystemBase.html", "classSystemBase" ],
+    [ "SystemEstimator", "classSystemEstimator.html", "classSystemEstimator" ],
+    [ "SystemVisualNav", "classSystemVisualNav.html", "classSystemVisualNav" ]
 ];

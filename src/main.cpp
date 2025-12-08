@@ -4,7 +4,8 @@
 #include <iostream>
 #include <opencv2/core/utility.hpp>
 #include "calibrate.h"
-#include "image_flow.h"
+#include "visual_odometry.h"
+#include "calibrate.h"
 
 int main(int argc, char* argv [])
 {
@@ -14,22 +15,23 @@ int main(int argc, char* argv [])
         "{@input          | <none>   | path to input video or configuration XML}"
         "{calibrate c     |          | perform camera calibration for given configuration XML}"
         "{export e        |          | export video}";
+        
+
 
     cv::CommandLineParser parser(argc, argv, keys);
-    parser.about("MCHA4400 Lab 10");
-    
+    parser.about("MCHA4400 Lab 11");
+
     if (parser.has("help"))
     {
         parser.printMessage();
         return EXIT_SUCCESS;
     }
 
-    // Parse input arguments
-    bool hasCalibrate = parser.has("calibrate");
     bool hasExport = parser.has("export");
+    bool hasCalibrate = parser.has("calibrate");
     std::filesystem::path inputPath = parser.get<std::string>("@input");
+    
 
-    // Check for syntax errors
     if (!parser.check())
     {
         parser.printMessage();
@@ -37,7 +39,6 @@ int main(int argc, char* argv [])
         return EXIT_FAILURE;
     }
 
-    // Prepare output directory
     std::filesystem::path outputDirectory;
     if (hasExport)
     {
@@ -50,21 +51,21 @@ int main(int argc, char* argv [])
             std::cout << "Creating directory " << outputDirectory.string() << std::endl;
             std::filesystem::create_directory(outputDirectory);
         }
-        std::cout << "Output directory set to " << outputDirectory.string() << std::endl;
     }
 
     if (hasCalibrate)
     {
         std::cout << "Calibrating camera" << std::endl;
         std::cout << "Configuration file: " << inputPath.string() << std::endl;
-        calibrateCamera(inputPath);
+        calibrateCamera(inputPath, hasExport, outputDirectory);
     }
+
     else
     {
         std::cout << "Input video: " << inputPath.string() << std::endl;
-        std::cout << "Running image flow" << std::endl;
+        std::cout << "Running visual odometry" << std::endl;
         std::filesystem::path cameraPath = inputPath.parent_path() / "camera.xml";
-        runImageFlow(inputPath, cameraPath, outputDirectory);
+        runVisualOdometryFromVideo(inputPath, cameraPath, outputDirectory);
     }
 
     return EXIT_SUCCESS;

@@ -16,6 +16,7 @@ SCENARIO("Camera model")
 {
     GIVEN("A camera with no lens distortion")
     {
+        
         std::filesystem::path cameraPath("test/data/camera.xml");
         REQUIRE(std::filesystem::exists(cameraPath));
         REQUIRE(std::filesystem::is_regular_file(cameraPath));
