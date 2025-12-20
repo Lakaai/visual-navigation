@@ -74,6 +74,13 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
 
     // Set camera pose w.r.t. body
     // TODO: Lab 11
+    Eigen::Matrix3d Rbc;
+        Rbc <<  0, 0, 1,
+                1, 0, 0,
+                0, 1, 0;
+    Eigen::Vector3d rBCn = Eigen::Vector3d::Zero();
+    camera.Tbc.rotationMatrix = Rbc;
+    camera.Tbc.translationVector = rBCn;
 
     // Open input video
     cv::VideoCapture cap(videoPath.string());
@@ -114,13 +121,6 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     Eigen::VectorXd etakm1(6);
     Eigen::VectorXd etak(6);
     etak = getInitialPose(djiVideoCaption[0]);
-    Eigen::Matrix3d Rbc;
-        Rbc <<  0, 0, 1,
-                1, 0, 0,
-                0, 1, 0;
-    Eigen::Vector3d rBCn = Eigen::Vector3d::Zero();
-    camera.Tbc.rotationMatrix = Rbc;
-    camera.Tbc.translationVector = rBCn;
 
     cv::Mat imgk_raw;
     cv::Mat imgkm1_raw;
@@ -244,29 +244,29 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     bufferedVideoReader.stop();
 }
 
-// Eigen::Vector6d getInitialPose(const DJIVideoCaption & caption0)
-// {
-//     double h        = caption0.altitude;    // Altitude (GPS) [m]
-//     double ga       = h - 7;                // Altitude (AGL) [m]
-
-//     Eigen::Vector6d eta0;
-//     // TODO: Lab 11
-//     eta0 << 0, 0, -ga,          // Initial position 
-//             -0.015, 0.14, 0;     // Initial orientation 
-//     return eta0;
-// }
-
-//assignement 2
 Eigen::Vector6d getInitialPose(const DJIVideoCaption & caption0)
 {
     double h        = caption0.altitude;    // Altitude (GPS) [m]
     double ga       = h - 7;                // Altitude (AGL) [m]
 
     Eigen::Vector6d eta0;
-    eta0 << 0, 0, -ga,         // Initial position 
-    -0.009, 0.09, 0;            // Initial orientation 
+    // TODO: Lab 11
+    eta0 << 0, 0, -ga,          // Initial position 
+            -0.015, 0.11, 0;     // Initial orientation 
     return eta0;
 }
+
+// Assignement 2
+// Eigen::Vector6d getInitialPose(const DJIVideoCaption & caption0)
+// {
+//     double h        = caption0.altitude;    // Altitude (GPS) [m]
+//     double ga       = h - 7;                // Altitude (AGL) [m]
+
+//     Eigen::Vector6d eta0;
+//     eta0 << 0, 0, -ga,         // Initial position 
+//     -0.009, 0.09, 0;            // Initial orientation 
+//     return eta0;
+// }
 
 void plotGroundPlane(cv::Mat & img, const Eigen::Vector6d & etak, const Camera & camera, const int & divisor)
 {

@@ -13,7 +13,7 @@ SCENARIO("DJIVideoCaption: Check first caption")
     GIVEN("Subtitle file")
     {
         // std::filesystem::path captionPath = std::filesystem::path("test") / std::filesystem::path("data") / std::filesystem::path("DJI_0121.SRT");
-        std::filesystem::path captionPath = "/home/luke/Documents/Github/MCHA4400/lab11/test/data/DJI_0121.SRT";
+        std::filesystem::path captionPath = "test/data/DJI_0121.SRT";
 
         REQUIRE(std::filesystem::exists(captionPath));
 

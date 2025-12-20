@@ -27,8 +27,8 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
     , sigma_(2.0)
 {
     const int divisor = 1;
-    const int maxNumFeatures = 1000;
-    const int minNumFeatures = 700;
+    const int maxNumFeatures = 2000;
+    const int minNumFeatures = 1500;
 
     cv::TermCriteria termcrit(cv::TermCriteria::COUNT|cv::TermCriteria::EPS, 30, 0.01);
     cv::Size subPixWinSize(11, 11);
