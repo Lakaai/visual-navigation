@@ -211,16 +211,16 @@ void runVisualNavigationFromVideo(const std::filesystem::path & videoPath, const
             //SystemSLAMPointLandmarks system = exampleSystemFromChessboardImage(camera, chessboardImage);
 
             // Get next input frame
-            cv::Mat imgin = bufferedVideoReader.read();
+            cv::Mat imgk = bufferedVideoReader.read();
             
-            if (imgin.empty()) break;
-            system.view() = imgin;
+            if (imgk.empty()) break;
+            system.view() = imgk;
             //printStateVector(system);
             currentFrame++;
             currentTime += 1.0 / fps;
             bool isLastFrame = (currentFrame == totalFrames);
             
-            std::vector<PointFeature> features = detectFeatures(imgin, maxNumFeatures);
+            std::vector<PointFeature> features = detectFeatures(imgk, maxNumFeatures);
             std::cout << features.size() << " features found in frame" << std::endl;
             assert(features.size() > 0);
             assert(features.size() <= maxNumFeatures);
