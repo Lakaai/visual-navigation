@@ -97,7 +97,6 @@ ChessboardImage::ChessboardImage(const cv::Mat & image_, const Chessboard & ches
     , isFound(false)
 {
     // Convert image to grayscale
-    //std::cout << "image:" << image << std::endl;
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
@@ -423,17 +422,8 @@ void Camera::printCalibration() const
     std::cout << std::setw(30) << "Bit flags: " << bitflag << std::endl;
     std::cout << std::setw(30) << "cameraMatrix:\n" << cameraMatrix << std::endl;
     std::cout << std::setw(30) << "distCoeffs:\n" << distCoeffs.t() << std::endl;
-    std::cout << std::setw(30) << "Focal lengths: " 
-              << "(fx, fy) = "
-              << "("<< cameraMatrix.at<double>(0, 0) << ", "<< cameraMatrix.at<double>(1, 1) << ")"
-              << std::endl;       
-    std::cout << std::setw(30) << "Principal point: " 
-              << "(cx, cy) = "
-              << "("<< cameraMatrix.at<double>(0, 2) << ", "<< cameraMatrix.at<double>(1, 2) << ")"
-              << std::endl;     
-    // std::cout << std::setw(30) << "Field of view (horizontal): " << 180.0/CV_PI*hFOV << " deg" << std::endl; // Origin print statements 
-    // std::cout << std::setw(30) << "Field of view (vertical): " << 180.0/CV_PI*vFOV << " deg" << std::endl;
-    // std::cout << std::setw(30) << "Field of view (diagonal): " << 180.0/CV_PI*dFOV << " deg" << std::endl;
+    std::cout << std::setw(30) << "Focal lengths: " << "(fx, fy) = " << "("<< cameraMatrix.at<double>(0, 0) << ", "<< cameraMatrix.at<double>(1, 1) << ")" << std::endl;       
+    std::cout << std::setw(30) << "Principal point: " << "(cx, cy) = " << "("<< cameraMatrix.at<double>(0, 2) << ", "<< cameraMatrix.at<double>(1, 2) << ")" << std::endl;     
     std::cout << std::setw(30) << "Field of view (horizontal): " << hFOV << " deg" << std::endl;
     std::cout << std::setw(30) << "Field of view (vertical): " << vFOV << " deg" << std::endl; 
     std::cout << std::setw(30) << "Field of view (diagonal): " << dFOV << " deg" << std::endl;
