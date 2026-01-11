@@ -16,7 +16,7 @@ from tqdm.auto import tqdm
 # Set float32 matmul precision
 torch.set_float32_matmul_precision('medium')
 
-TRAIN_PATH = "../data/train"
+TRAIN_PATH = "/home/luke/MCHA4400/data/augmented"
 
 # Extract instance masks from annotated image
 def extract_instance_masks(annotated_image):
