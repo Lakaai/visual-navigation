@@ -127,8 +127,8 @@ void Measurement::update(SystemBase & system_)
             // Minimise cost
             Eigen::MatrixXd Q(nx, nx);
             Eigen::VectorXd v(nx);
-            //int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, verbosity_);
-            int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, 3);
+            int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, verbosity_);
+            // int ret = funcmin::NewtonTrustEig(costFunc, x, g, Q, v, 3);
             assert(ret == 0);
 
             // Post-calculate posterior square-root information matrix from Hessian eigendecomposition

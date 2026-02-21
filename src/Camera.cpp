@@ -58,7 +58,6 @@ ChessboardImage::ChessboardImage(const cv::Mat & image_, const Chessboard & ches
     , isFound(false)
 {
     // Convert image to grayscale
-    //std::cout << "image:" << image << std::endl;
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
@@ -562,4 +561,3 @@ void Camera::read(const cv::FileNode & node)
     assert(distCoeffs.cols == 1);
     assert(distCoeffs.type() == CV_64F);
 }
-
