@@ -28,8 +28,8 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
 {
     // Parameters maxNumFeatures = 
     const int divisor = 2;
-    const int maxNumFeatures = 2000; // 1200 
-    const int minNumFeatures = 1600; // 900 minDist 50 1e-4 qualityLevel
+    const int maxNumFeatures = 1200; // 1200 
+    const int minNumFeatures = 900; // 900 minDist 50 1e-4 qualityLevel
 
     cv::TermCriteria termcrit(cv::TermCriteria::COUNT|cv::TermCriteria::EPS, 30, 0.01);
     cv::Size subPixWinSize(11, 11);
@@ -45,7 +45,7 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
     cv::resize(imgk_gray, imgk_scaled, cv::Size(), 1.0/divisor, 1.0/divisor);
     cv::resize(imgkm1_gray, imgkm1_scaled, cv::Size(), 1.0/divisor, 1.0/divisor);
 
-    std::cout << "rQOikm1_ size: " << rQOikm1_.cols() << std::endl;
+    // std::cout << "rQOikm1_ size: " << rQOikm1_.cols() << std::endl;
 
     if (rQOikm1_.cols() == 0)
     {
@@ -100,12 +100,12 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
         rQOik_.conservativeResize(2, np);
         rQOikm1_.conservativeResize(2, np);
 
-        std::cout << "Tracked " << np << " features" << std::endl;
+        // std::cout << "Tracked " << np << " features" << std::endl;
 
         // If we've lost too many features, detect new ones
         if (np < minNumFeatures)
         {
-            std::cout << "Detecting new features" << std::endl;
+            // std::cout << "Detecting new features" << std::endl;
             std::vector<cv::Point2f> new_corners;
             cv::goodFeaturesToTrack(imgk_scaled, new_corners, maxNumFeatures - np, 1e-4, 50, cv::Mat(), 5, false, 0.04);
             cv::cornerSubPix(imgk_scaled, new_corners, subPixWinSize, cv::Size(-1,-1), termcrit);       
@@ -119,7 +119,7 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
                 rQOikm1_.col(np + i) = rQOik_.col(np + i);  // New features are assumed to be stationary for their first frame
             }
 
-            std::cout << "Added " << new_features << " new features" << std::endl;
+            // std::cout << "Added " << new_features << " new features" << std::endl;
         }
     }
 
@@ -152,7 +152,7 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
         }
     }
 
-    std::cout << "Inliers: " << nInliers << ", Outliers: " << mask_.size() - nInliers << std::endl;
+    // std::cout << "Inliers: " << nInliers << ", Outliers: " << mask_.size() - nInliers << std::endl;
 }
 
 Eigen::VectorXd MeasurementOutdoorFlowBundle::simulate(const Eigen::VectorXd & x, const SystemEstimator & system) const
@@ -184,8 +184,9 @@ double MeasurementOutdoorFlowBundle::logLikelihood(const Eigen::VectorXd & x, co
 
 double MeasurementOutdoorFlowBundle::logLikelihood(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const
 {
-    // Evaluate gradient for Newton and quasi-Newton methods
 
+    // this function is cheap and took: 19686 microseconds 20ms however the optimiser bfgs calls it many times so we need to make it efficient.
+    // Evaluate gradient for Newton and quasi-Newton methods
     using autodiff::dual;
     using autodiff::gradient;
 
@@ -195,8 +196,9 @@ double MeasurementOutdoorFlowBundle::logLikelihood(const Eigen::VectorXd & x, co
     // Compute gradient and function value using autodiff
     autodiff::dual fdual;
     g = gradient(&MeasurementOutdoorFlowBundle::logLikelihood<autodiff::dual>, autodiff::wrt(x_dual), autodiff::at(this, x_dual, system), fdual);
-    
-    return logLikelihood(x, system);
+    auto result = logLikelihood(x, system);
+
+    return result;
 }
 
 

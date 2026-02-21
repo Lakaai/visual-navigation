@@ -45,7 +45,7 @@ void printStateVector(const SystemVisualNav& system);
 void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const std::filesystem::path & cameraPath, const std::filesystem::path & outputDirectory)
 {
     int imgModulus  = 14;                    // Take frames divisible by this number
-    int divisor     = 2;                    // Image scaling factor (used for plotting only)
+    int divisor     = 2;                     // Image scaling factor (used for plotting only)
     
     assert(!videoPath.empty());
 
@@ -61,12 +61,7 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     bool doExport = !outputDirectory.empty();
     if (doExport)
     {
-        std::string outputFilename = videoPath.stem().string()
-                                   + "_"
-                                   + std::to_string(divisor)
-                                   + "_"
-                                   + std::to_string(imgModulus)
-                                   + videoPath.extension().string();
+        std::string outputFilename = videoPath.stem().string() + "_" + std::to_string(divisor) + "_" + std::to_string(imgModulus) + videoPath.extension().string();
         outputPath = outputDirectory / outputFilename;
     }
 
@@ -90,11 +85,8 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     std::cout << "Subtitle file: " << subtitlePath.string() << std::endl;
     std::cout << "Total number of frames: " << nFrames << std::endl;
     double fps = cap.get(cv::CAP_PROP_FPS);
-    std::cout   << "Input video frame rate: " << fps << std::endl;
-    std::cout   << "Input video dimensions: [" 
-                << cap.get(cv::CAP_PROP_FRAME_WIDTH) << " x "
-                << cap.get(cv::CAP_PROP_FRAME_HEIGHT) << "]"
-                << std::endl;
+    std::cout << "Input video frame rate: " << fps << std::endl;
+    std::cout << "Input video dimensions: [" << cap.get(cv::CAP_PROP_FRAME_WIDTH) << " x " << cap.get(cv::CAP_PROP_FRAME_HEIGHT) << "]" << std::endl;
 
     BufferedVideoReader bufferedVideoReader(5);
     bufferedVideoReader.start(cap);
@@ -128,24 +120,21 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     Eigen::MatrixXd S = Eigen::MatrixXd::Identity(18, 18);
 
     // Initial velocity uncertainty (first 6 states)
-    S.block<3, 3>(0, 0) = Eigen::MatrixXd::Identity(3, 3) * 50;  // (m/s)
-    S.block<3, 3>(3, 3) = Eigen::MatrixXd::Identity(3, 3) * 1;   // (rad/s)
+    S.block<3, 3>(0, 0) = Eigen::MatrixXd::Identity(3, 3) * 50;         // m/s
+    S.block<3, 3>(3, 3) = Eigen::MatrixXd::Identity(3, 3) * 1;          // rad/s
 
     // Current pose eta uncertainty (middle 6 states)
-    S.block<3, 3>(6, 6) = Eigen::MatrixXd::Identity(3, 3) * 0.01;  // m  
-    S.block<3, 3>(9, 9) = Eigen::MatrixXd::Identity(3, 3) * 0.0005; // rad
+    S.block<3, 3>(6, 6) = Eigen::MatrixXd::Identity(3, 3) * 0.01;       // m  
+    S.block<3, 3>(9, 9) = Eigen::MatrixXd::Identity(3, 3) * 0.0005;     // rad
 
     // Previous pose zeta uncertainty (final 6 states)
-    S.block<3, 3>(12, 12) = Eigen::MatrixXd::Identity(3, 3) * 50; // (m)
-    S.block<3, 3>(15, 15) = Eigen::MatrixXd::Identity(3, 3) * 0.1;  // (rad)
-    auto p0 = GaussianInfo<double>::fromSqrtMoment(mu, S);                     // Initialise system state density p(x0)     
+    S.block<3, 3>(12, 12) = Eigen::MatrixXd::Identity(3, 3) * 50;       // m
+    S.block<3, 3>(15, 15) = Eigen::MatrixXd::Identity(3, 3) * 0.1;      // rad
+    auto p0 = GaussianInfo<double>::fromSqrtMoment(mu, S);              // Initialise system state density p(x0)     
     SystemVisualNav system(p0); 
     
     // Set camera pose w.r.t. body
-    Eigen::Matrix3d Rbc;
-        Rbc <<  0, 0, 1,
-                1, 0, 0,
-                0, 1, 0;
+    Eigen::Matrix3d Rbc { {0, 0, 1}, {1, 0, 0}, {0, 1, 0} };
     Eigen::Vector3d rBCn = Eigen::Vector3d::Zero();
     camera.Tbc.rotationMatrix = Rbc;
     camera.Tbc.translationVector = rBCn;
@@ -163,25 +152,16 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     
     for (int i = 0, k = 0; currentFrame < totalFrames; ++i)
     {
-        
-        //printStateVector(system);
         currentFrame++;
         currentTime = i / fps;
-        
-        // bool isLastFrame = (currentFrame == totalFrames);
-        // Capture frame by frame
-        imgk_raw = bufferedVideoReader.read();
-        cv::resize(imgk_raw, imgout, cv::Size(), 1.0/divisor, 1.0/divisor); // REMOVE THIS WHEN DONE W/ DEBUG 
+
+        imgk_raw = bufferedVideoReader.read();       // Capture frame by frame
+
+        // cv::resize(imgk_raw, imgout, cv::Size(), 1.0/divisor, 1.0/divisor); // REMOVE THIS WHEN DONE W/ DEBUG 
         if (imgk_raw.empty())
         {
             break;
         }
-
-        // if (!dynamic_cast<SystemEstimator&>(system).isZetaUpdateEnabled()) {
-        //     // Verify zeta hasn't changed for altimeter updates
-        //     Eigen::VectorXd state_after = system.density.mean();
-        //     assert((state_after.segment<6>(12) - etakm1).norm() < 1 && "Zeta changed during altimeter update!");
-        // }
         
         // Read altimeter value from subtitle file
         for (const auto& caption : djiVideoCaption)
@@ -195,19 +175,20 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
 
         if (altitude != altitudekm1)
         {
-                // MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
-                // system.setZetaUpdateEnabled(false);  // Don't update zeta for altimeter
-                // std::cout << "Before altimeter update:" << std::endl;
-                // printZeta(system);
-                // measurementAltimeter.process(system);
-                // std::cout << "After altimeter update:" << std::endl;
-                // printZeta(system);
+                MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
+                system.setZetaUpdateEnabled(false);  // Don't update zeta for altimeter
+                std::cout << "Before altimeter update:" << std::endl;
+                printZeta(system);
+                measurementAltimeter.process(system);
+                std::cout << "After altimeter update:" << std::endl;
+                printZeta(system);
                 altitudekm1 = altitude;
-            // MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
-            // //system.setZetaUpdateEnabled(false);                                         // Don't update zeta for altimeter
-            // std::cout << "altimeter update" << std::endl;
-            // measurementAltimeter.process(system);                                       // Process measurement event (do time update and measurement update)   
-            // altitudekm1 = altitude;
+
+                MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
+                system.setZetaUpdateEnabled(false);                                         // Don't update zeta for altimeter
+                std::cout << "altimeter update" << std::endl;
+                measurementAltimeter.process(system);                                       // Process measurement event (do time update and measurement update)   
+                altitudekm1 = altitude;
         }
 
         if (i % imgModulus == 0)
@@ -217,6 +198,7 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
                 
                 cv::resize(imgk_raw, imgout, cv::Size(), 1.0/divisor, 1.0/divisor);
                 MeasurementOutdoorFlowBundle measurementFlowBundle(currentTime, camera, imgk_raw, imgkm1_raw, rQOikm1);
+
                 // std::cout << "Before flow update:" << std::endl;
                 // printZeta(system);
                 system.setZetaUpdateEnabled(true);  // Do update zeta for flow
@@ -234,43 +216,44 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
                 Eigen::Matrix<double, 2, Eigen::Dynamic> rQOik_hat = measurementFlowBundle.predictedFeatures(system.density.mean(), system);
                 
                 // Plotting
-                std::vector<cv::Point2d> rQOikm1_scaled, rQOik_scaled, rQOik_hat_scaled;
-                int np = rQOik.cols();
-                rQOikm1_scaled.resize(np);
-                rQOik_scaled.resize(np);
-                rQOik_hat_scaled.resize(np);
-                for (int j = 0; j < np; ++j)
-                {
-                    rQOikm1_scaled[j].x     = rQOikm1(0, j)/divisor;
-                    rQOikm1_scaled[j].y     = rQOikm1(1, j)/divisor;
+                // std::vector<cv::Point2d> rQOikm1_scaled, rQOik_scaled, rQOik_hat_scaled;
+                // int np = rQOik.cols();
+                // rQOikm1_scaled.resize(np);
+                // rQOik_scaled.resize(np);
+                // rQOik_hat_scaled.resize(np);
+                // for (int j = 0; j < np; ++j)
+                // {
+                //     rQOikm1_scaled[j].x     = rQOikm1(0, j)/divisor;
+                //     rQOikm1_scaled[j].y     = rQOikm1(1, j)/divisor;
 
-                    rQOik_scaled[j].x       = rQOik(0, j)/divisor;
-                    rQOik_scaled[j].y       = rQOik(1, j)/divisor;
+                //     rQOik_scaled[j].x       = rQOik(0, j)/divisor;
+                //     rQOik_scaled[j].y       = rQOik(1, j)/divisor;
 
-                    rQOik_hat_scaled[j].x   = rQOik_hat(0, j)/divisor;
-                    rQOik_hat_scaled[j].y   = rQOik_hat(1, j)/divisor;
-                }
+                //     rQOik_hat_scaled[j].x   = rQOik_hat(0, j)/divisor;
+                //     rQOik_hat_scaled[j].y   = rQOik_hat(1, j)/divisor;
+                // }
+                
 
-                for (int j = 0; j < rQOik.cols(); ++j)
-                {
-                    // Only draw prediction if this was a valid measurement
-                    if (j < measurementFlowBundle.inlierMask().size())  // Check we have a mask entry
-                    {
-                        // Predicted flow - only draw for inliers
-                        if (measurementFlowBundle.inlierMask()[j]) {
-                            cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_hat_scaled[j], cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
-                            // Measured inliers
-                            cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_scaled[j], cv::Scalar(0, 255, 0), 1, cv::LINE_AA);
-                        }
-                        else {
-                            // Measured outliers
-                            cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_scaled[j], cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
-                        }
-                    }
-                }
+                // for (int j = 0; j < rQOik.cols(); ++j)
+                // {
+                //     // Only draw prediction if this was a valid measurement
+                //     if (j < measurementFlowBundle.inlierMask().size())  // Check we have a mask entry
+                //     {
+                //         // Predicted flow - only draw for inliers
+                //         if (measurementFlowBundle.inlierMask()[j]) {
+                //             cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_hat_scaled[j], cv::Scalar(255, 0, 0), 1, cv::LINE_AA);
+                //             // Measured inliers
+                //             cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_scaled[j], cv::Scalar(0, 255, 0), 1, cv::LINE_AA);
+                //         }
+                //         else {
+                //             // Measured outliers
+                //             cv::arrowedLine(imgout, rQOikm1_scaled[j], rQOik_scaled[j], cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+                //         }
+                //     }
+                // }
 
-                plotTranslationalVelocity(imgout, system, camera, divisor);  
-                plotGroundPlane(imgout, system, camera, divisor);
+                // plotTranslationalVelocity(imgout, system, camera, divisor);  
+                // plotGroundPlane(imgout, system, camera, divisor);
                 plotHorizon(imgout, system, camera, divisor);
                 plotCompass(imgout, system, camera, divisor);
                 plotAltitude(imgout, altitude, system);  
@@ -294,6 +277,7 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
 
             imgk_raw.copyTo(imgkm1_raw);
             k++;
+           
         }
     } 
 
@@ -316,8 +300,7 @@ Eigen::Vector6d getInitialPose(const DJIVideoCaption & caption0)
 
     Eigen::Vector6d eta0;
     eta0 << 0, 0, -ga,         // Initial position 
-    -0.009, 0.09, -1
-    ;            // Initial orientation 
+    -0.009, 0.09, -1;          // Initial orientation 
     return eta0;
 }
 

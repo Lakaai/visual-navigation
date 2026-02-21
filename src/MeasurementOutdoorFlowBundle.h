@@ -121,9 +121,7 @@ protected:
 //     return pk_hat;
 // }
 template <typename Scalar>
-Eigen::Matrix<Scalar, 3, 1> MeasurementOutdoorFlowBundle::predict(const Eigen::VectorX<Scalar> & x, 
-                                                                 const Eigen::Vector3d & pkm1_i,
-                                                                 const Eigen::Vector3d & pk_i) const
+Eigen::Matrix<Scalar, 3, 1> MeasurementOutdoorFlowBundle::predict(const Eigen::VectorX<Scalar> & x, const Eigen::Vector3d & pkm1_i, const Eigen::Vector3d & pk_i) const
 {
     assert(x.rows() >= 18);
     assert(x.cols() == 1);
@@ -266,7 +264,6 @@ Scalar MeasurementOutdoorFlowBundle::logLikelihood(const Eigen::VectorX<Scalar> 
         // Add log likelihood for this point         
         totalLogLik += likelihood.log(rQbarOik);     
     }
-
     return totalLogLik;
 }
 

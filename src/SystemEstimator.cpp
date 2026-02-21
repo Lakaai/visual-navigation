@@ -13,7 +13,7 @@ SystemEstimator::~SystemEstimator() = default;
 void SystemEstimator::predict(double time)
 {
     double dt = time - time_;
-    std::cout << "dt= \n" << dt << std::endl;
+    
     assert(dt >= 0);
 
     if (dt == 0.0) {

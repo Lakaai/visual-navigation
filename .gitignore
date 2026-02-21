@@ -1,2 +1,6 @@
 /build/
 /docs/
+data/duck_with_postprocessing.pt
+data/duck_with_postprocessing.onnx.data
+python/model/model.safetensors
+/python/

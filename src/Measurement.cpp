@@ -28,7 +28,7 @@ double Measurement::costJointDensity(const Eigen::VectorXd & x, const SystemEsti
 double Measurement::costJointDensity(const Eigen::VectorXd & x, const SystemEstimator & system, Eigen::VectorXd & g) const
 {
     Eigen::VectorXd logpriorGrad(x.size());
-    // std::cout << "x inside cost joint density= " << x.transpose() << std::endl;
+    
     double logprior = system.density.log(x, logpriorGrad);
 
     Eigen::VectorXd loglikGrad(x.size());
@@ -65,19 +65,23 @@ void Measurement::update(SystemBase & system_)
     // Second-order iterated update
     Eigen::VectorXd g(nx);
     Eigen::VectorXd x = system.density.mean(); // Set initial decision variable to prior mean
-    //std::cout << "x in update = " << x.transpose() << std::endl;
+   
     Eigen::MatrixXd Xi = system.density.sqrtInfoMat();
 
     switch (updateMethod_)
     {
         case UpdateMethod::BFGSTRUSTSQRT: 
         {
+            // auto start = std::chrono::high_resolution_clock::now();
             // Create cost function with prototype V = costFunc(x, g)
             auto costFunc = [&](const Eigen::VectorXd & x, Eigen::VectorXd & g){ return costJointDensity(x, system, g); };
 
             // Minimise cost
             int ret = funcmin::BFGSTrustSqrt(costFunc, x, g, Xi, verbosity_);
             assert(ret == 0);
+            // auto stop = std::chrono::high_resolution_clock::now();
+            // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+            // std::cout << "BFGSTrustSqrt took: " << duration.count() << " microseconds" << std::endl;
             break;
         }
         case UpdateMethod::BFGSLMSQRT:

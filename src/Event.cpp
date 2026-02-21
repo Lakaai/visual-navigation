@@ -3,6 +3,7 @@
 #include <string>
 #include "SystemBase.h"
 #include "Event.h"
+#include <chrono>
 
 Event::Event(double time)
     : time_(time)
@@ -27,10 +28,18 @@ void Event::process(SystemBase & system)
     }
     
     // Time update
+    auto start1 = std::chrono::high_resolution_clock::now();
     system.predict(time_);
+    auto stop1 = std::chrono::high_resolution_clock::now();
+    auto duration1 = std::chrono::duration_cast<std::chrono::microseconds>(stop1 - start1);
+    std::cout << "predict took: " << duration1.count() << " microseconds" << std::endl;
 
     // Event-specific implementation
+    auto start2 = std::chrono::high_resolution_clock::now();
     update(system);
+    auto stop2 = std::chrono::high_resolution_clock::now();
+    auto duration2 = std::chrono::duration_cast<std::chrono::microseconds>(stop2 - start2);
+    std::cout << "update took: " << duration2.count() << " microseconds" << std::endl;
 
     if (verbosity_ > 0)
     {
