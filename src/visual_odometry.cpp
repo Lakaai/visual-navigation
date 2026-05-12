@@ -152,8 +152,10 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     
     for (int i = 0, k = 0; currentFrame < totalFrames; ++i)
     {
+        /// TODO: FIX ME 
         currentFrame++;
-        currentTime = i / fps;
+        currentTime = i / fps; /// TODO: Current time is not accurate. Should not be using frame index to calculate time, 
+        //should be using actual timestamps from subtitle file!
 
         imgk_raw = bufferedVideoReader.read();       // Capture frame by frame
 
@@ -184,11 +186,6 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
                 printZeta(system);
                 altitudekm1 = altitude;
 
-                MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
-                system.setZetaUpdateEnabled(false);                                         // Don't update zeta for altimeter
-                std::cout << "altimeter update" << std::endl;
-                measurementAltimeter.process(system);                                       // Process measurement event (do time update and measurement update)   
-                altitudekm1 = altitude;
         }
 
         if (i % imgModulus == 0)
@@ -296,6 +293,7 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
 Eigen::Vector6d getInitialPose(const DJIVideoCaption & caption0)
 {
     double h        = caption0.altitude;    // Altitude (GPS) [m]
+    std::cout << "Initial altitude: " << h << " m" << std::endl;
     double ga       = h - 7;                // Altitude (AGL) [m]
 
     Eigen::Vector6d eta0;

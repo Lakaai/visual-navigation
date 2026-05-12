@@ -124,9 +124,10 @@ MeasurementOutdoorFlowBundle::MeasurementOutdoorFlowBundle(double time, const Ca
     }
 
     // Calculate undistorted feature locations
+    std::cout << "Calculating undistorted feature locations..." << std::endl;
     rQbarOik_ = camera_.undistort(rQOik_);
     rQbarOikm1_ = camera_.undistort(rQOikm1_);
-
+    std::cout << "rQOik_ size: " << rQOik_.cols() << ", rQbarOik_ size: " << rQbarOik_.cols() << std::endl;
     // Use RANSAC to find fundamental matrix and determine inliers
     std::vector<cv::Point2f> points1, points2;
     for (int i = 0; i < rQbarOikm1_.cols(); ++i)
