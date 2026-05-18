@@ -1,14 +1,15 @@
 # Assignment 2 Visual Navigation
 
-
+```bash
 cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Debug && cd build
-
+```
+```bash
 ./a2 --calibrate ../data/outdoor/config.xml
+```
 
-
-
+```bash
 ninja && ./a2 --scenario=4 --interactive=0 --export ../data/outdoor/flight.MOV
-
+```
 
 ## Command Line Arugments
 

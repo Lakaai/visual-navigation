@@ -14,6 +14,7 @@ import numpy as np
 class RotationMatrix:
     """
     TODO:
+
     """
 
     R: np.ndarray
@@ -23,6 +24,10 @@ class RotationMatrix:
 class Rotations:
     """
     TODO:
+
+    If Rab is the matrix that rotates the vectors of the basis {a} into the vectors of the basis {b}, 
+    then Rab is the coordinate tranformation matrix that relates the coordinates of a vector in {b} to its components in {a}:
+    ua = Rab @ ub
     """
 
     @staticmethod

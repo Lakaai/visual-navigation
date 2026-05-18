@@ -1,8 +1,6 @@
-from dataclasses import dataclass
-
 import cv2
 import numpy as np
-from src.camera import Camera 
+from src.camera import CAMERA
 
 import cv2
 import numpy as np
@@ -10,36 +8,13 @@ import numpy as np
 from src.gaussian import Gaussian
 from src.gaussian_vector import GaussianVector
 from src.rotations import Rotations, RotationMatrix
-from dataclasses import dataclass
-
-@dataclass
-class Camera():
-    matrix: np.ndarray
-    distortion_coeffs: np.ndarray
-    translation_vector: np.ndarray
-    rotation_matrix: RotationMatrix
-
-
-    def undistort_features(self, features):
-        """
-        TODO: 
-        """
-        undistorted_features = cv2.undistortPoints(features, self.matrix, self.distortion_coeffs, P=self.matrix)
-        return undistorted_features
+# from scipy.spatial.transform import Rotation
 
 DIVISOR = 2
 MAX_NUM_FEATURES = 1500
 MIN_NUM_FEATURES = 1100
 QUALITY_LEVEL = 0.0001
 MIN_DISTANCE_PIXELS = 15
-
-CAMERA = Camera(matrix=np.array([[2230.0302561729463, 0.0, 1326.9024252144795], [0.0, 2249.3015295213522, 483.88958360970497], [0.0, 0.0, 1.0]]), 
-        distortion_coeffs=np.array([
-            0.010524588721904289, 0.048537210858010528, -0.059423525226001202,
-            -0.0063860373221385318, 0.11992593543150673, -0.016224313722952306,
-            0.1179079716819904, 0.06468044932840758, 0.015143083729458221,
-            -0.011402957916733165, 0.052841065220381671, 0.0074396821766865989
-        ]), translation_vector=np.array([0.0, 0.0, 0.0]), rotation_matrix=RotationMatrix([[0.0, 0.0, 1.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]))
 
 e3 = np.array([0.0, 0.0, 1.0])
 
@@ -170,9 +145,9 @@ class MeasurementFlowBundle:
         # Evaluate how probable the observed measurement is under the predicted distribution
         total_log_likelihood = np.sum(likelihood.log_pdf(rQbarOk)) 
 
-        # rQbarOk_hat = likelihood.mean
-        # self.print_pixel_error(rQbarOk, rQbarOk_hat)
-        # self.plot_predicted_measurements(rQbarOk, rQbarOk_hat)
+        rQbarOk_hat = likelihood.mean
+        self.print_pixel_error(rQbarOk, rQbarOk_hat)
+        self.plot_predicted_measurements(rQbarOk, rQbarOk_hat)
         return total_log_likelihood
     
     

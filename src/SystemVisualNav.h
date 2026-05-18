@@ -32,6 +32,8 @@ public:
     virtual GaussianInfo<double> bodyTranslationalVelocityDensity() const;
     virtual GaussianInfo<double> bodyAngularVelocityDensity() const;
 
+    void initialise_state_density(const Eigen::VectorXd nu, const Eigen::VectorXd eta, const Eigen::VectorXd zeta);
+
     template <typename Scalar> static Eigen::Vector3<Scalar> cameraPosition(const Camera & cam, const Eigen::VectorX<Scalar> & x);
     static Eigen::Vector3d cameraPosition(const Camera & cam, const Eigen::VectorXd & x, Eigen::MatrixXd & J);
     template <typename Scalar> static Eigen::Matrix3<Scalar> cameraOrientation(const Camera & cam, const Eigen::VectorX<Scalar> & x);

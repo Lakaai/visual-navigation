@@ -9,7 +9,8 @@ from src.measurement import Measurement, MeasurementBaro
 from src.update_method import UpdateMethod
 from src.sensor_type import SensorType
 from src.rotations import Rotations
-from src.measurement_flow_bundle import MeasurementFlowBundle, CAMERA
+from src.measurement_flow_bundle import MeasurementFlowBundle
+from src.camera import CAMERA
 import numpy as np
 import rerun as rr
 import rerun.blueprint as rrb
@@ -21,7 +22,7 @@ def construct_initial_density():
     h = 63.126999                               # Altitude (GPS) [m]
     ga = h - 7.0                                # Altitude (AGL) [m]
     
-    etak = np.array([0.0, 0.0, -ga, -0.009, 0.09, -1.0 ])
+    etak = np.array([0.0, 0.0, -ga, -0.009, np.deg2rad(-15), 0])
     etakm1 = etak.copy()
 
     mu[0:3] = np.array([0.0, 0.0, 0.0])         # Initial translational velocity (m/s)
@@ -34,8 +35,8 @@ def construct_initial_density():
     P[:3, :3] = np.eye(3) * 0.1                 # Initial translational velocity covariance (m^2/s^2)
     P[3:6, 3:6] = np.eye(3) * 0.01              # Initial angular velocity covariance (rad^2/s^2)
     
-    P[6:9, 6:9] = np.eye(3) * 0.001              # Initial position covariance (m^2/s^2)
-    P[9:12, 9:12] = np.eye(3) * 0.001            # Initial attitude covariance (rad^2/s^2)
+    P[6:9, 6:9] = np.eye(3) * 0.001             # Initial position covariance (m^2/s^2)
+    P[9:12, 9:12] = np.eye(3) * 0.001           # Initial attitude covariance (rad^2/s^2)
 
     P[12:15, 12:15] = np.eye(3) * 0.001         # Initial previous position covariance (m^2/s^2)
     P[15:18, 15:18] = np.eye(3) * 0.001         # Initial previous attitude covariance (rad^2/s^2)
@@ -69,7 +70,6 @@ def run_visual_navigation():
 
     num_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     print(f"Video resolution: {width}x{height}, Number of frames: {num_frames}")
-    orb = cv2.ORB_create()
 
     if not cap.isOpened():
         print("Error: Could not open video file.")
@@ -112,6 +112,10 @@ def run_visual_navigation():
         ned = navpy.lla2ned(lat, lon, alt, lat_ref, lon_ref, alt_ref)
         print(f"North: {ned[0]}, East: {ned[1]}, Down: {ned[2]}")
 
+        # plot_horizon(frame, system, CAMERA)
+        # cv2.imshow("Good Points", frame)
+        # cv2.waitKey(10000)
+
         # Predict system forward and update with the optical flow measurement.
         system.predict(t, UpdateMethod.UNSCENTED)
         
@@ -137,9 +141,7 @@ def run_visual_navigation():
         
             #     # Draw using integer coordinates
             #     cv2.circle(frame, (int(x), int(y)), 3, (0, 255, 0), -1)
-        plot_horizon(frame, system, CAMERA)
-        cv2.imshow("Good Points", frame)
-        cv2.waitKey(1)
+        
 
         # rr.set_time(timeline="Timeline", duration=t)
 
@@ -271,112 +273,42 @@ import cv2
 def plot_horizon(frame, system, camera):
 
     state = system.density.mean
-
-    #
-    # Extract roll/pitch/yaw
-    #
     rpy = state[9:12]
 
-    #
-    # Navigation -> body
-    #
-    Rnb = Rotations.rpy2rot(rpy).R
+    print(rpy)
 
-    #
-    # Body -> camera
-    #
-    Rbc = CAMERA.rotation_matrix.R
-
-    #
-    # Navigation -> camera
-    #
-    Rnc = Rnb @ Rbc
-
-    #
-    # Camera intrinsics
-    #
-    K = CAMERA.matrix
-
-    #
-    # Horizon line:
-    #
-    # l ∝ K^{-T} R_cn [0 0 1]^T
-    #
-    # line = [a b c]
-    # ax + by + c = 0
-    #
-    n_world = np.array([0.0, 0.0, 1.0])
-
-    line = np.linalg.inv(K).T @ (Rnc @ n_world)
-
-    a, b, c = line
-
-    #
-    # Avoid divide-by-zero
-    #
-    eps = 1e-8
+    # Note the state vector roll pitch yaw states encode the rotation matrix Rnb, that is the rotation from world basis vectors into body basis vectors / frame 
+    # Rab is the matrix that rotates the vectors of the basis a into the vectors of the basis b
+    Rnb = Rotations.rpy2rot(rpy).R          # {n} -> {b}    (world to body)
+    Rbc = camera.rotation_matrix.R          # {b} -> {c}    (body to camera)
+    Rnc = Rnb @ Rbc                         # {n} -> {c}    (world to camera)
+    # Rnc = Rbc @ Rnb
 
     h, w = frame.shape[:2]
-
-    points = []
-
-    #
-    # Intersect with left/right image borders
-    #
-
-    # x = 0
-    if abs(b) > eps:
-        y0 = -(a * 0 + c) / b
-
-        if 0 <= y0 < h:
-            points.append((0, int(y0)))
-
-    # x = w-1
-    if abs(b) > eps:
-        y1 = -(a * (w - 1) + c) / b
-
-        if 0 <= y1 < h:
-            points.append((w - 1, int(y1)))
-
-    #
-    # Intersect with top/bottom borders
-    #
-
-    # y = 0
-    if abs(a) > eps:
-        x0 = -(b * 0 + c) / a
-
-        if 0 <= x0 < w:
-            points.append((int(x0), 0))
-
-    # y = h-1
-    if abs(a) > eps:
-        x1 = -(b * (h - 1) + c) / a
-
-        if 0 <= x1 < w:
-            points.append((int(x1), h - 1))
-
-    #
-    # Remove duplicates
-    #
-    unique_points = []
-
-    for p in points:
-        if p not in unique_points:
-            unique_points.append(p)
-
-    #
-    # Draw line if we found two intersections
-    #
-    if len(unique_points) >= 2:
-
-        cv2.line(
-            frame,
-            unique_points[0],
-            unique_points[1],
-            (0, 0, 255),
-            2,
-            cv2.LINE_AA
-        )
+    K = camera.matrix
+    
+    horizon_pts = []
+    num_samples = 120
+    
+    for i in range(num_samples):
+        angle = 2 * np.pi * i / num_samples
+        # Horizontal direction in world (North-East plane)
+        dir_n = np.array([np.cos(angle), np.sin(angle), 0.0])
+        
+        dir_c = Rnc @ dir_n                    # Transform to camera frame
+        
+        if dir_c[2] > 0.05:                    # Only points in front of camera
+            # Project
+            p = K @ dir_c
+            p = p[:2] / p[2]
+            u, v = int(p[0]), int(p[1])
+            
+            if 0 <= u < w and 0 <= v < h:
+                horizon_pts.append((u, v))
+    
+    # Draw smooth curve
+    if len(horizon_pts) > 5:
+        for i in range(len(horizon_pts)-1):
+            cv2.line(frame, horizon_pts[i], horizon_pts[i+1], (0, 0, 255), 2, cv2.LINE_AA)
 
 run_visual_navigation()

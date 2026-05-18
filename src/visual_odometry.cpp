@@ -100,38 +100,29 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
         frameSize.width     = cap.get(cv::CAP_PROP_FRAME_WIDTH)/divisor;
         frameSize.height    = cap.get(cv::CAP_PROP_FRAME_HEIGHT)/divisor;
         double outputFps    = fps/imgModulus;
-        // int codec = cap.get(cv::CAP_PROP_FOURCC); // use same output video codec as input video
-        int codec = cv::VideoWriter::fourcc('m', 'p', '4', 'v'); // manually specify output video codec
+        int codec = cap.get(cv::CAP_PROP_FOURCC); // use same output video codec as input video
         videoOut.open(outputPath.string(), codec, outputFps, frameSize);
         bufferedVideoWriter.start(videoOut);
     }
    
-    // Visual odometry
-    Eigen::VectorXd etak(6);
+    Eigen::VectorXd etak = getInitialPose(djiVideoCaption[0]);
     Eigen::VectorXd etakm1 = etak;
-    etak = getInitialPose(djiVideoCaption[0]);
-    Eigen::VectorXd mu = Eigen::VectorXd::Zero(18);                                     // Initial state mean
-    mu.segment<3>(0) = Eigen::Vector3d(0, 0, 0);                                        // Initial translational velocity (m/s)
-    mu.segment<3>(3) = Eigen::Vector3d(0, 0, 0);                                        // Initial angular velocity (rad/s)
-    mu.segment<6>(6) = Eigen::VectorXd(etak);                                           // Set initial pose eta 
-    mu.segment<6>(12) = Eigen::VectorXd(etak);                                          // Set initial pose zeta (etakm1)
+    Eigen::VectorXd nu = Eigen::VectorXd::Zero(6);
+    Eigen::VectorXd mu = Eigen::VectorXd::Zero(18);                     // Initial state mean
 
-    // Initialize square root of covariance matrix (upper triangular)
+    // Initialise square root of covariance matrix (upper triangular)
     Eigen::MatrixXd S = Eigen::MatrixXd::Identity(18, 18);
 
-    // Initial velocity uncertainty (first 6 states)
-    S.block<3, 3>(0, 0) = Eigen::MatrixXd::Identity(3, 3) * 50;         // m/s
-    S.block<3, 3>(3, 3) = Eigen::MatrixXd::Identity(3, 3) * 1;          // rad/s
-
-    // Current pose eta uncertainty (middle 6 states)
-    S.block<3, 3>(6, 6) = Eigen::MatrixXd::Identity(3, 3) * 0.01;       // m  
-    S.block<3, 3>(9, 9) = Eigen::MatrixXd::Identity(3, 3) * 0.0005;     // rad
-
-    // Previous pose zeta uncertainty (final 6 states)
-    S.block<3, 3>(12, 12) = Eigen::MatrixXd::Identity(3, 3) * 50;       // m
-    S.block<3, 3>(15, 15) = Eigen::MatrixXd::Identity(3, 3) * 0.1;      // rad
-    auto p0 = GaussianInfo<double>::fromSqrtMoment(mu, S);              // Initialise system state density p(x0)     
+    auto p0 = GaussianInfo<double>::fromSqrtMoment(mu, S);              // Initialise system state density p(x0)   
+    
     SystemVisualNav system(p0); 
+
+    system.initialise_state_density(nu, etak, etakm1);
+
+    std::cout << "Initial state mean: " << system.density.mean().transpose() << std::endl;
+    std::cout << "Initial state covariance: \n" << system.density.cov() << std::endl;
+
+    return;
     
     // Set camera pose w.r.t. body
     Eigen::Matrix3d Rbc { {0, 0, 1}, {1, 0, 0}, {0, 1, 0} };
@@ -147,7 +138,8 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
     int currentFrame = 0;
     double altitudekm1 = 0;
     
-    double altitude = etak[2];
+    // double altitude = etak[2]; TODO: Remove 
+    double altitude = 0; /// TODO: Ensure first alittude is correct below 
     int totalFrames = cap.get(cv::CAP_PROP_FRAME_COUNT);                              // Number of frames in the selected video
     
     for (int i = 0, k = 0; currentFrame < totalFrames; ++i)
@@ -180,10 +172,10 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
                 MeasurementAltimeter measurementAltimeter(currentTime, camera, altitude);
                 system.setZetaUpdateEnabled(false);  // Don't update zeta for altimeter
                 std::cout << "Before altimeter update:" << std::endl;
-                printZeta(system);
+                // printZeta(system);
                 measurementAltimeter.process(system);
                 std::cout << "After altimeter update:" << std::endl;
-                printZeta(system);
+                // printZeta(system);
                 altitudekm1 = altitude;
 
         }

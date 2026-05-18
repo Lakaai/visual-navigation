@@ -257,3 +257,29 @@ GaussianInfo<double> SystemVisualNav::landmarkPositionDensity(std::size_t idxLan
     std::size_t idx = landmarkPositionIndex(idxLandmark);
     return density.marginal(Eigen::seqN(idx, 3));
 }
+
+/// TODO: Add docstringexplaining why zeta is etakm1 
+void SystemVisualNav::initialise_state_density(const Eigen::VectorXd nu, const Eigen::VectorXd etak, const Eigen::VectorXd zetak)
+{
+    Eigen::VectorXd mu = Eigen::VectorXd::Zero(18); 
+    mu.segment<6>(0) = Eigen::VectorXd(nu);                                     
+    mu.segment<6>(6) = Eigen::VectorXd(etak);                                           
+    mu.segment<6>(12) = Eigen::VectorXd(zetak); 
+
+    // Initialise square root of covariance matrix (upper triangular)
+    Eigen::MatrixXd S = Eigen::MatrixXd::Identity(18, 18);
+
+    // Initial velocity uncertainty (first 6 states)
+    S.block<3, 3>(0, 0) = Eigen::MatrixXd::Identity(3, 3) * 50;         // m/s
+    S.block<3, 3>(3, 3) = Eigen::MatrixXd::Identity(3, 3) * 1;          // rad/s
+
+    // Current pose eta uncertainty (middle 6 states)
+    S.block<3, 3>(6, 6) = Eigen::MatrixXd::Identity(3, 3) * 0.01;       // m  
+    S.block<3, 3>(9, 9) = Eigen::MatrixXd::Identity(3, 3) * 0.0005;     // rad
+
+    // Previous pose zeta uncertainty (final 6 states)
+    S.block<3, 3>(12, 12) = Eigen::MatrixXd::Identity(3, 3) * 50;       // m
+    S.block<3, 3>(15, 15) = Eigen::MatrixXd::Identity(3, 3) * 0.1;      // rad
+
+    density = GaussianInfo<double>::fromSqrtMoment(mu, S);
+}
