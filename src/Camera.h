@@ -1,16 +1,17 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <autodiff/forward/dual.hpp>
 #include <vector>
 #include <filesystem>
+#include <cmath>
 #include <Eigen/Core>
+#include <opencv2/calib3d.hpp>
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/mat.hpp>
 #include <opencv2/core/persistence.hpp>
 #include "serialisation.hpp"
 #include "Pose.hpp"
-#include <Eigen/Core>
-#include <autodiff/forward/dual.hpp>
 
 struct Chessboard
 {
@@ -51,11 +52,6 @@ struct ChessboardData
     void recoverPoses(const Camera &);
 };
 
-namespace Eigen {
-using Matrix23d = Eigen::Matrix<double, 2, 3>;
-using Vector6d = Eigen::Matrix<double, 6, 1>;
-}
-
 struct Camera
 {
     void calibrate(ChessboardData &);                       // Calibrate camera from chessboard data
@@ -72,10 +68,9 @@ struct Camera
     cv::Vec2d worldToPixel(const cv::Vec3d &, const Pose<double> &) const;
     cv::Vec2d vectorToPixel(const cv::Vec3d &) const;
     template <typename Scalar> Eigen::Vector2<Scalar> vectorToPixel(const Eigen::Vector3<Scalar> &) const;
-    Eigen::Vector2d vectorToPixel(const Eigen::Vector3d &, Eigen::Matrix23d &) const;
+    Eigen::Vector2d vectorToPixel(const Eigen::Vector3d &, const Eigen::Matrix<double, 2, 3> &) const;
 
     cv::Vec3d pixelToVector(const cv::Vec2d &) const;
-
 
     bool isWorldWithinFOV(const cv::Vec3d& rPNn, const Pose<double>& Tnb) const;
     bool isWorldWithinFOV(const Eigen::Vector3d& rPNn, const Pose<double>& Tnb) const;
@@ -95,24 +90,15 @@ struct Camera
     template <typename Scalar>
     Eigen::Vector2<Scalar> worldToPixel(const Eigen::Vector3<Scalar>& rPNn, const Pose<Scalar>& Tnb) const
     {   
-        //std::cout << "rPNn input into worldtopixel: " << rPNn.transpose() << std::endl;
         // Camera pose Tnc (i.e., Rnc, rCNn)
         Pose<Scalar> Tnc = Tnb * Tbc;
 
         // Compute the vector from the camera to the point in camera coordinates
         Eigen::Vector3<Scalar> rPCc = Tnc.rotationMatrix.transpose() * (rPNn - Tnc.translationVector);
 
-        //std::cout << "rPCc before normalization: " << rPCc.transpose() << std::endl;
-
-        // Normalize the resulting vector
         Eigen::Vector3<Scalar> uPCc = rPCc.normalized();
 
-        //std::cout << "uPCc after normalization: " << uPCc.transpose() << std::endl;
-
-        // Project the normalized vector to pixel coordinates
         Eigen::Vector2<Scalar> pixel = vectorToPixel(uPCc);
-
-        //std::cout << "Projected pixel: " << pixel.transpose() << std::endl;
 
         return pixel;
     }
@@ -138,9 +124,6 @@ private:
     double vFOV = 0.0;                                      // Vertical field of view
     double dFOV = 0.0;                                      // Diagonal field of view
 };
-
-#include <cmath>
-#include <opencv2/calib3d.hpp>
 
 template <typename Scalar>
 Eigen::Vector2<Scalar> Camera::vectorToPixel(const Eigen::Vector3<Scalar> & rPCc) const

@@ -491,7 +491,7 @@ cv::Vec2d Camera::vectorToPixel(const cv::Vec3d & rPCc) const
     return cv::Vec2d(imagePoints[0].x, imagePoints[0].y);
 }
 
-Eigen::Vector2d Camera::vectorToPixel(const Eigen::Vector3d & rPCc, Eigen::Matrix23d & J) const
+Eigen::Vector2d Camera::vectorToPixel(const Eigen::Vector3d& rPCc, const Eigen::Matrix<double, 2, 3>& J) const
 {
     Eigen::Vector2d rQOi;
     // TODO: Lab 7 (optional)
