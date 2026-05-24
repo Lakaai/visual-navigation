@@ -121,8 +121,6 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
 
     std::cout << "Initial state mean: " << system.density.mean().transpose() << std::endl;
     std::cout << "Initial state covariance: \n" << system.density.cov() << std::endl;
-
-    return;
     
     // Set camera pose w.r.t. body
     Eigen::Matrix3d Rbc { {0, 0, 1}, {1, 0, 0}, {0, 1, 0} };
