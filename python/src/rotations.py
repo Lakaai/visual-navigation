@@ -104,11 +104,19 @@ class Rotations:
         return RotationMatrix(R, dRdx)
 
     @staticmethod
-    def rpy2rot(rpy: np.ndarray):
+    def rpy2rot(rpy: np.ndarray, order: str = "zyx"):
         """
         TODO:
         """
+        if order == 'zxy':
+
+            return RotationMatrix(Rotations.rotz(rpy[2]).R @ Rotations.rotx(rpy[0]).R @ Rotations.roty(rpy[1]).R, None)
+        
         return RotationMatrix(Rotations.rotz(rpy[2]).R @ Rotations.roty(rpy[1]).R @ Rotations.rotx(rpy[0]).R, None)
+        # if order == "zyx":
+        #     return RotationMatrix(Rotations.rotz(rpy[2]).R @ Rotations.roty(rpy[1]).R @ Rotations.rotx(rpy[0]).R, None)
+        # else:
+        #     raise ValueError("Unsupported rotation order")
 
     @staticmethod
     def rot2rpy(R: RotationMatrix):

@@ -6,15 +6,16 @@ from src.gaussian import Gaussian
 from src.srt_parser import parse_srt
 from src.system_estimator import SystemEstimator
 from src.measurement import Measurement, MeasurementBaro
+from src.rerun_helpers import RerunHelper
 from src.update_method import UpdateMethod
 from src.sensor_type import SensorType
 from src.rotations import Rotations
 from src.measurement_flow_bundle import MeasurementFlowBundle
 from src.camera import CAMERA
-import numpy as np
 import rerun as rr
 import rerun.blueprint as rrb
 import argparse
+import time
 
 def construct_initial_density():
     mu = np.zeros(18)
@@ -22,7 +23,7 @@ def construct_initial_density():
     h = 63.126999                               # Altitude (GPS) [m]
     ga = h - 7.0                                # Altitude (AGL) [m]
     
-    etak = np.array([0.0, 0.0, -ga, -0.009, np.deg2rad(-15), 0])
+    etak = np.array([0.0, 0.0, -ga, -0.009, np.deg2rad(-5), 0])
     etakm1 = etak.copy()
 
     mu[0:3] = np.array([0.0, 0.0, 0.0])         # Initial translational velocity (m/s)
@@ -45,31 +46,41 @@ def construct_initial_density():
 
 measurement_data = parse_srt("data/outdoor/flight.SRT")
 
-# rr.init("Visual Navigation", spawn=True)
+use_rerun = True
 
-blueprint = rrb.Horizontal(
-    rrb.Spatial3DView(origin="/world", name="World"),
-    rrb.Spatial2DView(origin="/world/camera", name="Camera", contents=["/world/**"]),
-    rrb.Spatial2DView(origin="/image", name="Frame", contents=["/image/**"]), 
-)
+if use_rerun:
 
-# Create empty arg parser for rerun
-parser = argparse.ArgumentParser(description="")
+    rr.init("Visual Navigation", spawn=True)
 
-# rr.script_add_args(parser)
+    blueprint = rrb.Horizontal(
+        rrb.Spatial3DView(origin="/world", name="World"),
+        rrb.Spatial2DView(origin="/world/camera", name="Camera"),
+        # rrb.Spatial2DView(origin="/image", name="Frame", contents=["/image/**"]), 
+    )
 
-args = parser.parse_args()
+    # Create empty arg parser for rerun
+    parser = argparse.ArgumentParser(description="")
 
-# rr.script_setup(args, "Visual Navigation", default_blueprint=blueprint)
+    rr.script_add_args(parser)
+
+    args = parser.parse_args()
+
+    rr.script_setup(args, "Visual Navigation", default_blueprint=blueprint)
+
+    # Intialise world frame as NED (Right-Handed Z-Down)
+    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_DOWN, static=True)
+    rerun_helper = RerunHelper()
+    rerun_helper.update_inertial_frame(axis_scale=2)
 
 def run_visual_navigation():
-    cap = cv2.VideoCapture("data/outdoor/flight.MOV")
+    cap = cv2.VideoCapture("data/outdoor/calibration.MOV")
 
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
     num_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     print(f"Video resolution: {width}x{height}, Number of frames: {num_frames}")
+    exit()
 
     if not cap.isOpened():
         print("Error: Could not open video file.")
@@ -93,6 +104,7 @@ def run_visual_navigation():
     rQOikm1 = None
 
     for i in range(len(measurement_data.timestamp)):
+        
 
         # Read frame 
         ret, frame = cap.read()
@@ -107,14 +119,6 @@ def run_visual_navigation():
         t = measurement_data.timestamp[i] - t0
 
         print(f"Time: {t}, Altitude: {alt}, Latitude: {lat}, Longitude: {lon}")
-
-        # Convert GPS coordinates to ECEF
-        ned = navpy.lla2ned(lat, lon, alt, lat_ref, lon_ref, alt_ref)
-        print(f"North: {ned[0]}, East: {ned[1]}, Down: {ned[2]}")
-
-        # plot_horizon(frame, system, CAMERA)
-        # cv2.imshow("Good Points", frame)
-        # cv2.waitKey(10000)
 
         # Predict system forward and update with the optical flow measurement.
         system.predict(t, UpdateMethod.UNSCENTED)
@@ -141,38 +145,55 @@ def run_visual_navigation():
         
             #     # Draw using integer coordinates
             #     cv2.circle(frame, (int(x), int(y)), 3, (0, 255, 0), -1)
+
+        if use_rerun:
+
+            # Convert GPS coordinates to ECEF
+            ned = navpy.lla2ned(lat, lon, alt, lat_ref, lon_ref, alt_ref)
+            print(f"North: {ned[0]}, East: {ned[1]}, Down: {ned[2]}")
+
+            frame = draw_horizon(frame, width, height, system, CAMERA)
+            # cv2.imshow("Good Points", frame)
+            # cv2.waitKey(2000)
+            
+            # rr.set_time(timeline="Timeline", duration=t)
+
+            # trajectory_enu.append(np.array([ned[1], ned[0], ned[2]]))
+
+            # Log the camera extrinsics as a transform, this will move the camera frustrum to the correct position in the world
+            # rr.log("world/camera_frame", rr.Transform3D(translation=[ned[0], ned[1], ned[2]],  rotation=rr.Quaternion(xyzw=(0, 0, 0, 1))))
+
+            # Log a visible point at the camera origin
+            # rr.log("world/camera_frame/origin", rr.Points3D([ned[0], ned[1], ned[2]], colors=np.array([[255, 0, 0]]), radii=0.05))
+            # rr.log("world/gps_trajectory", rr.LineStrips3D([np.array(trajectory_enu)], colors=[[0, 255, 0]]))
+            
+            rerun_helper.update_body_frame(system=system, axis_scale=2)
+            rerun_helper.update_gps_position(ned=ned)
+            rerun_helper.update_camera_frustum(width, height, frame, CAMERA=CAMERA)
+            frame = rerun_helper.draw_horizon(euler_angles=np.array(system.density.mean[9:12]), image=frame, image_height=height, image_width=width, CAMERA=CAMERA)
+            # cv2.imshow("Good Points", frame)
+            # cv2.waitKey(2000)
+
+            rr.log("world/camera/image", rr.Image(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)))
+            
+            # estimated_trajectory_enu.append(np.array([system.density.mean[6], system.density.mean[7], -system.density.mean[8]]))
+
+            # Add state estimate to the rerun timeline.
+            # rr.log("world/estimated_trajectory", rr.LineStrips3D([np.array(estimated_trajectory_enu)], colors=[[0, 0, 255]]))
+
+            # rr.log("world/camera_frame/pinhole", rr.Pinhole(image_from_camera=CAMERA.matrix, resolution=(width, height), camera_xyz=rr.ViewCoordinates.RDF))
         
+            # _, jpeg = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
 
-        # rr.set_time(timeline="Timeline", duration=t)
-
-        # # Convert NED to ENU for visualisation
-        # trajectory_enu.append(np.array([ned[1], ned[0], -ned[2]]))
-
-        # # Log the camera extrinsics as a transform, this will move the camera frustrum to the correct position in the world
-        # rr.log("world/camera", rr.Transform3D(translation=[ned[0], ned[1], -ned[2]],  rotation=rr.Quaternion(xyzw=(0, 0, 0, 1))))
-
-        # # Log a visible point at the camera origin
-        # rr.log("world/camera", rr.Points3D([ned[0], ned[1], -ned[2]], colors=np.array([[255, 0, 0]]), radii=0.05))
-        # rr.log("world/gps_trajectory", rr.LineStrips3D([np.array(trajectory_enu)], colors=[[0, 255, 0]]))
-
-        # rr.log("/image/frame", rr.Image(frame))
-        
-        estimated_trajectory_enu.append(np.array([system.density.mean[6], system.density.mean[7], -system.density.mean[8]]))
-
-        # Add state estimate to the rerun timeline.
-        # rr.log("world/estimated_trajectory", rr.LineStrips3D([np.array(estimated_trajectory_enu)], colors=[[0, 0, 255]]))
+            # rr.log("/image/frame", rr.EncodedImage())
+            # time.sleep(10)
 
         # 4. Update the previous frame and previous flow measurement for the next iteration.
         previous_frame = frame.copy()
         rQOikm1 = measurement_flow_bundle.data.rQOik.copy()
+        time.sleep(100)
         
         # rr.log("world/chessboard_corners", rr.Points3D(grid_points, colors=np.array([[0, 255, 0]]), radii=0.0015))
-
-        # rr.log("world/camera/pinhole", rr.Pinhole(image_from_camera=camera_matrix, resolution=(width, height), camera_xyz=rr.ViewCoordinates.RDF))
-        
-        # _, jpeg = cv2.imencode(".jpg", frame, [int(cv2.IMWRITE_JPEG_QUALITY), 80])
-
-        # rr.log("/image/frame", rr.EncodedImage())
         
         # gray_image = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         # # keypoints, descriptors = orb.detectAndCompute(gray_image, None)
@@ -266,49 +287,60 @@ def run_visual_navigation():
 #             cv2.LINE_AA
 #         )
 
-import numpy as np
-import cv2
 
-
-def plot_horizon(frame, system, camera):
-
+def draw_horizon(frame, frame_width, frame_height, system, camera):
+    """
+    Draw the horizon on the image frame.
+    """
     state = system.density.mean
     rpy = state[9:12]
 
     print(rpy)
-
+    horizon_pts = []
+    camera_horizontal_vectors = []
+    num_samples = 60
+    R = Rotations.rpy2rot(rpy, order='zxy').R
+    K = CAMERA.matrix
     # Note the state vector roll pitch yaw states encode the rotation matrix Rnb, that is the rotation from world basis vectors into body basis vectors / frame 
     # Rab is the matrix that rotates the vectors of the basis a into the vectors of the basis b
-    Rnb = Rotations.rpy2rot(rpy).R          # {n} -> {b}    (world to body)
-    Rbc = camera.rotation_matrix.R          # {b} -> {c}    (body to camera)
-    Rnc = Rnb @ Rbc                         # {n} -> {c}    (world to camera)
+    # Rnb = Rotations.rpy2rot(rpy).R          # {n} -> {b}    (world to body)
+    # Rbc = camera.rotation_matrix.R          # {b} -> {c}    (body to camera)
+    # Rnc = Rnb @ Rbc                         # {n} -> {c}    (world to camera)
     # Rnc = Rbc @ Rnb
-
-    h, w = frame.shape[:2]
-    K = camera.matrix
-    
-    horizon_pts = []
-    num_samples = 120
-    
+    # Create direction vectors pointing out of the camera optical axis
     for i in range(num_samples):
+
         angle = 2 * np.pi * i / num_samples
-        # Horizontal direction in world (North-East plane)
-        dir_n = np.array([np.cos(angle), np.sin(angle), 0.0])
+        dir_c = [np.sin(angle), 0, np.cos(angle)]   # Camera XZ plane
         
-        dir_c = Rnc @ dir_n                    # Transform to camera frame
-        
-        if dir_c[2] > 0.05:                    # Only points in front of camera
-            # Project
-            p = K @ dir_c
-            p = p[:2] / p[2]
-            u, v = int(p[0]), int(p[1])
-            
-            if 0 <= u < w and 0 <= v < h:
-                horizon_pts.append((u, v))
+        dir_c = R @ np.array(dir_c)
     
-    # Draw smooth curve
+    if dir_c[2] > 0.02:  
+        camera_horizontal_vectors.append(dir_c)
+        p = K @ dir_c
+
+        if p[2] > 0:
+            p_img = p[:2] / p[2]
+            u = int(round(p_img[0]))
+            v = int(round(p_img[1]))
+            if 0 <= u < frame_width and 0 <= v < frame_height:
+                horizon_pts.append((u, v))
+
+    # Draw on image
     if len(horizon_pts) > 5:
-        for i in range(len(horizon_pts)-1):
-            cv2.line(frame, horizon_pts[i], horizon_pts[i+1], (0, 0, 255), 2, cv2.LINE_AA)
+        pts = np.array(horizon_pts, dtype=np.int32)
+        cv2.polylines(frame, [pts], isClosed=False, 
+                     color=(0, 0, 255), thickness=4, lineType=cv2.LINE_AA)
+
+    # rr.log(
+    #     "world/inertial_frame/body_frame/camera_frame/horizon_from_camera",
+    #     rr.Arrows3D(
+    #         vectors=camera_horizontal_vectors,
+    #         colors=[255, 100, 0],
+    #         radii=0.02,
+    #     )
+    # )
+
+    return frame
 
 run_visual_navigation()

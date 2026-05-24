@@ -145,9 +145,9 @@ class MeasurementFlowBundle:
         # Evaluate how probable the observed measurement is under the predicted distribution
         total_log_likelihood = np.sum(likelihood.log_pdf(rQbarOk)) 
 
-        rQbarOk_hat = likelihood.mean
-        self.print_pixel_error(rQbarOk, rQbarOk_hat)
-        self.plot_predicted_measurements(rQbarOk, rQbarOk_hat)
+        # rQbarOk_hat = likelihood.mean
+        # self.print_pixel_error(rQbarOk, rQbarOk_hat)
+        # self.plot_predicted_measurements(rQbarOk, rQbarOk_hat)
         return total_log_likelihood
     
     

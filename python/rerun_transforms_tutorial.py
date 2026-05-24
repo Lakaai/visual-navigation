@@ -10,7 +10,7 @@ import argparse
 import numpy as np
 import cv2
 from scipy.spatial.transform import Rotation
-from camera import CAMERA
+from src.camera import CAMERA
 
 def draw_horizon(euler_angles, image, image_height, image_width):
     """
@@ -185,8 +185,10 @@ def visualise_transforms():
     )
 
     # Define navigation to body rotation matrix
-    Rnb = Rotation.from_euler("xyz", rpy, degrees=True)
-
+    # Rnb = Rotation.from_euler("xyz", rpy, degrees=True)
+    # print("Rnb:\n", Rnb.as_matrix())
+    Rnb = Rotation.from_euler("zyx", rpy, degrees=True)
+    print("Rnb:\n", Rnb.as_matrix())
     rBNn = np.array([3, 3, -3])
     rCBb = np.array([0.1, 0.1, -0.1])   # Apply some offset only for visualisation purposes
 
