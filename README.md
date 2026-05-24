@@ -1,7 +1,7 @@
 # Assignment 2 Visual Navigation
 
 ```bash
-cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Debug && cd build
+cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release && cd build
 ```
 ```bash
 ./a2 --calibrate ../data/outdoor/config.xml

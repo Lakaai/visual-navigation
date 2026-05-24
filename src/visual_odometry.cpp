@@ -145,11 +145,12 @@ void runVisualOdometryFromVideo(const std::filesystem::path & videoPath, const s
         /// TODO: FIX ME 
         currentFrame++;
         currentTime = i / fps; /// TODO: Current time is not accurate. Should not be using frame index to calculate time, 
+        std::cout << "Processing frame " << currentFrame << "/" << totalFrames << " (time: " << currentTime << "s)..." << std::endl;
         //should be using actual timestamps from subtitle file!
 
         imgk_raw = bufferedVideoReader.read();       // Capture frame by frame
 
-        // cv::resize(imgk_raw, imgout, cv::Size(), 1.0/divisor, 1.0/divisor); // REMOVE THIS WHEN DONE W/ DEBUG 
+        cv::resize(imgk_raw, imgout, cv::Size(), 1.0/divisor, 1.0/divisor); // REMOVE THIS WHEN DONE W/ DEBUG 
         if (imgk_raw.empty())
         {
             break;
